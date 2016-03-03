@@ -7,6 +7,7 @@ abstract class Application
     protected $httpResponse;
     protected $name;
     protected $user ;
+    protected $config;
 
     public function __construct()
     {
