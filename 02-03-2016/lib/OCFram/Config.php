@@ -13,7 +13,7 @@ class Config extends ApplicationComponent
 {
 protected $vars= [];
 
-    public function getVars($var)
+    public function get($var)
     {
         if ($this->vars == NULL)
         {
@@ -22,7 +22,7 @@ protected $vars= [];
         $define=$xml->getElementsByTagName('define');
         foreach($define as $element)
         {
-            $this->vars[$element->getAttribute('var')]=$element->getAttribute('values');
+            $this->vars[$element->getAttribute('var')]= $element->getAttribute('values');
         }
 
         }

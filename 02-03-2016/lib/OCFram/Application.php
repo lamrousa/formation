@@ -85,4 +85,9 @@ abstract class Application
     {
         return $this->name;
     }
+
+    public function config()
+    {
+        return $this->config;
+    }
 }

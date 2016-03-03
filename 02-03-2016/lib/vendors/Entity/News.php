@@ -1,6 +1,7 @@
 <?php
 
 namespace Entity ;
+
 use \OCFram\Entity ;
 class News extends Entity
 
@@ -55,27 +56,27 @@ class News extends Entity
         $this->dateModif = $dateModif;
     }
 
-    public function getAuteur()
+    public function auteur()
     {
         return $this->auteur;
     }
 
-    public function getContenu()
+    public function contenu()
     {
         return $this->contenu;
     }
 
-    public function getDateAjout()
+    public function dateAjout()
     {
         return $this->dateAjout;
     }
 
-    public function getDateModif()
+    public function dateModif()
     {
         return $this->dateModif;
     }
 
-    public function getTitre()
+    public function titre()
     {
         return $this->titre;
     }
