@@ -29,4 +29,24 @@ class NewsManagerPDO extends NewsManager
         return $listeNews;
 
     }
+    public function getUnique($id)
+    {
+        $sql='SELECT id, auteur, contenu, dateAjout, dateModif FROM news WHERE id = :id ';
+        $query= $this->dao->prepare($sql) ;
+        $query->bindValue(':id',(int) $id, \PDO::PARAM_INT);
+        $query->execute();
+
+        $query->setFetchMode (\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\News');
+        if ($news = $requete->fetch())
+        {
+            $news->setDateAjout(new \DateTime($news->dateAjout()));
+            $news->setDateModif(new \DateTime($news->dateModif()));
+
+            return $news;
+        }
+
+        return null;
+    }
+
+    }
 }

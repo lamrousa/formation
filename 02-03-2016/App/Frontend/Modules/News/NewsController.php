@@ -38,5 +38,18 @@ class NewsController extends BackController
 
 
     }
+    public function executeShow (HTTPRequest $request)
+    {
+        $manager=$this->managers->getManagerOf ('News');
+        $news = $manager->getUnique($request->getData('id'));
+        if (empty($news))
+        {
+        $this->app->httpResponse()->redirect404();
+        }
+        $this->page->addVar('title',$news->title()) ;
+        $this->page->addVar('news', $news);
+
+
+    }
 
 }
