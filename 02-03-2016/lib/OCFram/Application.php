@@ -18,6 +18,10 @@ abstract class Application
         $this->user= new User();
 
     }
+    public function user()
+    {
+        return $this->user;
+    }
 
     public function getController()
     {

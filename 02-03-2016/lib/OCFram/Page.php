@@ -36,8 +36,10 @@ protected $vars = [] ;
     {
         if (!file_exists($this->contentFile))
         {
-            throw new \RuntimeException('La vue spécifiée n\'existe pas');
+            throw new \RuntimeException('La vue  n\'existe pas');
         }
+
+        $user=$this->app->user();
 
         extract($this->vars);
 
