@@ -25,7 +25,7 @@ abstract class BackController extends ApplicationComponent
 
         if (!is_callable([$this, $method]))
         {
-            throw new \RuntimeException('L\'action "'.$this->action.'" n\'est pas définie sur ce module');
+            throw new \RuntimeException('L\'action "'.$this->action.'" n\'existe pas dans ce module');
         }
 
         $this->$method($this->app->httpRequest());

@@ -20,7 +20,7 @@ protected $managers = [];
     {
         if (!is_string($module) || empty($module))
         {
-            throw new \InvalidArgumentException('Le module spécifié est invalide');
+            throw new \InvalidArgumentException('Le module n\'existe pas');
         }
         if (!isset( $this->managers[$module]))
 
