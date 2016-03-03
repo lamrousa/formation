@@ -21,7 +21,7 @@ protected $page ;
     }
     public function send()
     {
-    exit($this->page->getGeneratedPage() ) ; /* A voir */
+    exit($this->page->getGeneratedPage() ) ; /* Pas Compris */
     }
     public function redirect404()
     {
@@ -38,4 +38,10 @@ protected $page ;
     {
         setcookie($name,$value,$expire,$path,$domain,$secure,$httpOnly);
     }
+
+    public function setPage($page)
+    {
+        $this->page = $page;
+    }
 }
+

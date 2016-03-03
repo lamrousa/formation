@@ -28,7 +28,7 @@ protected $vars= [];
         }
         if (!isset($this->vars[$var]))
         {
-            throw new \InvalidArgumentException ('Variable non existante');
+            throw new \RuntimeException ('Variable non existante');
         }
             return $this->vars[$var];
     }

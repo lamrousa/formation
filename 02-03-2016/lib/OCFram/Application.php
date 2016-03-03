@@ -28,7 +28,7 @@ abstract class Application
 
         $routes = $xml->getElementsByTagName('route');
 
-        // On parcourt les routes du fichier XML.
+        // Parcours des routes du fichier XML.
         foreach ($routes as $route)
         {
             $vars = [];
