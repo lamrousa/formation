@@ -11,6 +11,7 @@ namespace App\Frontend\Modules\News;
 
 use OCFram\BackController;
 use OCFram\HTTPRequest;
+use Entity\Comment;
 
 class NewsController extends BackController
 {
@@ -48,8 +49,35 @@ class NewsController extends BackController
         }
         $this->page->addVar('title',$news->title()) ;
         $this->page->addVar('news', $news);
+        $this->page->addVar('comments',$this->managers->getManagerOf('Comments')->getListOf($news->id()));
 
+    }
 
+    public function executeInsertComment(HTTPRequest $request)
+    {
+        $this->page->addVar('title','Ajout d\'un commentaire');
+        if ($request->postExists('pseudo'))
+        {
+            $comment = new Comment(
+                [
+                    'news' => $request->getData('news'),
+                    'auteur' => $request->getData('auteur'),
+                    'contenu' => $request->getData('contenu')
+
+                ]
+            );
+            if ($comment->isValid())
+            {
+                $this->managers->getManagerOf('Comment')->save($comment);
+                $this->app->user()->setFlash('Commentaire bien ajouté') ;
+                $this->app->httpResponse()->redirect('news-'.$request->getData('news').'.html');
+            }
+            else
+            {
+                $this->page->addVar('erreurs',$comment->erreurs());
+            }
+            $this->page->addVar('comment',$comment);
+        }
     }
 
 }

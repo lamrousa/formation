@@ -7,6 +7,7 @@
  */
 
 namespace App\Frontend;
+namespace OCFram ;
 
 
 use OCFram\Application;

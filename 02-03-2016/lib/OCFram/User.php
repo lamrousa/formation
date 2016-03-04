@@ -1,68 +1,50 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alamrous
- * Date: 03/03/2016
- * Time: 10:04
- */
-
 namespace OCFram;
 
-session_start() ;
+session_start();
 
-class User extends ApplicationComponent //Pas d'heritage ?
+class User
 {
-    public function getAttribute ($attr)
+    public function getAttribute($attr)
     {
-        if (isset($_SESSION[$attr]))
-        {
-            return $_SESSION[$attr] ;
-        }
-        else
-        {
-            return NULL ;
-        }
+        return isset($_SESSION[$attr]) ? $_SESSION[$attr] : null;
     }
-    public function getFlash ()
+
+    public function getFlash()
     {
-        if (!isset($_SESSION['flash'] ))
-        {
-            throw new \ErrorException('Le message est introuvable ') ;
-        }
-        return $_SESSION['flash'];
+        $flash = $_SESSION['flash'];
+        unset($_SESSION['flash']);
+
+        return $flash;
     }
-    public function hasFlash ()
+
+    public function hasFlash()
     {
         return isset($_SESSION['flash']);
     }
+
     public function isAuthenticated()
     {
-        return (isset ($_SESSION['auth'])) ; //$_SESSION['auth']===true
+        return isset($_SESSION['auth']) && $_SESSION['auth'] === true;
     }
-    public function setAttribute ($attr, $value)
+
+    public function setAttribute($attr, $value)
     {
-
-            $_SESSION[$attr]=$value;
-
+        $_SESSION[$attr] = $value;
     }
-    public function setAuthenticated($authenticated= TRUE)
+
+    public function setAuthenticated($authenticated = true)
     {
         if (!is_bool($authenticated))
         {
-            throw new \InvalidArgumentException('L\'argument d\'authentification doit etre un booleen') ;
+            throw new \InvalidArgumentException('La valeur spécifiée à la méthode User::setAuthenticated() doit être un boolean');
         }
-        $_SESSION['auth']=$authenticated;
 
+        $_SESSION['auth'] = $authenticated;
     }
-    public function setFlash ($value)
+
+    public function setFlash($value)
     {
-        if ((!is_string($value)) || empty($value))
-        {
-            throw new \InvalidArgumentException('Le message doit etre une chaine de caractere');
-        }
-
-        $_SESSION['flash']=$value;
+        $_SESSION['flash'] = $value;
     }
-
-
 }
