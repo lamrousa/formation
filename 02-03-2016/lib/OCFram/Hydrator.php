@@ -11,7 +11,7 @@ namespace OCFram;
 
 trait Hydrator
 {
-    public function hydrate($date)
+    public function hydrate($data)
     {
         foreach ($data as $key => $value)
         {
