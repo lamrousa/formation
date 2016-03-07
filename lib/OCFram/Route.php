@@ -11,12 +11,13 @@ namespace OCFram;
 
 class Route
 {
-    protected $action ;
-    protected $module ;
-    protected $url ;
+    protected $action;
+    protected $module;
+    protected $url;
     protected $varNames;
-    protected $vars;
-    public function __construct($url, $module,$action, array $varNames)
+    protected $vars = [];
+
+    public function __construct($url, $module, $action, array $varNames)
     {
         $this->setUrl($url);
         $this->setModule($module);
@@ -24,22 +25,21 @@ class Route
         $this->setVarNames($varNames);
 
     }
-    public function hasVars ()
-    {
-        return isset($this->vars) ;
-    }
-    public function match ($url)
 
-        {
-                                            if (preg_match('`^'.$this->url.'$`', $url, $matches))
-                                            {
-                                                return $matches;
-                                            }
-                                            else
-                                            {
-                                                return false;
-                                            }
-            }
+    public function hasVars()
+    {
+        return isset($this->vars);
+    }
+
+    public function match($url)
+
+    {
+        if (preg_match('`^' . $this->url . '$`', $url, $matches)) {
+            return $matches;
+        } else {
+            return false;
+        }
+    }
 
     public function setAction($action)
     {
@@ -51,11 +51,12 @@ class Route
         $this->module = $module;
     }
 
-    public function setVarNames( array $varNames)
+    public function setVarNames(array $varNames)
     {
         $this->varNames = $varNames;
     }
-    public  function setVars(array $vars)
+
+    public function setVars(array $vars)
     {
         $this->vars = $vars;
     }

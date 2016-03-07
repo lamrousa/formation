@@ -12,6 +12,7 @@ class NewsController extends BackController
     public function executeIndex(HTTPRequest $request)
     {
         $nombreNews = $this->app->config()->get('nombre_news');
+
         $nombreCaracteres = $this->app->config()->get('nombre_caracteres');
 
         // On ajoute une définition pour le titre.
@@ -21,6 +22,7 @@ class NewsController extends BackController
         $manager = $this->managers->getManagerOf('News');
 
         $listeNews = $manager->getList(0, $nombreNews);
+
 
         foreach ($listeNews as $news)
         {

@@ -1,59 +1,55 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alamrous
- * Date: 04/03/2016
- * Time: 10:07
- */
-
 namespace Entity;
 
-
-use OCFram\Entity;
+use \OCFram\Entity;
 
 class Comment extends Entity
-
 {
-protected $news,
+    protected $news,
         $auteur,
         $contenu,
         $date;
 
-    const AUTEUR_INVALIDE =1;
-    const CONTENU_INVALIDE =2;
+    const AUTEUR_INVALIDE = 1;
+    const CONTENU_INVALIDE = 2;
+
     public function isValid()
     {
-        return !(empty($auteur) || empty($contenu) );
-
-    }
-
-    public function setAuteur($auteur)
-    { if (!is_string($auteur) || empty($auteur))
-    {
-        $this->erreurs[]= self::AUTEUR_INVALIDE;
-    }
-        $this->auteur = $auteur;
-    }
-
-    public function setContenu($contenu)
-    { if (!is_string($contenu) || empty($contenu))
-
-    {
-        $this->erreurs [] = self::CONTENU_INVALIDE;
-    }
-        $this->contenu = $contenu;
-    }
-
-    public function setDate(\DateTime $date)
-
-    {
-        $this->date = $date;
+        return !(empty($this->auteur) || empty($this->contenu));
     }
 
     public function setNews($news)
     {
         $this->news = (int) $news;
     }
+
+    public function setAuteur($auteur)
+    {
+        if (!is_string($auteur) || empty($auteur))
+        {
+            $this->erreurs[] = self::AUTEUR_INVALIDE;
+        }
+
+        $this->auteur = $auteur;
+    }
+
+    public function setContenu($contenu)
+    {
+        if (!is_string($contenu) || empty($contenu))
+        {
+            $this->erreurs[] = self::CONTENU_INVALIDE;
+        }
+
+        $this->contenu = $contenu;
+    }
+
+    public function setDate(\DateTime $date)
+    {           date_default_timezone_set("Europe/Paris");
+
+
+        $this->date = $date;
+    }
+
     public function news()
     {
         return $this->news;
@@ -73,6 +69,4 @@ protected $news,
     {
         return $this->date;
     }
-
-
-    }
+}

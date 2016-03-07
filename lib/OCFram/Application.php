@@ -48,7 +48,6 @@ abstract class Application
             // On récupère la route correspondante à l'URL.
 
             $matchedRoute = $router->getRoute($this->httpRequest->requestURI());
-            var_dump($matchedRoute);
 
         }
         catch (\RuntimeException $e)
@@ -62,7 +61,6 @@ abstract class Application
 
         // On ajoute les variables de l'URL au tableau $_GET.
         /** @var Route $matchedRoute */
-        var_dump($matchedRoute);
 
         $_GET = array_merge($_GET, $matchedRoute->vars());
 

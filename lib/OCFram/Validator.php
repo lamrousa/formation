@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alamrous
- * Date: 04/03/2016
- * Time: 17:49
- */
-
 namespace OCFram;
-
 
 abstract class Validator
 {

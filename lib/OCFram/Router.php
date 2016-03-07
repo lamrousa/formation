@@ -25,7 +25,7 @@ class Router
                 // Si elle a des variables
                 if ($route->hasVars())
                 {
-                    $varsNames = $route->varsNames();
+                    $varsNames = $route->varNames();
                     $listVars = [];
 
                     // On crée un nouveau tableau clé/valeur

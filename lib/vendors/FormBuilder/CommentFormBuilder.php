@@ -1,12 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alamrous
- * Date: 04/03/2016
- * Time: 18:06
- */
-
-namespace OCFram;
+namespace FormBuilder;
 
 use \OCFram\FormBuilder;
 use \OCFram\StringField;
@@ -14,7 +7,7 @@ use \OCFram\TextField;
 use \OCFram\MaxLengthValidator;
 use \OCFram\NotNullValidator;
 
-class CommentFormBuilder
+class CommentFormBuilder extends FormBuilder
 {
     public function build()
     {

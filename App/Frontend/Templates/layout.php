@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>
-        <?= isset($title) ? $title : 'Mon super site- alamrous' ?>
+        <?= isset($title) ? $title : 'Mon super site' ?>
     </title>
 
     <meta charset="utf-8" />
