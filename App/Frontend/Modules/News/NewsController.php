@@ -29,7 +29,14 @@ class NewsController extends BackController
             if (strlen($news->contenu()) > $nombreCaracteres)
             {
                 $debut = substr($news->contenu(), 0, $nombreCaracteres);
-                $debut = substr($debut, 0, strrpos($debut, ' ')) . '...';
+
+                if ((strrpos($debut, ' ')==false))
+                {
+                    $debut = substr($debut, 0, $nombreCaracteres - 3) . '(...)';
+
+                }
+
+               else { $debut = substr($debut, 0, strrpos($debut, ' ')) . '...';}
 
                 $news->setContenu($debut);
             }

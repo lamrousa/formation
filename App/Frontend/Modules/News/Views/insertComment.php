@@ -1,8 +1,8 @@
 <h2>Ajouter un commentaire</h2>
 <form action="" method="post">
-  <p>
+  <h3>
     <?= $form ?>
     
     <input type="submit" value="Commenter" />
-  </p>
+  </h3>
 </form>

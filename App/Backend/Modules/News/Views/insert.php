@@ -1,8 +1,8 @@
 <h2>Ajouter une news</h2>
 <form action="" method="post">
-  <p>
+  <h3>
     <?= $form ?>
     
     <input type="submit" value="Ajouter" />
-  </p>
+  </h3>
 </form>

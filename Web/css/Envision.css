@@ -46,11 +46,15 @@ h2 {
 	font-size: 140%;
 	text-transform: uppercase;
 	color: #88ac0b;
+	hyphens: auto;
+
+
 }
 h3 {
 	font-size: 120%;
 	color: #666666; 
 }
+
 
 /* images */
 img {
@@ -63,9 +67,21 @@ img.float-left {
   margin: 5px 10px 10px 0px;
 }
 
-h1, h2, h3, p {
+h1, h2, h3 {
 	padding: 10px;		
 	margin: 0;
+	word-wrap: break-word;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+p{
+	padding: 10px;
+	margin: 0;
+	max-height:100px ;
+	word-wrap: break-word;
+	overflow-y: auto;
+	overflow-x: hidden;
+
 }
 ul, ol {
 	margin: 5px 20px;
@@ -117,13 +133,27 @@ form th {
 }
 tr {
 	height: 30px;
+	width: 50px;
+	word-wrap: break-word;
+	overflow-y: auto;
+	overflow-x: auto;
 }
 td {
+	max-width: 50px;
+	max-height: 50px;
 	padding-left: 5px;
 	padding-right: 5px;
 	border-left: 1px solid #FFF;
-	border-bottom: solid 1px #ffffff;
+	border-bottom: solid 1px #FFFFFF;
     text-align: center;
+	word-wrap: break-word;
+	overflow-y: auto;
+	overflow-x: auto;
+}
+table {
+	margin : auto;
+	text-align: center;
+
 }
 form td {
     text-align: left;
@@ -150,6 +180,7 @@ label {
 	font-weight:bold;
 	margin:5px 0;
 }
+
 input {
 	padding:2px;
 	border:1px solid #eee;
