@@ -34,7 +34,7 @@
 
             <?= $content ?>
         </section>
-
+    </div>
 
     <footer></footer>
 </div>

@@ -34,9 +34,15 @@ class ConnexionController extends BackController
 
             $this->page->addVar('title', 'Deconnexion');
 
+            $this->app->user()->setAttribute('login', 'admin');
+
+            session_unset();
+            session_destroy();
+            session_start();
             $this->app->user()->setAuthenticated(false);
-            $this->app->httpResponse()->redirect('..');
             $this->app->user()->setFlash('Deconnexion reussie');
+            $this->app->httpResponse()->redirect('..');
+
 
         }
     }
