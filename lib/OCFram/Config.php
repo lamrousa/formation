@@ -16,7 +16,7 @@ class Config extends ApplicationComponent
 
             foreach ($elements as $element)
             {
-                $this->vars[$element->getAttribute('var')] = $element->getAttribute('values');
+                $this->vars[$element->getAttribute('var')] = $element->getAttribute('value');
 
             }
         }

@@ -17,6 +17,7 @@ class ConnexionController extends BackController
 
             if ($login == $this->app->config()->get('login') && $password == $this->app->config()->get('pass'))
             {
+
                 $this->app->user()->setAuthenticated(true);
                 $this->app->httpResponse()->redirect('.');
             }
@@ -34,7 +35,7 @@ class ConnexionController extends BackController
             $this->page->addVar('title', 'Deconnexion');
 
             $this->app->user()->setAuthenticated(false);
-            $this->app->httpResponse()->redirect('.');
+            $this->app->httpResponse()->redirect('..');
             $this->app->user()->setFlash('Deconnexion reussie');
 
         }
