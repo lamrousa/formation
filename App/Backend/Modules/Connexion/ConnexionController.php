@@ -1,6 +1,7 @@
 <?php
 namespace App\Backend\Modules\Connexion;
 
+use Entity\OutsideUser;
 use \OCFram\BackController;
 use \OCFram\HTTPRequest;
 
@@ -34,7 +35,6 @@ class ConnexionController extends BackController
 
             $this->page->addVar('title', 'Deconnexion');
 
-            $this->app->user()->setAttribute('login', 'admin');
 
             session_unset();
             session_destroy();
@@ -46,4 +46,5 @@ class ConnexionController extends BackController
 
         }
     }
+
 }

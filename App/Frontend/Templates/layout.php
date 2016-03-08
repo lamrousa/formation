@@ -20,11 +20,23 @@
     <nav>
         <ul>
             <li><a href="/">Accueil</a></li>
+
             <?php if ($user->isAuthenticated()) { ?>
                 <li><a href="/admin/">Admin</a></li>
                 <li><a href="/admin/news-insert.html">Ajouter une news</a></li>
                 <li><a href="/admin/logout.html">Deconnexion</a></li>
+
+
             <?php } ?>
+            <?php if ($user->isUser() ) {?>
+            <li><a href="/logout.html">Deconnexion</a></li>
+               <?php } ?>
+            <?php if ($user->isAuthenticated() ==false && $user->isUser() ==false ) {?>
+                <li><a href="/registration.html">Inscription</a></li>
+            <li><a href="/authentification.html">Connexion</a></li>
+            <?php } ?>
+
+
         </ul>
     </nav>
 

@@ -4,4 +4,8 @@
   <route url="/news-([0-9]+)\.html" module="News" action="show" vars="id"/>
   <route url="/commenter-([0-9]+)\.html" module="News" action="insertComment" vars="news" />
   <route url ="/device\.html" module="Device" action="show"/>
+  <route url ="/registration\.html" module="Connexion" action="signup" />
+  <route url ="/authentification\.html" module="Connexion" action="login" />
+  <route url="/logout\.html" module="Connexion" action="logout" />
+
 </routes>

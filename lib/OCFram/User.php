@@ -47,4 +47,22 @@ class User
     {
         $_SESSION['flash'] = $value;
     }
+    /* Ajoute */
+    public function setIsUser($attr = true)
+    {
+
+        if (!is_bool($attr))
+        {
+            throw new \InvalidArgumentException('La valeur spécifiée à la méthode OutsideUser::setIsUser() doit être un boolean');
+        }
+
+        $_SESSION['usr'] = $attr;
+
+
+    }
+    public function isUser()
+    {
+        return isset($_SESSION['usr']) && $_SESSION['usr'] === true;
+    }
+
 }
