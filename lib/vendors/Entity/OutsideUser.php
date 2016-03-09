@@ -14,6 +14,7 @@ class OutsideUser extends User
 {
     protected $AUC_login;
     protected $AUC_password;
+    protected $AUC_email;
     protected $AUC_state;
     protected $AUC_dateAdd;
     protected $AUC_dateEnd;
@@ -39,7 +40,13 @@ class OutsideUser extends User
         }
         $this->AUC_password = $password;
     }
-
+    public function setEmail ($email)
+    {      if (is_string($login) && !empty($login))
+        {
+            $this->AUC_email = $email;
+        }
+    else throw new \InvalidArgumentException('L \'email doit etre une chaine de caractères');
+    }
 
     public function setInvalidState()
     {
