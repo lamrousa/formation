@@ -17,4 +17,5 @@ abstract class UsersManager extends Manager
     abstract public function addUser(OutsideUser $outsideUser);
     abstract public function getUser($id);
     abstract public function deleteUser($id);
+
 }

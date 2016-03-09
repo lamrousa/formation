@@ -22,8 +22,13 @@ class OutsideUser extends User
     const USERE_USERC_VALID =1 ;
     const USERE_USERC_INVALID = 0 ;
 
-
-
+  /*  public function __construct($AUC_login, $AUC_password, $AUC_email=NULL)
+    {
+        $this->setLogin($AUC_login);
+        $this->setPassword($AUC_password);
+        $this->setEmail($AUC_email);
+    }
+*/
 
     public function setLogin($login)
     { if (is_string($login) && !empty($login))
@@ -41,7 +46,7 @@ class OutsideUser extends User
         $this->AUC_password = $password;
     }
     public function setEmail ($email)
-    {      if (is_string($login) && !empty($login))
+    {      if (is_string($email) && !empty($email))
         {
             $this->AUC_email = $email;
         }
@@ -78,5 +83,9 @@ class OutsideUser extends User
         return $this->AUC_state;
     }
 
+    public function email()
+    {
+        return $this->AUC_email;
+    }
 
 }

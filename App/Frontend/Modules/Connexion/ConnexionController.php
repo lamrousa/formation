@@ -13,13 +13,17 @@ class ConnexionController extends BackController
         $this->page->addVar('title','signin');
         if ($request->postExists('slogin'))
         {
-            $login = $request->postData('slogin');
-            $password = $request->postData('spassword');
+            $AUC_login = $request->postData('slogin');
+            $AUC_password = $request->postData('spassword');
+            $AUC_email = $request->postData('semail');
 
-
-        if ($this->managers->getManagerOf('Users')->getUser($login) == NULL )
+            var_dump($AUC_login);var_dump($AUC_password);  var_dump($AUC_email) ;
+        if ($this->managers->getManagerOf('Users')->getUser($AUC_login) == NULL )
         {
-            $user = new OutsideUser($login,$password);
+            $user = new OutsideUser;
+            $user->setLogin($AUC_login);
+            $user->setPassword($AUC_password);
+            $user->setEmail($AUC_email);
 
             $this->managers->getManagerOf('Users')->addUser($user);
             $this->page->addVar('OutUser',$user);
@@ -41,6 +45,7 @@ class ConnexionController extends BackController
             $login = $request->postData('llogin');
             $password = $request->postData('lpassword');
 
+            //var_dump($this->managers->getManagerOf('Users')->getUser($login)); die();
         if ($login==$this->managers->getManagerOf('Users')->getUser($login)->login() && $password==$this->managers->getManagerOf('Users')->getUser($login)->password())
             {
                 if ( $this->app->user()->isAuthenticated() ==false )
@@ -48,6 +53,10 @@ class ConnexionController extends BackController
                     $this->app->user()->setIsUser(true);
 
                     $this->page->addVar('user',$this->managers->getManagerOf('Users')->getUser($login));
+
+                    $this->managers->getManagerOf('Users')->getUser($login)->setAttribute( 'log',$this->managers->getManagerOf('Users')->getUser($login)->login());
+                    $this->managers->getManagerOf('Users')->getUser($login)->setAttribute( 'mail',$this->managers->getManagerOf('Users')->getUser($login)->email());
+
 
                     $this->app->user()->setFlash('Connexion Reussie');
                     $this->app->httpResponse()->redirect('.');

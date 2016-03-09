@@ -20,6 +20,14 @@ class CommentFormBuilder extends FormBuilder
                 new NotNullValidator('Merci de spécifier l\'auteur du commentaire'),
             ],
         ]))
+        ->add(new StringField([
+            'label' => 'Email (Facultatif)',
+            'name' => 'email',
+            'maxLength' => 50,
+            'validators' => [
+                new MaxLengthValidator('L\'auteur spécifié est trop long (50 caractères maximum)', 50)],
+        ]))
+
             ->add(new TextField([
                 'label' => 'Contenu',
                 'name' => 'contenu',
@@ -29,5 +37,19 @@ class CommentFormBuilder extends FormBuilder
                     new NotNullValidator('Merci de spécifier votre commentaire'),
                 ],
             ]));
+    }
+
+    public function buildUser()
+    {
+        $this->form->add(new TextField([
+                'label' => 'Contenu',
+                'name' => 'contenu',
+                'rows' => 7,
+                'cols' => 50,
+                'validators' => [
+                    new NotNullValidator('Merci de spécifier votre commentaire'),
+                ],
+            ]));
+
     }
 }

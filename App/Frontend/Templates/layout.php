@@ -30,7 +30,13 @@
             <?php } ?>
             <?php if ($user->isUser() ) {?>
             <li><a href="/logout.html">Deconnexion</a></li>
-               <?php } ?>
+                <li><a href="/add-news.html">Ajouter une news</a></li>
+                <li><a href="/mynews.html">Mes news</a></li>
+
+
+
+
+            <?php } ?>
             <?php if ($user->isAuthenticated() ==false && $user->isUser() ==false ) {?>
                 <li><a href="/registration.html">Inscription</a></li>
             <li><a href="/authentification.html">Connexion</a></li>
