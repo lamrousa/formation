@@ -13,5 +13,6 @@
   <route url="/mynews\.html" module="News" action="mynews" vars="id" />
   <route url="/showuser-([0-9]+)\.html" module="News" action="showuser" vars="id" />
   <route url="/showauthoruser-([0-9]+)\.html" module="News" action="showauthoruser" vars="id" />
-
+  <route url="/comment-update-([0-9]+)\.html" module="News" action="updateComment" vars="id" />
+  <route url="/comment-delete-([0-9]+)\.html" module="News" action="deleteComment" vars="id" />
 </routes>

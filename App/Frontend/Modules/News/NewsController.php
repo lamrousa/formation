@@ -108,6 +108,8 @@ class NewsController extends BackController
 
         if ($formHandler->process())
         {
+            //$this->sendmail($request->getData('news'));
+
             $this->app->user()->setFlash('Le commentaire a bien été ajouté, merci !');
 
             $this->app->httpResponse()->redirect('news-'.$request->getData('news').'.html');
@@ -117,7 +119,6 @@ class NewsController extends BackController
         $this->page->addVar('form', $form->createView());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
 
-        $this->executeSendmail($request->getData('news'));
     }
 /*Ajout user */
     public function executeInsert(HTTPRequest $request)
@@ -134,10 +135,54 @@ class NewsController extends BackController
 
 
         $this->page->addVar('listeNews', $manager->getListByAuthor($this->app()->user()->getAttribute('log')));
+        $this->page->addVar('listeCom',$this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('log')));
 
+        $this->page->addVar('listeComnews',$this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('log')));
 
+        $this->page->addVar('log',$this->app()->user()->getAttribute('log'));
 
-        $this->page->addVar('nombreNews', $manager->count());
+    }
+    public function executeDeleteComment(HTTPRequest $request)
+    {
+        $this->managers->getManagerOf('Comments')->delete($request->getData('id'));
+
+        $this->app->user()->setFlash('Le commentaire a bien été supprimé !');
+
+        $this->app->httpResponse()->redirect('.');
+    }
+
+    public function executeUpdateComment(HTTPRequest $request)
+    {
+        $this->page->addVar('title', 'Modification d\'un commentaire');
+
+        if ($request->method() == 'POST')
+        {
+            $comment = new Comment([
+                'id' => $request->getData('id'),
+                'auteur' => $this->app->user()->getAttribute('log'),
+                'contenu' => $request->postData('contenu')
+            ]);
+        }
+        else
+        {
+            $comment = $this->managers->getManagerOf('Comments')->get($request->getData('id'));
+        }
+
+        $formBuilder = new CommentFormBuilder($comment);
+        $formBuilder->buildUser();
+
+        $form = $formBuilder->form();
+
+        $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
+
+        if ($formHandler->process())
+        {
+            $this->app->user()->setFlash('Le commentaire a bien été modifié');
+
+            $this->app->httpResponse()->redirect('.');
+        }
+
+        $this->page->addVar('form', $form->createView());
     }
    public function executeUpdate(HTTPRequest $request)
     {
@@ -252,30 +297,34 @@ class NewsController extends BackController
 
 
     }
-    public function executeSendmail($id)
+    public function sendmail($id)
     {
+     $listcomment= $this->managers->getManagerOf('Comments')->getListOf($id);
 
-     $listcomment=$this->managers->getManagerOf('Comments')->get($id);
-        if (!empty($listcomment))
+        if ($listcomment != NULL )
         {
-            $email = [];
-            foreach ($listcomment as $com) {
+            foreach ($listcomment as $com)
+            {
                 if ($com->email() !=NULL)
-                {
+                {   $mail[] = $com->email();
+                    $mail=array_unique($mail);
+                }
+            }
 
-            $email[]=$com->email() ;
-                $email=array_unique($email);
+        foreach($mail as $email)
+        {
         $to      = $email;
      $subject = 'Une nouvelle personne a aussi commenté la news';
      $message = 'Bonjour ! Une nouvelle personne a aussi commenté la news! Réagissez vite ';
-        $headers   = array();
-        $headers[] = "MIME-Version: 1.0";
-        $headers[] = "Content-type: text/plain; charset=iso-8859-1";
-        $headers[] = "From: Sender Name <exemple@domain.com>";
-        $headers[] = "Subject: {$subject}";
-        $headers[] = "X-Mailer: PHP/".phpversion();
 
-      mail($to, $subject, $email, implode("\r\n", $headers));
+            $headers  = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+            $headers .= 'Content-type: text/plain; charset=iso-8859-1'."\r\n";
+            $headers .= 'From: MOI <comment@example.com>'. "\r\n";
+            $headers.= 'X-Mailer: PHP/'.phpversion();
 
-    }}}}
+      mail($to, $subject, $message,$headers);
+
+
+   }}}
 }

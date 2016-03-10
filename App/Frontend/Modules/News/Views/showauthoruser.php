@@ -12,10 +12,11 @@ foreach ($listnews as $news)
     <?php
 }?>
     <h1> Les Commentaires postés par <?= $auteur  ?></h1> <?php
-if (empty($liscom))
+if (empty($listcom))
 {
     ?>  <p> Aucun commentaire posté par  <?= $auteur  ?></p>
 <?php }
+else {
 foreach ($listcom as $com)
 { ?>
 
@@ -26,4 +27,4 @@ foreach ($listcom as $com)
 
 
     <?php
-}?>
+}}?>

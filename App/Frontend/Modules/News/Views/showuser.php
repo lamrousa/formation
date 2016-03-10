@@ -16,6 +16,7 @@ if (empty($listcom))
 {
     ?>  <p> Aucun commentaire posté par  <?= $auteur  ?></p>
 <?php }
+else {
 foreach ($listcom as $com)
 { ?>
 
@@ -26,4 +27,4 @@ foreach ($listcom as $com)
 
 
     <?php
-}?>
+}}?>

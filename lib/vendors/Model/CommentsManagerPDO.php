@@ -32,12 +32,13 @@ class CommentsManagerPDO extends CommentsManager
 
     public function getListOf($news)
     {
+        date_default_timezone_set("Europe/Paris");
         if (!ctype_digit($news))
         {
             throw new \InvalidArgumentException('L\'identifiant de la news passé doit être un nombre entier valide');
         }
 
-        $q = $this->dao->prepare('SELECT id, news, auteur, contenu, date FROM comments WHERE news = :news');
+        $q = $this->dao->prepare('SELECT id, news, auteur, contenu, email, date FROM comments WHERE news = :news');
         $q->bindValue(':news', $news, \PDO::PARAM_INT);
         $q->execute();
 
@@ -71,6 +72,7 @@ class CommentsManagerPDO extends CommentsManager
         $q->execute();
 
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
+
         return $q->fetch();
     }
 
@@ -84,5 +86,14 @@ class CommentsManagerPDO extends CommentsManager
         return $q->fetchAll();
 
     }
+    public function getListByCommentAuthor($author)
+    {
+        $q=$this->dao->prepare('SELECT news.titre, comments.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.auteur = :auteur');
+        $q->bindValue(':auteur',$author, \PDO::PARAM_STR);
+        $q->execute();
+
+        return $q->fetchAll();
+    }
+
 
 }
