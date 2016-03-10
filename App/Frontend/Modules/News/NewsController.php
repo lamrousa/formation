@@ -128,11 +128,12 @@ class NewsController extends BackController
     public function executeMynews(HTTPRequest $request)
     {
         $this->page->addVar('title', 'Mes news');
-        die();
         $manager = $this->managers->getManagerOf('News');
 
-        var_dump($manager->getListByAuthor($this->app()->user()));
+
         $this->page->addVar('listeNews', $manager->getListByAuthor($this->app()->user()->getAttribute('log')));
+
+
 
         $this->page->addVar('nombreNews', $manager->count());
     }
@@ -203,5 +204,50 @@ class NewsController extends BackController
         }
 
         $this->page->addVar('form', $form->createView());
+    }
+    public function executeShowuser(HTTPRequest $request)
+    {
+        if ($request->method() == 'POST')
+    {
+        $auteur =  $request->postData('auteur');
+
+    }
+    else
+    {
+        $auteur = $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur();
+    }
+        $ListCom=$this->managers->getManagerOf('Comments')->getListByAuthor($auteur);
+        $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur);
+
+        $this->page->addVar('listnews', $listenews);
+        $this->page->addVar('listcom', $ListCom);
+
+        $this->page->addVar('auteur',$auteur);
+
+
+    }
+    public function executeShowauthoruser(HTTPRequest $request)
+    {
+        if ($request->method() == 'POST')
+        {
+            $auteur =  $request->postData('auteur');
+
+        }
+        else
+        {
+            $auteur = $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur();
+        }
+        $ListCom=$this->managers->getManagerOf('Comments')->getListByAuthor($auteur);
+
+
+        $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur);
+
+        $this->page->addVar('listnews', $listenews);
+        $this->page->addVar('listcom', $ListCom);
+        $this->page->addVar('auteur',$auteur);
+
+
+
+
     }
 }

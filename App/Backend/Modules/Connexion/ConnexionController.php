@@ -26,7 +26,9 @@ class ConnexionController extends BackController
             }
         }
         else {
+            $this->app->user()->setFlash('Vous êtes déjà connectés en tant que User. Veuillez vous deconnecter');
             $this->app->httpResponse()->redirect404();
+
         }
     }
     public function executeLogout (HTTPRequest $request)

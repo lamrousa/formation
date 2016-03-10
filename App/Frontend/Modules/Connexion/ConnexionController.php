@@ -40,29 +40,36 @@ class ConnexionController extends BackController
     public function executeLogin (HTTPRequest $request)
     {
         $this->page->addVar('title','login');
-        if ($request->postExists('llogin'))
-        {
+        if ($request->postExists('llogin')) {
             $login = $request->postData('llogin');
             $password = $request->postData('lpassword');
 
             //var_dump($this->managers->getManagerOf('Users')->getUser($login)); die();
-        if ($login==$this->managers->getManagerOf('Users')->getUser($login)->login() && $password==$this->managers->getManagerOf('Users')->getUser($login)->password())
+            if ($this->managers->getManagerOf('Users')->getUser($login) != NULL)
             {
-                if ( $this->app->user()->isAuthenticated() ==false )
-                {
-                    $this->app->user()->setIsUser(true);
+                if ($login == $this->managers->getManagerOf('Users')->getUser($login)->login() && $password == $this->managers->getManagerOf('Users')->getUser($login)->password()) {
+                    if ($this->app->user()->isAuthenticated() == false) {
+                        $this->app->user()->setIsUser(true);
 
-                    $this->page->addVar('user',$this->managers->getManagerOf('Users')->getUser($login));
+                        $this->page->addVar('user', $this->managers->getManagerOf('Users')->getUser($login));
 
-                    $this->managers->getManagerOf('Users')->getUser($login)->setAttribute( 'log',$this->managers->getManagerOf('Users')->getUser($login)->login());
-                    $this->managers->getManagerOf('Users')->getUser($login)->setAttribute( 'mail',$this->managers->getManagerOf('Users')->getUser($login)->email());
+                        $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('log', $this->managers->getManagerOf('Users')->getUser($login)->login());
+                        $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('mail', $this->managers->getManagerOf('Users')->getUser($login)->email());
 
 
-                    $this->app->user()->setFlash('Connexion Reussie');
-                    $this->app->httpResponse()->redirect('.');
+                        $this->app->user()->setFlash('Connexion Reussie');
+                        $this->app->httpResponse()->redirect('.');
+
+                    }
 
                 }
+                else {
+                    $this->app->user()->setFlash('login ou mdp incorrect');
 
+                }
+            }
+            else {
+                $this->app->user()->setFlash('login ou mdp incorrect');
             }
         }
 

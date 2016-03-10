@@ -87,10 +87,10 @@ class NewsManagerPDO extends NewsManager
     }
     public function getListByAuthor($login)
     {
-        $q=$this->dao->prepare('SELECT id, auteur, titre, contenu, dateAjout, dateModif FROM news WHERE auteur = :auteur  ORDER BY id DESC');
-        $q->bindValue(':auteur', $login, \PDO::PARAM_STR);
-
-        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\News');
+        $q=$this->dao->prepare('SELECT id, auteur, titre, contenu, dateAjout, dateModif FROM news WHERE auteur = :auteur ORDER BY id DESC');
+       $q->bindValue(':auteur', $login, \PDO::PARAM_STR);
+        $q->execute();
+       $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\News');
 
         $listeNews = $q->fetchAll();
 
