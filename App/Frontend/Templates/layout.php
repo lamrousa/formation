@@ -27,20 +27,20 @@
                 <li><a href="/admin/logout.html">Deconnexion</a></li>
 
 
-            <?php } ?>
+            <?php }  ;?>
             <?php if ($user->isUser() ) {?>
-            <li><a href="/logout.html">Deconnexion</a></li>
-                <li><a href="/add-news.html">Ajouter une news</a></li>
+            <li><a href="<?=$Connexionlogout?>">Deconnexion</a></li>
+                <li><a href="<?=$Newsinsert?>">Ajouter une news</a></li>
                 <li><a href="/mynews.html">Mes news</a></li>
 
 
 
 
-            <?php } ?>
+            <?php } if (isset($Connexionsignup) && isset($Connexionlogin)) {?>
             <?php if ($user->isAuthenticated() ==false && $user->isUser() ==false ) {?>
-                <li><a href="/registration.html">Inscription</a></li>
-            <li><a href="/authentification.html">Connexion</a></li>
-            <?php } ?>
+                <li><a href="<?=$Connexionsignup?>">Inscription</a></li>
+            <li><a href="<?=$Connexionlogin?>">Connexion</a></li>
+            <?php } }?>
 
 
 

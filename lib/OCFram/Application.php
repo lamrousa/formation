@@ -99,36 +99,11 @@ abstract class Application
         return $this->user;
     }
 
-    /*
+/*
 * Retourne le lien à inserer dans le layout
 * type : nom de l'application , Frontend et Backend
 * $module: nom du controller propre au module
 * action :  associée au module
-*
-    public function getLink($module, $action)
-    {
-      if (is_string($module) )
-            {
-                if (is_string($action))
-                {
-                    $xml = new \DOMDocument;
-                    $xml->load(__DIR__.'/../../App/'.$this->name.'/Config/routes.xml');
+**/
 
-                    $routes = $xml->getElementsByTagName('route');
-                    foreach ($routes as $route)
-                    {
-                        if ($route->getAttribute('module') == $module && $route->getAttribute('action')==$action)
-                        {
-                          return $route->getAttribute('url');
-                            break;
-                        }
-                    }
-                    $this->httpResponse->redirect404();
-                }
-                return new InvalidArgumentException('L \'action doit être une chaine de caractères ');
-
-            }
-        return new InvalidArgumentException('Le nom du module doit être une chaine de caractères ');
-
-    }*/
 }
