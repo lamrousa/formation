@@ -116,6 +116,8 @@ class NewsController extends BackController
         $this->page->addVar('comment', $comment);
         $this->page->addVar('form', $form->createView());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
+
+        $this->executeSendmail($request->getData('news'));
     }
 /*Ajout user */
     public function executeInsert(HTTPRequest $request)
@@ -250,4 +252,30 @@ class NewsController extends BackController
 
 
     }
+    public function executeSendmail($id)
+    {
+
+     $listcomment=$this->managers->getManagerOf('Comments')->get($id);
+        if (!empty($listcomment))
+        {
+            $email = [];
+            foreach ($listcomment as $com) {
+                if ($com->email() !=NULL)
+                {
+
+            $email[]=$com->email() ;
+                $email=array_unique($email);
+        $to      = $email;
+     $subject = 'Une nouvelle personne a aussi commenté la news';
+     $message = 'Bonjour ! Une nouvelle personne a aussi commenté la news! Réagissez vite ';
+        $headers   = array();
+        $headers[] = "MIME-Version: 1.0";
+        $headers[] = "Content-type: text/plain; charset=iso-8859-1";
+        $headers[] = "From: Sender Name <exemple@domain.com>";
+        $headers[] = "Subject: {$subject}";
+        $headers[] = "X-Mailer: PHP/".phpversion();
+
+      mail($to, $subject, $email, implode("\r\n", $headers));
+
+    }}}}
 }
