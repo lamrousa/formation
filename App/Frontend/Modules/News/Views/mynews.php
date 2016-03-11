@@ -1,6 +1,7 @@
 <h1>Profil de  <?= $log ?></h1>
 <h2>Mes News</h2>
 <?php
+
 if (empty($listeNews))
 {
     ?>  <p> Aucune news postée    <a href="/add-news.html">Ajouter une news </a>
@@ -10,7 +11,11 @@ if (empty($listeNews))
   <?php
   foreach ($listeNews as $news)
   {
-    echo '<tr><td>', $news['titre'], '</td><td>le ', $news['dateAjout']->format('d/m/Y à H\hi'), '</td><td>', ($news['dateAjout'] == $news['dateModif'] ? '-' : 'le '.$news['dateModif']->format('d/m/Y à H\hi')), '</td><td><a href="news-update-', $news['id'], '.html"><img src="/images/update.png" alt="Modifier" /></a> <a href="news-delete-', $news['id'], '.html"><img src="/images/delete.png" alt="Supprimer" /></a></td></tr>', "\n";
+      $update = str_replace('([0-9]+)',$news['id'],$Newsupdate) ;
+      $delete = str_replace('([0-9]+)',$news['id'],$Newsdelete) ;
+
+
+      echo '<tr><td>', $news['titre'], '</td><td>le ', $news['dateAjout']->format('d/m/Y à H\hi'), '</td><td>', ($news['dateAjout'] == $news['dateModif'] ? '-' : 'le '.$news['dateModif']->format('d/m/Y à H\hi')), '</td><td><a href="',$update, '"><img src="/images/update.png" alt="Modifier" /></a> <a href="',$delete,'"><img src="/images/delete.png" alt="Supprimer" /></a></td></tr>', "\n";
   }
   ?>
 </table>
@@ -38,11 +43,15 @@ foreach ($listeCom as $com)
     <td><?= nl2br($com['contenu']) ?></td>
 
     <td>Le <?=  $com['date']?> </td>
-    <td>   <a href="news-<?= $com['news'] ?>.html"> <?= $titre ?></a> </td>
+    <?php $show = str_replace('([0-9]+)',$news['id'],$Newsshow);
+    $comupdate = str_replace('([0-9]+)',$com['id'],$NewsupdateComment);
+    $comdelete=str_replace('([0-9]+)',$com['id'],$NewsdeleteComment);
+            ?>
+    <td>   <a href="<?=$show?>"> <?= $titre ?></a> </td>
     <td>
 
 
-        <a href="comment-update-<?= $com['id'] ?>.html"><img src="/images/update.png" alt="Modifier" /></a> <a href="comment-delete-<?= $com['id'] ?>.html"><img src="/images/delete.png" alt="Supprimer" /></a></td>
+        <a href="<?= $comupdate?>"><img src="/images/update.png" alt="Modifier" /></a> <a href="<?= $comdelete ?>"><img src="/images/delete.png" alt="Supprimer" /></a></td>
 </table>
 
 <?php }}

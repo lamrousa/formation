@@ -28,6 +28,8 @@ class ConnexionController extends BackController
             $this->managers->getManagerOf('Users')->addUser($user);
             $this->page->addVar('OutUser',$user);
             $this->app->user()->setFlash('Inscription reussie');
+            $this->app->httpResponse()->redirect('.');
+
         }
             else {
                 $this->app->user()->setFlash('Login déjà utilisé');

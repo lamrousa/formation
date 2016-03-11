@@ -1,4 +1,9 @@
-<p>Par <em><a href="showauthoruser-<?= $news['id'] ?>.html"><?= $news['auteur'] ?></em> </a>, le <?= $news['dateAjout']->format('d/m/Y à H\hi') ?></p>
+<?php
+$showauthoruser = str_replace('([0-9]+)',$news['id'],$Newsshowauthoruser) ;
+
+ ?>
+
+<p>Par <em><a href="<?= $showauthoruser ?>"><?= $news['auteur'] ?></em> </a>, le <?= $news['dateAjout']->format('d/m/Y à H\hi') ?></p>
 <h2><?= $news['titre'] ?></h2>
 <p><?= nl2br($news['contenu']) ?></p>
 
@@ -18,19 +23,24 @@ if (empty($comments))
 
 foreach ($comments as $comment)
 {
+  $showuser = str_replace('([0-9]+)',$comment['id'],$Newsshowuser) ;
+  $updateComment = str_replace('([0-9]+)',$comment['id'],$NewsupdateComment) ;
+  $deleteComment = str_replace('([0-9]+)',$comment['id'],$NewsdeleteComment) ;
   ?>
   <fieldset>
     <legend>
-      Posté par <strong><a href="showuser-<?= $comment['id'] ?>.html"><?= htmlspecialchars($comment['auteur']) ?></strong> </a>le <?= $comment['date']->format('d/m/Y à H\hi') ?>
+      Posté par <strong><a href="<?= $showuser ?>"><?= htmlspecialchars($comment['auteur']) ?></strong> </a>le <?= $comment['date']->format('d/m/Y à H\hi') ?>
       <?php if ($user->isAuthenticated()) { ?> -
-        <a href="admin/comment-update-<?= $comment['id'] ?>.html">Modifier</a> |
-        <a href="admin/comment-delete-<?= $comment['id'] ?>.html">Supprimer</a>
+        <a href="<?= $updateComment ?>">Modifier</a> |
+        <a href="<?= $deleteComment ?>">Supprimer</a>
       <?php } ?>
     </legend>
     <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>
   </fieldset>
   <?php
 }
+$insertComment = str_replace('([0-9]+)',$news['id'],$NewsinsertComment) ;
+
 ?>
 
-<p><a href="commenter-<?= $news['id'] ?>.html">Ajouter un commentaire</a></p>
+<p><a href="<?= $insertComment ?>">Ajouter un commentaire</a></p>

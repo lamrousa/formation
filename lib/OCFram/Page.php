@@ -57,12 +57,22 @@ class Page extends ApplicationComponent
 
                 $routes = $xml->getElementsByTagName('route');
                 foreach ($routes as $route)
-                {   if (! $route->hasAttribute('vars'))
+               // {   if (! $route->hasAttribute('vars'))
 
                     {
+
                         $module_route=$route->getAttribute('module');
                         $module_route .=$route->getAttribute('action');
-                        $url = trim($route->getAttribute('url'),"/");
+                        if (strstr($route->getAttribute('url'),'admin'))
+                        {
+                            $module_route = 'admin'.$module_route;
+                        }
+                        $url = $route->getAttribute('url');
+
+                        if (strstr($route->getAttribute('url'),'admin') == false  && strlen($url)!= 1)
+                        {
+                            $url = trim($url, "/");
+                        }
                         $url = stripslashes ($url);
 
 
@@ -70,8 +80,8 @@ class Page extends ApplicationComponent
                         $this->addLinks( $module_route,$url);
 
                     }
-                }
-                return NULL;
+                //}
+                //return NULL;
 
 
     }

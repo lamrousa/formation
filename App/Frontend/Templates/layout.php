@@ -19,12 +19,18 @@
 
     <nav>
         <ul>
-            <li><a href="/">Accueil</a></li>
 
-            <?php if ($user->isAuthenticated()) { ?>
-                <li><a href="/admin/">Admin</a></li>
-                <li><a href="/admin/news-insert.html">Ajouter une news</a></li>
-                <li><a href="/admin/logout.html">Deconnexion</a></li>
+            <?php if ($user->isAuthenticated() == false ) {?>
+            <li><a href="/">Accueil</a></li>
+            <?php } else {
+            ?>
+            <li><a href="<?=$adminNewsindex?>">Accueil</a></li>
+
+            <?php }
+            if ($user->isAuthenticated()) { ?>
+                <li><a href="<?=$adminNewsindex?>">Admin</a></li>
+                <li><a href="<?=$adminNewsinsert?>">Ajouter une news</a></li>
+                <li><a href="<?=$adminConnexionlogout?>">Deconnexion</a></li>
 
 
             <?php }  ;?>
