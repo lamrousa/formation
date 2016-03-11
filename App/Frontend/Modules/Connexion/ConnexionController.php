@@ -16,7 +16,11 @@ class ConnexionController extends BackController
             $AUC_login = $request->postData('slogin');
             $AUC_password = $request->postData('spassword');
             $AUC_email = $request->postData('semail');
-
+            $confirmation = $request->postData('spassword2');
+        if (filter_var($AUC_email, FILTER_VALIDATE_EMAIL))
+        {
+            if ($AUC_password == $confirmation)
+            {
             var_dump($AUC_login);var_dump($AUC_password);  var_dump($AUC_email) ;
         if ($this->managers->getManagerOf('Users')->getUser($AUC_login) == NULL )
         {
@@ -25,9 +29,16 @@ class ConnexionController extends BackController
             $user->setPassword($AUC_password);
             $user->setEmail($AUC_email);
 
+
             $this->managers->getManagerOf('Users')->addUser($user);
             $this->page->addVar('OutUser',$user);
-            $this->app->user()->setFlash('Inscription reussie');
+            $this->app->user()->setFlash('Inscription reussie ! Bienvenue,'.$AUC_login);
+            $this->app->user()->setIsUser(true);
+
+            $this->managers->getManagerOf('Users')->getUser($AUC_login)->setAttribute('id', $this->managers->getManagerOf('Users')->getUser($AUC_login)->id());
+            $this->managers->getManagerOf('Users')->getUser($AUC_login)->setAttribute('log', $this->managers->getManagerOf('Users')->getUser($AUC_login)->login());
+            $this->managers->getManagerOf('Users')->getUser($AUC_login)->setAttribute('mail', $this->managers->getManagerOf('Users')->getUser($AUC_login)->email());
+
             $this->app->httpResponse()->redirect('.');
 
         }
@@ -35,6 +46,11 @@ class ConnexionController extends BackController
                 $this->app->user()->setFlash('Login déjà utilisé');
 
             }
+        }
+            else $this->app->user()->setFlash('Les deux mots de passe ne correspondent pas ');
+
+        }
+            else $this->app->user()->setFlash('L\'email est invalide');
         }
 
 
@@ -53,10 +69,10 @@ class ConnexionController extends BackController
                     if ($this->app->user()->isAuthenticated() == false) {
                         $this->app->user()->setIsUser(true);
 
-                        $this->page->addVar('user', $this->managers->getManagerOf('Users')->getUser($login));
 
+                        $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('id', $this->managers->getManagerOf('Users')->getUser($login)->id());
                         $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('log', $this->managers->getManagerOf('Users')->getUser($login)->login());
-                        $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('mail', $this->managers->getManagerOf('Users')->getUser($login)->email());
+                       $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('mail', $this->managers->getManagerOf('Users')->getUser($login)->email());
 
 
                         $this->app->user()->setFlash('Connexion Reussie');

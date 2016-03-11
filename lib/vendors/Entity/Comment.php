@@ -48,8 +48,7 @@ class Comment extends Entity
     }
 
     public function setDate(\DateTime $date)
-    {           date_default_timezone_set("Europe/Paris");
-
+    {
 
         $this->date = $date;
     }

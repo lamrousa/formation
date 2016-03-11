@@ -10,6 +10,9 @@
     <label>Mot de passe</label>
     <input type="password" name="spassword" /><br /><br />
 
+    <label>Veuillez Confirmer votre mot de passe</label>
+    <input type="password" name="spassword2" /><br /><br />
+
 
     <input type="submit" value="signin" />
 </form>

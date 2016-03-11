@@ -40,7 +40,6 @@ class NewsManagerPDO extends NewsManager
 
         $listeNews = $requete->fetchAll();
 
-        date_default_timezone_set("Europe/Paris");
 
 
         foreach ($listeNews as $news)
@@ -55,7 +54,7 @@ class NewsManagerPDO extends NewsManager
     }
 
     public function getUnique($id)
-    {         date_default_timezone_set("Europe/Paris");
+    {
 
         $requete = $this->dao->prepare('SELECT id, auteur, titre, contenu, dateAjout, dateModif FROM news WHERE id = :id');
         $requete->bindValue(':id', (int) $id, \PDO::PARAM_INT);
@@ -94,7 +93,6 @@ class NewsManagerPDO extends NewsManager
 
         $listeNews = $q->fetchAll();
 
-        date_default_timezone_set("Europe/Paris");
 
 
         foreach ($listeNews as $news)
@@ -107,5 +105,31 @@ class NewsManagerPDO extends NewsManager
 
         return $listeNews;
 
+    }
+    public function getIdOfAuthorUsingId($id)
+    {
+        $q=$this->dao->prepare('SELECT AUC_id,AUC_login,AUC_password,AUC_state,AUC_email,AUC_dateAdd,AUC_dateEnd FROM t_app_userc
+ INNER JOIN t_app_authord ON AAD_fk_AUC=AUC_id
+ INNER JOIN news ON news.id=AAD_fk_news AND news.id= :id');
+
+        $q->bindValue(':id', $id, \PDO::PARAM_INT);
+        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\OutsideUser');
+        $q->execute();
+        return $q->fetch();
+
+
+    }
+    public function addnewsUser($user)
+    {
+        $requete = $this->dao->prepare('INSERT INTO t_app_authord (AAD_fk_AUC,AAD_fk_news)
+SELECT  AUC_id,news.id
+FROM news
+INNER JOIN t_app_userc ON news.auteur=AUC_login AND AUC_id= :auteur
+ORDER BY news.id DESC
+LIMIT 1');
+
+        $requete->bindValue(':auteur', $user,\PDO::PARAM_INT);
+
+        $requete->execute();
     }
 }

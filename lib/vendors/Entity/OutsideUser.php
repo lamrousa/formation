@@ -12,6 +12,7 @@ use OCFram\User;
 
 class OutsideUser extends User
 {
+    protected $AUC_id;
     protected $AUC_login;
     protected $AUC_password;
     protected $AUC_email;
@@ -88,4 +89,13 @@ class OutsideUser extends User
         return $this->AUC_email;
     }
 
+    public function id()
+    {
+        return $this->AUC_id;
+    }
+
+    public function setId($AUC_id)
+    {
+        $this->AUC_id = $AUC_id;
+    }
 }

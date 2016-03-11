@@ -1,5 +1,4 @@
 <?php
-
 foreach ($listeNews as $news)
 {
     ?>

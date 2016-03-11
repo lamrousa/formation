@@ -1,6 +1,7 @@
 <?php
 namespace FormBuilder;
 
+use OCFram\EmailValidator;
 use \OCFram\FormBuilder;
 use \OCFram\StringField;
 use \OCFram\TextField;
@@ -26,6 +27,7 @@ class CommentFormBuilder extends FormBuilder
             'maxLength' => 50,
             'validators' => [
                 new MaxLengthValidator('L\'auteur spécifié est trop long (50 caractères maximum)', 50)],
+                new EmailValidator('L\'Email indiquée n\'est pas valide'),
         ]))
 
             ->add(new TextField([

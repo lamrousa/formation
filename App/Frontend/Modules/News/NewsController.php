@@ -51,6 +51,7 @@ class NewsController extends BackController
     public function executeShow(HTTPRequest $request)
     {
         $news = $this->managers->getManagerOf('News')->getUnique($request->getData('id'));
+        $auteur= $this->managers->getManagerOf('News')->getIdOfAuthorUsingId($request->getData('id'));
 
         if (empty($news))
         {
@@ -60,6 +61,9 @@ class NewsController extends BackController
         $this->page->addVar('title', $news->titre());
         $this->page->addVar('news', $news);
         $this->page->addVar('comments', $this->managers->getManagerOf('Comments')->getListOf($news->id()));
+        $authors=$this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->id());
+        $this->page->addVar('authors',$authors);
+        $this->page->addVar('auteur',$auteur);
     }
 
     public function executeInsertComment(HTTPRequest $request)
@@ -149,58 +153,93 @@ class NewsController extends BackController
     }
     public function executeDeleteComment(HTTPRequest $request)
     {
+
+        if ($this->managers->getManagerOf('Comments')->get($request->getData('id')) ==false )
+    {
+        $this->app->httpResponse()->redirect404();
+    }
+    else {
+       if ( $this->app->user()->getAttribute('log')==$this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur())
+       {
         $this->managers->getManagerOf('Comments')->delete($request->getData('id'));
 
         $this->app->user()->setFlash('Le commentaire a bien été supprimé !');
 
         $this->app->httpResponse()->redirect('.');
-    }
-
-    public function executeUpdateComment(HTTPRequest $request)
-    {
-        $this->page->addVar('title', 'Modification d\'un commentaire');
-
-        if ($request->method() == 'POST')
-        {
-            $comment = new Comment([
-                'id' => $request->getData('id'),
-                'auteur' => $this->app->user()->getAttribute('log'),
-                'contenu' => $request->postData('contenu')
-            ]);
         }
         else
         {
-            $comment = $this->managers->getManagerOf('Comments')->get($request->getData('id'));
+            $this->app->httpResponse()->redirect404();
         }
-
-        $formBuilder = new CommentFormBuilder($comment);
-        $formBuilder->buildUser();
-
-        $form = $formBuilder->form();
-
-        $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
-
-        if ($formHandler->process())
-        {
-            $this->app->user()->setFlash('Le commentaire a bien été modifié');
-
-            $this->app->httpResponse()->redirect('.');
-        }
-
-        $this->page->addVar('form', $form->createView());
     }
-   public function executeUpdate(HTTPRequest $request)
-    {
-        if ($this->app->user()->isUser() == true)
-        {
-        $this->processForm($request);
+    }
 
-        $this->page->addVar('title', 'Modification d\'une news');
+    public function executeUpdateComment(HTTPRequest $request)
+    {        if ($this->managers->getManagerOf('Comments')->get($request->getData('id')) ==false )
+        {
+            $this->app->httpResponse()->redirect404();
+        }
+    else {
+        $this->page->addVar('title', 'Modification d\'un commentaire');
+
+        if ($this->app->user()->getAttribute('log') == $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur()) {
+            if ($request->method() == 'POST') {
+                $comment = new Comment([
+                    'id' => $request->getData('id'),
+                    'auteur' => $this->app->user()->getAttribute('log'),
+                    'contenu' => $request->postData('contenu')
+                ]);
+            } else {
+                $comment = $this->managers->getManagerOf('Comments')->get($request->getData('id'));
+            }
+
+            $formBuilder = new CommentFormBuilder($comment);
+            $formBuilder->buildUser();
+
+            $form = $formBuilder->form();
+
+            $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
+
+            if ($formHandler->process()) {
+                $this->app->user()->setFlash('Le commentaire a bien été modifié');
+
+                $this->app->httpResponse()->redirect('.');
+            }
+
+            $this->page->addVar('form', $form->createView());
+        } else
+        {
+            $this->app->httpResponse()->redirect404();
+
+        }
     }}
+   public function executeUpdate(HTTPRequest $request)
+   {
+       if ($this->managers->getManagerOf('News')->getUnique($request->getData('id')  ) === NULL)
+
+       {                $this->app->httpResponse()->redirect404(); }
+       else
+       {
+           if ($this->app->user()->getAttribute('log') == $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur()) {
+
+
+               $this->processForm($request);
+
+               $this->page->addVar('title', 'Modification d\'une news');
+           }
+           else
+           {
+               $this->app->httpResponse()->redirect404();
+           }
+
+
+
+       }}
 
     public function executeDelete(HTTPRequest $request)
-    {if ($this->app->user()->isUser() == true)
+    {          if ($this->managers->getManagerOf('News')->getUnique($request->getData('id'))!= NULL)
     {
+        if ($this->app->user()->getAttribute('log') == $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur()) {
         $newsId = $request->getData('id');
 
         $this->managers->getManagerOf('News')->delete($newsId);
@@ -209,7 +248,18 @@ class NewsController extends BackController
         $this->app->user()->setFlash('La news a bien été supprimée !');
 
         $this->app->httpResponse()->redirect('.');
-    }}
+    }
+        else {
+            $this->app->httpResponse()->redirect404();
+
+        }
+    }
+    else {
+        $this->app->httpResponse()->redirect404();
+
+    }
+
+    }
     public function processForm(HTTPRequest $request)
     {
         if ($request->method() == 'POST')
@@ -250,6 +300,7 @@ class NewsController extends BackController
 
         if ($formHandler->process())
         {
+            $this->managers->getManagerOf('News')->addnewsUser($this->app->user()->getAttribute('id'));
             $this->app->user()->setFlash($news->isNew() ? 'La news a bien été ajoutée !' : 'La news a bien été modifiée !');
 
             $this->app->httpResponse()->redirect('/./');
@@ -257,6 +308,10 @@ class NewsController extends BackController
 
         $this->page->addVar('form', $form->createView());
     }
+
+
+
+
     public function executeShowuser(HTTPRequest $request)
     {
         if ($request->method() == 'POST')
@@ -266,10 +321,14 @@ class NewsController extends BackController
     }
     else
     {
-        $auteur = $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur();
+        $auteur=$this->managers->getManagerOf('Users')->get($request->getData('id'));
+
+
     }
-        $ListCom=$this->managers->getManagerOf('Comments')->getListByAuthor($auteur);
-        $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur);
+        if ($auteur != NULL )
+        {
+        $ListCom=$this->managers->getManagerOf('Comments')->getListByAuthor($auteur->login());
+        $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur->login());
 
         $this->page->addVar('listnews', $listenews);
         $this->page->addVar('listcom', $ListCom);
@@ -277,7 +336,7 @@ class NewsController extends BackController
         $this->page->addVar('auteur',$auteur);
 
 
-    }
+    }}
     public function executeShowauthoruser(HTTPRequest $request)
     {
         if ($request->method() == 'POST')
@@ -287,20 +346,17 @@ class NewsController extends BackController
         }
         else
         {
-            $auteur = $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur();
+
+            $auteur = $this->managers->getManagerOf('Users')->get($request->getData('id'));
         }
-        $ListCom=$this->managers->getManagerOf('Comments')->getListByAuthor($auteur);
+        $ListCom=$this->managers->getManagerOf('Comments')->getListByAuthor($auteur->login());
 
 
-        $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur);
+        $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur->login());
 
         $this->page->addVar('listnews', $listenews);
         $this->page->addVar('listcom', $ListCom);
         $this->page->addVar('auteur',$auteur);
-
-
-
-
     }
     public function sendmail($id)
     {
