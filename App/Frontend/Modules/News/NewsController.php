@@ -46,7 +46,7 @@ class NewsController extends BackController
 
         // On ajoute la variable $listeNews à la vue.
         $this->page->addVar('listeNews', $listeNews);
-        $this->page->getSpecificLink('News','index');
+       // $this->page->getSpecificLink('News','index');
     }
 
     public function executeShow(HTTPRequest $request)

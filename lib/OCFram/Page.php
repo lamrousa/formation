@@ -107,7 +107,15 @@ class Page extends ApplicationComponent
             $url = stripslashes ($url);
 
 
-            substr_count($module_route,)
+            $count=substr_count($module_route,'([0-9]+)');
+                $pos= 0;
+                $len=strlen('([0-9]+)');
+
+                for ($i = 0; $i<=$count; $i++)
+                {
+                    $pos=strpos($module_route,'([0-9]+)',$pos);
+                    substr_replace($module_route,$vars[$count],$pos,$pos+$len);
+                }
             $this->addVar( $module_route,$url);
 
 
