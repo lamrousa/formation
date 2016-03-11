@@ -46,6 +46,8 @@ h2 {
 	font-size: 140%;
 	text-transform: uppercase;
 	color: #88ac0b;
+	hyphens: auto;
+
 }
 h3 {
 	font-size: 120%;
@@ -64,8 +66,11 @@ img.float-left {
 }
 
 h1, h2, h3, p {
-	padding: 10px;		
+	padding: 10px;
 	margin: 0;
+	word-wrap: break-word;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 ul, ol {
 	margin: 5px 20px;
@@ -97,7 +102,9 @@ blockquote {
 /* start - table */
 table {
 	border-collapse: collapse;
-	margin: 10px;	
+	margin : auto;
+	text-align: center;
+
 }
 th strong {
 	color: #fff;
@@ -117,13 +124,22 @@ form th {
 }
 tr {
 	height: 30px;
+	width: 50px;
+	word-wrap: break-word;
+	overflow-y: auto;
+	overflow-x: auto;
 }
 td {
+	max-width: 50px;
+	max-height: 50px;
 	padding-left: 5px;
 	padding-right: 5px;
 	border-left: 1px solid #FFF;
-	border-bottom: solid 1px #ffffff;
-    text-align: center;
+	border-bottom: solid 1px #FFFFFF;
+	text-align: center;
+	word-wrap: break-word;
+	overflow-y: auto;
+	overflow-x: auto;
 }
 form td {
     text-align: left;

@@ -46,6 +46,7 @@ class NewsController extends BackController
 
         // On ajoute la variable $listeNews à la vue.
         $this->page->addVar('listeNews', $listeNews);
+        $this->page->getSpecificLink('News','index');
     }
 
     public function executeShow(HTTPRequest $request)
@@ -309,9 +310,6 @@ class NewsController extends BackController
         $this->page->addVar('form', $form->createView());
     }
 
-
-
-
     public function executeShowuser(HTTPRequest $request)
     {
         if ($request->method() == 'POST')
@@ -388,4 +386,5 @@ class NewsController extends BackController
 
 
    }}}
+
 }

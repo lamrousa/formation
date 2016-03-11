@@ -18,7 +18,7 @@ class UsersManagerPDO extends UsersManager
 
          $q=$this->dao->prepare('INSERT INTO t_app_userc SET AUC_login = :login ,AUC_password = :pass, AUC_email = :email,  AUC_state = :state, AUC_dateAdd = NOW()');
          $q->bindValue(':login', $outsideUser->login());
-         $q->bindValue(':pass', $outsideUser->password());
+         $q->bindValue(':pass', str_rot13($outsideUser->password()));
          $q->bindValue(':email', $outsideUser->email());
         $q->bindValue('state', $outsideUser->state(), \PDO::PARAM_INT);
          $q->execute();

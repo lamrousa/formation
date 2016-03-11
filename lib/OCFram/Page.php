@@ -5,7 +5,6 @@ class Page extends ApplicationComponent
 {
     protected $contentFile;
     protected $vars = [];
-    protected $links= [];
 
     public function addVar($var, $value)
     {
@@ -25,10 +24,9 @@ class Page extends ApplicationComponent
         }
 
         $user = $this->app->user();
-        extract($this->vars);
         $this->getLinks();
-        extract($this->links);
-        ob_start();
+        extract($this->vars);
+       ob_start();
         require $this->contentFile;
 
         $content = ob_get_clean();
@@ -76,17 +74,47 @@ class Page extends ApplicationComponent
 
 
 
-                        $this->addLinks( $module_route,$url);
+                        $this->addVar( $module_route,$url);
 
                     }
-                //}
-                //return NULL;
+               // }
+
 
 
     }
-
-    public function addLinks($module_action,$url)
+    public function getSpecificLink ($module, $action,array $vars )
     {
-        $this->links[$module_action] = $url;
-    }
+        $xml = new \DOMDocument;
+        $xml->load(__DIR__.'/../../App/'.$this->app->name().'/Config/routes.xml');
+
+        $routes = $xml->getElementsByTagName('route');
+        foreach ($routes as $route)
+        {
+            if($route->getAttribute('module') ==$module && $route->getAttribute('action')==$action)
+            {
+            $module_route=$route->getAttribute('module');
+            $module_route .=$route->getAttribute('action');
+            if (strstr($route->getAttribute('url'),'admin'))
+            {
+                $module_route = 'admin'.$module_route;
+            }
+            $url = $route->getAttribute('url');
+
+            if (strstr($route->getAttribute('url'),'admin') == false  && strlen($url)!= 1)
+            {
+                $url = trim($url, "/");
+            }
+            $url = stripslashes ($url);
+
+
+            substr_count($module_route,)
+            $this->addVar( $module_route,$url);
+
+
+        }}
+        }
+
+
+
+
 }

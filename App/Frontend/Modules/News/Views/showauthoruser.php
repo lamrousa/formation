@@ -14,7 +14,7 @@ foreach ($listnews as $news)
     <h1> Les Commentaires postés par <?= $auteur->login() ?></h1> <?php
 if (empty($listcom))
 {
-    ?>  <p> Aucun commentaire posté par  <?= $auteur  ?></p>
+    ?>  <p> Aucun commentaire posté par  <?= $auteur->login()  ?></p>
 <?php }
 else {
 foreach ($listcom as $com)

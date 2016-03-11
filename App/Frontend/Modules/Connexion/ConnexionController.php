@@ -30,6 +30,9 @@ class ConnexionController extends BackController
             $user->setEmail($AUC_email);
 
 
+          // var_dump( str_rot13(str_rot13($AUC_login))); die();
+
+
             $this->managers->getManagerOf('Users')->addUser($user);
             $this->page->addVar('OutUser',$user);
             $this->app->user()->setFlash('Inscription reussie ! Bienvenue,'.$AUC_login);
@@ -65,7 +68,7 @@ class ConnexionController extends BackController
             //var_dump($this->managers->getManagerOf('Users')->getUser($login)); die();
             if ($this->managers->getManagerOf('Users')->getUser($login) != NULL)
             {
-                if ($login == $this->managers->getManagerOf('Users')->getUser($login)->login() && $password == $this->managers->getManagerOf('Users')->getUser($login)->password()) {
+                if ($login == $this->managers->getManagerOf('Users')->getUser($login)->login() && $password == str_rot13($this->managers->getManagerOf('Users')->getUser($login)->password())) {
                     if ($this->app->user()->isAuthenticated() == false) {
                         $this->app->user()->setIsUser(true);
 
