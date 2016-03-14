@@ -68,6 +68,7 @@ class ConnexionController extends BackController
             //var_dump($this->managers->getManagerOf('Users')->getUser($login)); die();
             if ($this->managers->getManagerOf('Users')->getUser($login) != NULL)
             {
+
                 if ($login == $this->managers->getManagerOf('Users')->getUser($login)->login() && $password == str_rot13($this->managers->getManagerOf('Users')->getUser($login)->password())) {
                     if ($this->app->user()->isAuthenticated() == false) {
                         $this->app->user()->setIsUser(true);

@@ -54,7 +54,7 @@ class Page extends ApplicationComponent
 
                 $routes = $xml->getElementsByTagName('route');
                 foreach ($routes as $route)
-               // {   if (! $route->hasAttribute('vars'))
+               {   if (! $route->hasAttribute('vars'))
 
                     {
 
@@ -77,12 +77,12 @@ class Page extends ApplicationComponent
                         $this->addVar( $module_route,$url);
 
                     }
-               // }
+               }
 
 
 
     }
-    public function getSpecificLink ($module, $action,array $vars )
+    public function getSpecificLink ($module, $action,array $vars  )
     {
         $xml = new \DOMDocument;
         $xml->load(__DIR__.'/../../App/'.$this->app->name().'/Config/routes.xml');
@@ -107,16 +107,17 @@ class Page extends ApplicationComponent
             $url = stripslashes ($url);
 
 
-            $count=substr_count($module_route,'([0-9]+)');
+            $count=substr_count($url,'([0-9]+)');
                 $pos= 0;
                 $len=strlen('([0-9]+)');
 
-                for ($i = 0; $i<=$count; $i++)
+                for ($i = 0; $i<$count; $i++)
                 {
-                    $pos=strpos($module_route,'([0-9]+)',$pos);
-                    substr_replace($module_route,$vars[$count],$pos,$pos+$len);
+                    $pos=strpos($url,'([0-9]+)',$pos);
+
+                    $url=substr_replace($url,$vars[$count-1],$pos,$len);
                 }
-            $this->addVar( $module_route,$url);
+               return $url;
 
 
         }}

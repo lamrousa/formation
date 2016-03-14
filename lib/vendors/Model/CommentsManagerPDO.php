@@ -91,7 +91,7 @@ class CommentsManagerPDO extends CommentsManager
     }
     public function getListByCommentAuthor($author)
     {
-        $q=$this->dao->prepare('SELECT news.titre, comments.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.auteur = :auteur');
+        $q=$this->dao->prepare('SELECT news.id AS nid, news.titre, comments.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.auteur = :auteur');
         $q->bindValue(':auteur',$author, \PDO::PARAM_STR);
         $q->execute();
 

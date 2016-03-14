@@ -46,7 +46,14 @@ class NewsController extends BackController
 
         // On ajoute la variable $listeNews à la vue.
         $this->page->addVar('listeNews', $listeNews);
-       // $this->page->getSpecificLink('News','index');
+        foreach ($listeNews as $news)
+        {
+            $Newsshow[$news->id()]=$this->page->getSpecificLink('News','show', array($news->id()));
+
+
+        }
+        $this->page->addVar('Newsshow', $Newsshow);
+
     }
 
     public function executeShow(HTTPRequest $request)
@@ -61,10 +68,54 @@ class NewsController extends BackController
 
         $this->page->addVar('title', $news->titre());
         $this->page->addVar('news', $news);
+        $comments=$this->managers->getManagerOf('Comments')->getListOf($news->id());
         $this->page->addVar('comments', $this->managers->getManagerOf('Comments')->getListOf($news->id()));
         $authors=$this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->id());
         $this->page->addVar('authors',$authors);
         $this->page->addVar('auteur',$auteur);
+       if ($auteur != NULL )
+        {
+            $Newsshowauthoruser [$news->auteur()]=$this->page->getSpecificLink('News','showauthoruser', array($auteur->id()));
+
+        }
+        else {
+            $Newsshowauthoruser [$news->auteur()]= NULL;
+        }
+        $this->page->addVar('Newsshowauthoruser', $Newsshowauthoruser);
+
+
+        $NewsinsertComment[$news->id()]=$this->page->getSpecificLink('News','insertComment', array($news->id()));
+        $this->page->addVar('NewsinsertComment', $NewsinsertComment);
+
+
+
+if ($comments != NULL)
+{
+        foreach ( $comments as $com) {
+            $NewsupdateComment[$com->id()]=$this->page->getSpecificLink('News','updateComment', array($com->id()));
+            $NewsdeleteComment[$com->id()]=$this->page->getSpecificLink('News','deleteComment', array($com->id()));
+
+           if ($authors != NULL )
+           {
+            foreach($authors as $auth)
+            {
+                if ($auth->login()==$com['auteur']){
+
+                    $Newsshowuser [$com['auteur']] = $this->page->getSpecificLink('News','updateComment', array($auth->id()));
+            }
+                else $Newsshowuser [$com['auteur']] = NULL;
+
+        }
+
+           }
+            $Newsshowuser [$com['auteur']] = NULL;
+    }
+    $this->page->addVar('Newsshowuser', $Newsshowuser);
+    $this->page->addVar('NewsupdateComment', $NewsupdateComment);
+        $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
+
+
+    }
     }
 
     public function executeInsertComment(HTTPRequest $request)
@@ -143,13 +194,48 @@ class NewsController extends BackController
         $this->page->addVar('title', 'Mes news');
         $manager = $this->managers->getManagerOf('News');
 
-
+        $listeNews = $manager->getListByAuthor($this->app()->user()->getAttribute('log'));
         $this->page->addVar('listeNews', $manager->getListByAuthor($this->app()->user()->getAttribute('log')));
+        $listeCom=$this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('log'));
         $this->page->addVar('listeCom',$this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('log')));
-
+        $listeComnews=$this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('log'));
         $this->page->addVar('listeComnews',$this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('log')));
 
         $this->page->addVar('log',$this->app()->user()->getAttribute('log'));
+
+
+        if ($listeNews != NULL )
+        {
+        foreach ($listeNews as $news)
+        {
+            $Newsupdate[$news->id()]=$this->page->getSpecificLink('News','update', array($news->id()));
+            $Newsdelete[$news->id()]=$this->page->getSpecificLink('News','delete', array($news->id()));
+
+        }
+        $this->page->addVar('Newsupdate', $Newsupdate);
+        $this->page->addVar('Newsdelete', $Newsdelete);
+    }
+        if ($listeCom != NULL )
+    {
+        foreach ($listeCom as $com)
+        {
+            $NewsupdateComment[$com->id()]=$this->page->getSpecificLink('News','updateComment', array($com->id()));
+            $NewsdeleteComment[$com->id()]=$this->page->getSpecificLink('News','deleteComment', array($com->id()));
+
+        }
+        $this->page->addVar('NewsupdateComment', $NewsupdateComment);
+        $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
+    }
+        if ($listeComnews != NULL )
+        {
+            foreach ($listeComnews as $comnews)
+            {
+                $Newsshow[$comnews['nid']]=$this->page->getSpecificLink('News','show', array([$comnews['nid']]));
+
+            }
+
+            $this->page->addVar('Newsshow', $Newsshow);
+        }
 
     }
     public function executeDeleteComment(HTTPRequest $request)

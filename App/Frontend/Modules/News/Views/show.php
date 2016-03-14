@@ -1,8 +1,8 @@
 
 
 <p>Par <em>
-    <?php if ($auteur != NULL ) { $showauthoruser = str_replace('([0-9]+)',$auteur->id(),$Newsshowauthoruser) ;?>
-    <a href="<?= $showauthoruser ?>"><?= $auteur->login() ?></a>
+    <?php if ($auteur != NULL ) {  ;?>
+    <a href="<?= $Newsshowauthoruser[$auteur->login()] ?>"><?= $auteur->login() ?></a>
 <?php } else { ?>
     <?= $news['auteur'] ?> <?php } ?>
   </em> , le <?= $news['dateAjout']->format('d/m/Y à H\hi') ?></p>
@@ -22,26 +22,17 @@ if (empty($comments))
   <p>Aucun commentaire n'a encore été posté. Soyez le premier à en laisser un !</p>
   <?php
 }
-
+else
+{
 foreach ($comments as $comment)
 {
 
-  $updateComment = str_replace('([0-9]+)',$comment['id'],$NewsupdateComment) ;
-  $deleteComment = str_replace('([0-9]+)',$comment['id'],$NewsdeleteComment) ;
   ?>
   <fieldset>
     <legend>
       Posté par <strong>
-        <?php
-        foreach($authors as $auth)
-        {
-          if ($auth->login()==$comment['auteur'])
 
-          { $nom= $auth; break;}
-          else {$nom=NULL;}
-    }
-        ?>
-        <?php if ($nom !=NULL ) {   $showuser = str_replace('([0-9]+)',$nom->id(),$Newsshowuser);
+        <?php if ($Newsshowuser [$comment['auteur']] !=NULL ) {
         ?>
         <a href="<?= $showuser ?>">
         <?= htmlspecialchars($comment['auteur']) ?> </a>
@@ -49,16 +40,15 @@ foreach ($comments as $comment)
 
       </strong>le <?= $comment['date']->format('d/m/Y à H\hi') ?>
       <?php if ($user->isAuthenticated()) { ?> -
-        <a href="<?= $updateComment ?>">Modifier</a> |
-        <a href="<?= $deleteComment ?>">Supprimer</a>
+        <a href="<?=  $NewsupdateComment[$comment->id()] ?>">Modifier</a> |
+        <a href="<?=  $NewsdeleteComment[$comment->id()] ?>">Supprimer</a>
       <?php } ?>
     </legend>
     <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>
   </fieldset>
   <?php
-}
-$insertComment = str_replace('([0-9]+)',$news['id'],$NewsinsertComment) ;
+}}
 
 ?>
 
-<p><a href="<?= $insertComment ?>">Ajouter un commentaire</a></p>
+<p><a href="<?= $NewsinsertComment[$news->id()] ?>">Ajouter un commentaire</a></p>
