@@ -37,7 +37,7 @@
             <?php if ($user->isUser() ) {?>
             <li><a href="<?=$Connexionlogout?>">Deconnexion</a></li>
                 <li><a href="<?=$Newsinsert?>">Ajouter une news</a></li>
-                <li><a href="/mynews.html">Mes news</a></li>
+                <li><a href="<?=$Newsmynews?>">Mes news</a></li>
 
 
 

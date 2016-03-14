@@ -25,6 +25,7 @@ class Page extends ApplicationComponent
 
         $user = $this->app->user();
         $this->getLinks();
+        var_dump($this->vars);
         extract($this->vars);
        ob_start();
         require $this->contentFile;

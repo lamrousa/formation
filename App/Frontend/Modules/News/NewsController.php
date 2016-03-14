@@ -358,6 +358,7 @@ class NewsController extends BackController
 
             $this->app->httpResponse()->redirect('/./');
         }
+        /** @var  \OCFram\Form */
 
         $this->page->addVar('form', $form->createView());
     }
