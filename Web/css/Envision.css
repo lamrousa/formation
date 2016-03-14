@@ -67,9 +67,8 @@ img.float-left {
 h1, h2, h3, p {
 	padding: 10px;
 	margin: 0;
-	word-wrap: break-word;
-	overflow-y: auto;
-	overflow-x: hidden;
+	word-break: break-all;
+
 }
 ul, ol {
 	margin: 5px 20px;
@@ -188,6 +187,18 @@ input.button {
 	background: #8EB50C url(../images/button-bg.jpg) repeat-x 0 0;
 	border: none;
 }
+ section {
+	max-width: inherit;
+	 /*overflow-wrap: break-word;
+	 hyphens: manual;*/
+
+}
+  fieldset {
+	  max-width: 70%;
+	  padding: 10px;
+	 margin: 0;
+  }
+ 
 
 /* search form */
 .searchform {
@@ -315,7 +326,8 @@ nav ul li#current a {
 #main {
 	float: left;
 	width: 70%;
-	padding: 0; margin: 5px 0 0 5px;
+	padding: 0;
+	margin: 5px 0 0 5px;
 	display: inline;
 }
 #main h2 {

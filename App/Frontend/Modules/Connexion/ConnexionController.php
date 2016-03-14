@@ -17,7 +17,8 @@ class ConnexionController extends BackController
             $AUC_password = $request->postData('spassword');
             $AUC_email = $request->postData('semail');
             $confirmation = $request->postData('spassword2');
-        if (filter_var($AUC_email, FILTER_VALIDATE_EMAIL))
+
+            if (filter_var($AUC_email, FILTER_VALIDATE_EMAIL))
         {
             if ($AUC_password == $confirmation)
             {
@@ -30,7 +31,6 @@ class ConnexionController extends BackController
             $user->setEmail($AUC_email);
 
 
-          // var_dump( str_rot13(str_rot13($AUC_login))); die();
 
 
             $this->managers->getManagerOf('Users')->addUser($user);

@@ -46,6 +46,7 @@ class NewsManagerPDO extends NewsManager
         {
             $news->setDateAjout(new \DateTime($news->dateAjout()));
             $news->setDateModif(new \DateTime($news->dateModif()));
+            $news->clean_msg();
         }
 
         $requete->closeCursor();
@@ -67,6 +68,7 @@ class NewsManagerPDO extends NewsManager
             $news->setDateAjout(new \DateTime($news->dateAjout()));
             $news->setDateModif(new \DateTime($news->dateModif()));
 
+           $news->clean_msg();
             return $news;
         }
 
@@ -99,6 +101,7 @@ class NewsManagerPDO extends NewsManager
         {
             $news->setDateAjout(new \DateTime($news->dateAjout()));
             $news->setDateModif(new \DateTime($news->dateModif()));
+            $news->clean_msg();
         }
 
         $q->closeCursor();
@@ -115,7 +118,11 @@ class NewsManagerPDO extends NewsManager
         $q->bindValue(':id', $id, \PDO::PARAM_INT);
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\OutsideUser');
         $q->execute();
-        return $q->fetch();
+        $news=$q->fetch();
+        if ($news) {
+            $news->clean_msg();
+        }
+            return $news;
 
 
     }

@@ -15,7 +15,7 @@ class HTTPRequest extends ApplicationComponent
 
     public function getData($key)
     {
-        return isset($_GET[$key]) ? htmlentities($_GET[$key]) : null;
+        return isset($_GET[$key]) ? $_GET[$key] : null;
     }
 
     public function getExists($key)
@@ -30,7 +30,7 @@ class HTTPRequest extends ApplicationComponent
 
     public function postData($key)
     {
-        return isset($_POST[$key]) ?  htmlentities($_POST[$key]) : null;
+        return isset($_POST[$key]) ?  $_POST[$key] : null;
     }
 
     public function postExists($key)
@@ -42,4 +42,5 @@ class HTTPRequest extends ApplicationComponent
     {
         return $_SERVER['REQUEST_URI'];
     }
+
 }

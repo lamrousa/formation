@@ -42,16 +42,15 @@ class NewsController extends BackController
 
                 $news->setContenu($debut);
             }
-        }
+
 
         // On ajoute la variable $listeNews à la vue.
-        $this->page->addVar('listeNews', $listeNews);
-        foreach ($listeNews as $news)
-        {
             $Newsshow[$news->id()]=$this->page->getSpecificLink('News','show', array($news->id()));
 
 
         }
+        $this->page->addVar('listeNews', $listeNews);
+
         $this->page->addVar('Newsshow', $Newsshow);
 
     }
@@ -65,15 +64,13 @@ class NewsController extends BackController
         {
             $this->app->httpResponse()->redirect404();
         }
-
         $this->page->addVar('title', $news->titre());
         $this->page->addVar('news', $news);
         $comments=$this->managers->getManagerOf('Comments')->getListOf($news->id());
-        $this->page->addVar('comments', $this->managers->getManagerOf('Comments')->getListOf($news->id()));
         $authors=$this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->id());
-        $this->page->addVar('authors',$authors);
-        $this->page->addVar('auteur',$auteur);
-       if ($auteur != NULL )
+
+
+        if ($auteur != NULL )
         {
             $Newsshowauthoruser [$news->auteur()]=$this->page->getSpecificLink('News','showauthoruser', array($auteur->id()));
 
@@ -92,6 +89,7 @@ class NewsController extends BackController
 if ($comments != NULL)
 {
         foreach ( $comments as $com) {
+
             $NewsupdateComment[$com->id()]=$this->page->getSpecificLink('News','updateComment', array($com->id()));
             $NewsdeleteComment[$com->id()]=$this->page->getSpecificLink('News','deleteComment', array($com->id()));
 
@@ -116,6 +114,10 @@ if ($comments != NULL)
 
 
     }
+        $this->page->addVar('authors',$authors);
+        $this->page->addVar('auteur',$auteur);
+        $this->page->addVar('comments', $comments);
+
     }
 
     public function executeInsertComment(HTTPRequest $request)
@@ -195,13 +197,9 @@ if ($comments != NULL)
         $manager = $this->managers->getManagerOf('News');
 
         $listeNews = $manager->getListByAuthor($this->app()->user()->getAttribute('log'));
-        $this->page->addVar('listeNews', $manager->getListByAuthor($this->app()->user()->getAttribute('log')));
         $listeCom=$this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('log'));
-        $this->page->addVar('listeCom',$this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('log')));
         $listeComnews=$this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('log'));
-        $this->page->addVar('listeComnews',$this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('log')));
 
-        $this->page->addVar('log',$this->app()->user()->getAttribute('log'));
 
 
         if ($listeNews != NULL )
@@ -228,14 +226,23 @@ if ($comments != NULL)
     }
         if ($listeComnews != NULL )
         {
-            foreach ($listeComnews as $comnews)
+            foreach ($listeComnews as &$comnews)
             {
+                /*$comnews['titre']=htmlentities('<br>');
+                   $comnews[1]=htmlentities('<br>');
+                var_dump($comnews);*/
+
                 $Newsshow[$comnews['nid']]=$this->page->getSpecificLink('News','show', array([$comnews['nid']]));
 
             }
 
             $this->page->addVar('Newsshow', $Newsshow);
         }
+
+        $this->page->addVar('listeComnews',$listeComnews);
+        $this->page->addVar('listeNews', $listeNews);
+        $this->page->addVar('listeCom',$listeCom);
+        $this->page->addVar('log',$this->app()->user()->getAttribute('log'));
 
     }
     public function executeDeleteComment(HTTPRequest $request)

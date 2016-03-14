@@ -98,4 +98,11 @@ class OutsideUser extends User
     {
         $this->AUC_id = $AUC_id;
     }
+    public function clean_msg()
+    {
+        $this->AUC_login= htmlentities($this->AUC_login);
+        $this->AUC_password= htmlentities($this->AUC_password);
+        $this->AUC_email= htmlentities($this->AUC_email);
+
+    }
 }

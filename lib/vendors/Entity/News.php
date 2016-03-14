@@ -89,4 +89,10 @@ class News extends Entity
   {
     return $this->dateModif;
   }
+  public function clean_msg()
+  {  $this->auteur= htmlentities($this->auteur);
+    $this->titre= htmlentities($this->titre);
+    $this->contenu= htmlentities($this->contenu);
+
+  }
 }

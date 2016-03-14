@@ -31,7 +31,7 @@ foreach ($listeCom as $com)
   {
 
 
-      $titre=$comnew['titre'];
+      $titre=htmlentities($comnew['titre']);
       $id = $comnew['nid'];
   }
 }

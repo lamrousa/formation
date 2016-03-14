@@ -88,4 +88,11 @@ class Comment extends Entity
     {
         return $this->date;
     }
+    public function clean_msg()
+    {
+        $this->auteur= htmlentities($this->auteur);
+        $this->contenu= htmlentities($this->contenu);
+        $this->email= htmlentities($this->email);
+
+    }
 }

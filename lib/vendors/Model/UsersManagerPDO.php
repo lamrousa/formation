@@ -32,7 +32,8 @@ class UsersManagerPDO extends UsersManager
 
          if ($user = $q->fetch())
          {
-               return $user;
+             $user->clean_msg();
+             return $user;
          }
 
          return null;
@@ -46,6 +47,7 @@ class UsersManagerPDO extends UsersManager
 
         if ($user = $q->fetch())
         {
+            $user->clean_msg();
             return $user;
         }
 
@@ -63,6 +65,11 @@ INNER JOIN news ON news.id= :id AND comments.news=news.id');
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\OutsideUser');
         if ($user = $q->fetchAll())
         {
+            foreach ($user as $use)
+            {
+                $use->clean_msg();
+
+            }
             return $user;
         }
 

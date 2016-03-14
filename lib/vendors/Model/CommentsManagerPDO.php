@@ -51,6 +51,7 @@ class CommentsManagerPDO extends CommentsManager
         foreach ($comments as $comment)
         {
             $comment->setDate(new \DateTime($comment->date()));
+            $comment->clean_msg();
         }
 
         return $comments;
@@ -86,7 +87,14 @@ class CommentsManagerPDO extends CommentsManager
         $q->execute();
 
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
-        return $q->fetchAll();
+
+        $comments= $q->fetchAll();
+        if ($comments ) {
+            foreach ($comments as $comment) {
+                $comment->clean_msg();
+            }
+        }
+        return $comments;
 
     }
     public function getListByCommentAuthor($author)
@@ -95,7 +103,8 @@ class CommentsManagerPDO extends CommentsManager
         $q->bindValue(':auteur',$author, \PDO::PARAM_STR);
         $q->execute();
 
-        return $q->fetchAll();
+
+        return $q->fetchAll() ;
     }
 
 
