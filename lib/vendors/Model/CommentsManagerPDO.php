@@ -56,6 +56,34 @@ class CommentsManagerPDO extends CommentsManager
 
         return $comments;
     }
+    public function getListOfDistinct($news)
+    {
+        if (!ctype_digit($news))
+        {
+            throw new \InvalidArgumentException('L\'identifiant de la news passé doit être un nombre entier valide');
+        }
+
+        $q = $this->dao->prepare('
+            SELECT   email, auteur
+            FROM comments
+            WHERE news = :news
+            GROUP BY email,auteur');
+        $q->bindValue(':news', $news, \PDO::PARAM_INT);
+        $q->execute();
+
+        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
+
+        $comments = $q->fetchAll();
+
+        foreach ($comments as $comment)
+        {
+            $comment->setDate(new \DateTime($comment->date()));
+            $comment->clean_msg();
+        }
+
+        return $comments;
+    }
+
 
     protected function modify(Comment $comment)
     {

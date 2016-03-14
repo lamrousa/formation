@@ -32,9 +32,9 @@ foreach ($comments as $comment)
     <legend>
       Posté par <strong>
 
-        <?php if ($Newsshowuser [$comment['auteur']] !=NULL ) {
+        <?php   if ($Newsshowuser [$comment['auteur']] !=NULL ) {
         ?>
-        <a href="<?= $showuser ?>">
+        <a href="<?= $Newsshowuser[$comment['auteur']]?>">
         <?= htmlspecialchars($comment['auteur']) ?> </a>
         <?php  } else  {echo htmlspecialchars($comment['auteur']);} ?>
 
