@@ -48,3 +48,11 @@ What happens if tomorrow i decided to edit a route ?
 All your code is break down.
 This part consist to add a functionnality for ask a route for a Controller and an Action using a function. Replace the manually entered href by a call of this function. 
 
+# 7 - Centralisation - gestion des composants génériques du site
+* Mettre en place une centralisation pour la gestion des composants génériques du site.
+* Actuellement, le menu est géré dans le layout. On pourrait le faire évoluer, avec des
+* parties à afficher en fonction du membre connecté. Il faudrait contrôler le menu par le
+* code.
+* Idem pour la gestion de cookies pour la reconnexion, pour la redirection automatique en cas de non connexion lors de certaines actions, etc.
+* En fait, il faudrait gérer la centralisation des actions des contrôleurs dans un nouvel élément du framework
+* Il faut créer un nouveau composant (ne pas le mettre dans Application ou autre)
