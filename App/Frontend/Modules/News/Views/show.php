@@ -1,7 +1,7 @@
 
 
 <p>Par <em>
-    <?php if ($auteur != NULL ) {  ;?>
+    <?php if ($auteur != NULL ) { ?>
     <a href="<?= $Newsshowauthoruser[$auteur->login()] ?>"><?= $auteur->login() ?></a>
 <?php } else { ?>
     <?= $news['auteur'] ?> <?php } ?>

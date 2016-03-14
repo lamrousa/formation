@@ -2,7 +2,7 @@
 ?><h1> Les News postées par <?= $auteur->login()  ?></h1> <?php
 if (empty($listnews))
 {
-  ?>  <p> Aucune news postée par  <?= $auteur  ?></p>
+  ?>  <p> Aucune news postée par  <?= $auteur->login()  ?></p>
 <?php }
 foreach ($listnews as $news)
 {

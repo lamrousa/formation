@@ -22,16 +22,13 @@ class ConnexionController extends BackController
         {
             if ($AUC_password == $confirmation)
             {
-            var_dump($AUC_login);var_dump($AUC_password);  var_dump($AUC_email) ;
+            var_dump($AUC_login);var_dump(crypt('mdp','BDD'));  var_dump($AUC_email) ;
         if ($this->managers->getManagerOf('Users')->getUser($AUC_login) == NULL )
         {
             $user = new OutsideUser;
             $user->setLogin($AUC_login);
             $user->setPassword($AUC_password);
             $user->setEmail($AUC_email);
-
-
-
 
             $this->managers->getManagerOf('Users')->addUser($user);
             $this->page->addVar('OutUser',$user);
@@ -69,7 +66,7 @@ class ConnexionController extends BackController
             if ($this->managers->getManagerOf('Users')->getUser($login) != NULL)
             {
 
-                if ($login == $this->managers->getManagerOf('Users')->getUser($login)->login() && $password == str_rot13($this->managers->getManagerOf('Users')->getUser($login)->password())) {
+                if ($login == $this->managers->getManagerOf('Users')->getUser($login)->login() && crypt($password,'BDD') == ($this->managers->getManagerOf('Users')->getUser($login)->password())) {
                     if ($this->app->user()->isAuthenticated() == false) {
                         $this->app->user()->setIsUser(true);
 

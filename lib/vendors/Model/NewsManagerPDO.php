@@ -120,7 +120,7 @@ class NewsManagerPDO extends NewsManager
         $q->execute();
         $news=$q->fetch();
         if ($news) {
-            $news->clean_msg();
+            //$news->clean_msg();
         }
             return $news;
 

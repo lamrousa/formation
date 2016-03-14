@@ -46,15 +46,18 @@ class CommentsManagerPDO extends CommentsManager
 
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
 
-        $comments = $q->fetchAll();
+       if ( $comments = $q->fetchAll())
+       {
 
         foreach ($comments as $comment)
         {
             $comment->setDate(new \DateTime($comment->date()));
-            $comment->clean_msg();
+            //$comment->clean_msg();
         }
 
         return $comments;
+    }
+    return null;
     }
     public function getListOfDistinct($news)
     {
@@ -119,7 +122,7 @@ class CommentsManagerPDO extends CommentsManager
         $comments= $q->fetchAll();
         if ($comments ) {
             foreach ($comments as $comment) {
-                $comment->clean_msg();
+                //$comment->clean_msg();
             }
         }
         return $comments;

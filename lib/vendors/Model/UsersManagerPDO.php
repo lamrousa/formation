@@ -18,7 +18,7 @@ class UsersManagerPDO extends UsersManager
 
          $q=$this->dao->prepare('INSERT INTO t_app_userc SET AUC_login = :login ,AUC_password = :pass, AUC_email = :email,  AUC_state = :state, AUC_dateAdd = NOW()');
          $q->bindValue(':login', $outsideUser->login());
-         $q->bindValue(':pass', str_rot13($outsideUser->password()));
+         $q->bindValue(':pass', crypt($outsideUser->password(),'BDD'));
          $q->bindValue(':email', $outsideUser->email());
         $q->bindValue('state', $outsideUser->state(), \PDO::PARAM_INT);
          $q->execute();
@@ -32,7 +32,7 @@ class UsersManagerPDO extends UsersManager
 
          if ($user = $q->fetch())
          {
-             $user->clean_msg();
+            // $user->clean_msg();
              return $user;
          }
 
@@ -67,7 +67,7 @@ INNER JOIN news ON news.id= :id AND comments.news=news.id');
         {
             foreach ($user as $use)
             {
-                $use->clean_msg();
+                //$use->clean_msg();
 
             }
             return $user;

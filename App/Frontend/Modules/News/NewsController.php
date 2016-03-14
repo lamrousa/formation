@@ -69,10 +69,12 @@ class NewsController extends BackController
 
         if ($auteur != NULL) {
             $Newsshowauthoruser [$news->auteur()] = $this->page->getSpecificLink('News', 'showauthoruser', array($auteur->id()));
+            $auteur->clean_msg();
 
         } else {
             $Newsshowauthoruser [$news->auteur()] = NULL;
         }
+
         $this->page->addVar('Newsshowauthoruser', $Newsshowauthoruser);
 
 
@@ -391,6 +393,7 @@ class NewsController extends BackController
         } else {
 
             $auteur = $this->managers->getManagerOf('Users')->get($request->getData('id'));
+
         }
         $ListCom = $this->managers->getManagerOf('Comments')->getListByAuthor($auteur->login());
 
