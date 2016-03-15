@@ -2,7 +2,6 @@
 namespace App\Frontend\Modules\News;
 
 use \OCFram\BackController;
-use OCFram\Centrale;
 use \OCFram\HTTPRequest;
 use \Entity\Comment;
 use \FormBuilder\CommentFormBuilder;
@@ -52,9 +51,8 @@ class NewsController extends BackController
 
         $this->page->addVar('Newsshow', $Newsshow);
 
-        $center = new Centrale();
+        $this->page->addVar('menu',$this->BuildMenu());
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
 
     }
 
@@ -113,9 +111,8 @@ class NewsController extends BackController
         $this->page->addVar('authors', $authors);
         $this->page->addVar('auteur', $auteur);
         $this->page->addVar('comments', $comments);
-        $center = new Centrale();
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
 
     }
 
@@ -169,23 +166,21 @@ class NewsController extends BackController
         $this->page->addVar('comment', $comment);
         $this->page->addVar('form', $form->createView());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
-        $center = new Centrale();
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
 
     }
 
     /*Ajout user */
     public function executeInsert(HTTPRequest $request)
     {
-        $center= new Centrale();
-        $center->RedirectNews404($this->app(), $this->managers(),$request);
+        $this->RedirectNews404($request);
 
         $this->processForm($request);
 
         $this->page->addVar('title', 'Ajout d\'une news');
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
 
 
 
@@ -193,8 +188,7 @@ class NewsController extends BackController
 
     public function executeMynews(HTTPRequest $request)
     {
-        $center= new Centrale();
-        $center->RedirectNews404($this->app(), $this->managers(),$request);
+        $this->RedirectNews404($request);
 
             $this->page->addVar('title', 'Mes news');
             $manager = $this->managers->getManagerOf('News');
@@ -240,7 +234,7 @@ class NewsController extends BackController
             $this->page->addVar('listeCom', $listeCom);
             $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
 
 
     }
@@ -249,8 +243,7 @@ class NewsController extends BackController
 
     public function executeDeleteComment(HTTPRequest $request)
     {
-                $center= new Centrale();
-                $center->RedirectComments404($this->app(), $this->managers(),$request);
+                $this->RedirectComments404($request);
 
 
                 $this->managers->getManagerOf('Comments')->delete($request->getData('id'));
@@ -260,14 +253,13 @@ class NewsController extends BackController
                 $this->app->httpResponse()->redirect('.');
 
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
 
     }
 
     public function executeUpdateComment(HTTPRequest $request)
     {
-        $center= new Centrale();
-        $center->RedirectComments404($this->app(), $this->managers(),$request);
+        $this->RedirectComments404($request);
 
             $this->page->addVar('title', 'Modification d\'un commentaire');
 
@@ -297,25 +289,24 @@ class NewsController extends BackController
                 $this->page->addVar('form', $form->createView());
 
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
         }
 
 
     public function executeUpdate(HTTPRequest $request)
-    {     $center= new Centrale();
-        $center->RedirectNews404($this->app(), $this->managers(),$request);
+    {
+        $this->RedirectNews404($request);
 
         $this->processForm($request);
      $this->page->addVar('title', 'Modification d\'une news');
 
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
     }
 
     public function executeDelete(HTTPRequest $request)
     {
-        $center= new Centrale();
-        $center->RedirectNews404($this->app(), $this->managers(),$request);
+        $this->RedirectNews404($request);
 
                 $newsId = $request->getData('id');
 
@@ -327,7 +318,7 @@ class NewsController extends BackController
                 $this->app->httpResponse()->redirect('.');
 
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
 
     }
 
@@ -395,9 +386,8 @@ class NewsController extends BackController
 
         }
 
-        $center = new Centrale();
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
     }
 
     public function executeShowauthoruser(HTTPRequest $request)
@@ -419,9 +409,8 @@ class NewsController extends BackController
         $this->page->addVar('listcom', $ListCom);
         $this->page->addVar('auteur', $auteur);
 
-        $center = new Centrale();
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
     }
 
     public function sendmail($id,$email)
@@ -463,8 +452,7 @@ class NewsController extends BackController
 
             }
         }
-        $center = new Centrale();
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
     }
 }

@@ -11,8 +11,9 @@ namespace OCFram;
 
 use OCFram\BackController;
 use OCFram\HTTPRequest;
-class Centrale
+trait Centrale
 {     protected $nav = '';
+    protected $links =[];
 
 
     public function addNav(array $navs)
@@ -22,122 +23,122 @@ class Centrale
         $this->nav .= '<li> <a href ="' . $nav . '">' . $key . '</a></li>';
         }
     }
-    public function BuildMenu(Application $app,Page $page)
+    public function BuildMenu()
     {
-      $page->getLinks();
-        extract ($page->getVars());
+      $this->page()->getLinks();
+        extract ($this->page()->getVars());
 
-        if ($app->user()->isUser() && $app->name() == 'Frontend' ) {
+        if ($this->app()->user()->isUser() && $this->app()->name() == 'Frontend' ) {
             $navs = array('Accueil' => $Newsindex , 'Ajouter News' => $Newsinsert, 'Mes News' => $Newsmynews,'Deconnexion' => $Connexionlogout );
     }
-        elseif(($app->user()->isAuthenticated()) && ($app->name() == 'Backend'))
+        elseif(($this->app()->user()->isAuthenticated()) && ($this->app()->name() == 'Backend'))
         {
             $navs = array('Admin' => $adminNewsindex , 'Deconnexion' => $adminConnexionlogout, 'Ajouter une news ' => $adminNewsinsert );
 
         }
 
-        elseif ($app->name() == 'Frontend' && !($app->user()->isAuthenticated()) && !($app->user()->isUser()) )
+        elseif ($this->app()->name() == 'Frontend' && !($this->app()->user()->isAuthenticated()) && !($this->app()->user()->isUser()) )
         {
              $navs = array('Accueil' => $Newsindex , 'Inscription' => $Connexionsignup, 'Connexion' => $Connexionlogin);
         }
-        elseif ($app->name() == 'Backend'  && !($app->user()->isAuthenticated()) && !($app->user()->isUser()))
+        elseif ($this->app()->name() == 'Backend'  && !($this->app()->user()->isAuthenticated()) && !($this->app()->user()->isUser()))
         {
             $navs = array('Accueil' => '/');
         }
-        elseif ($app->name() == 'Frontend'&& $app->user()->isAuthenticated() ) {
+        elseif ($this->app()->name() == 'Frontend'&& $this->app()->user()->isAuthenticated() ) {
             $navs = array('Admin_Mode' => '/admin/');
         }
 
-
+       $navs=array_merge($navs,$this->links);
         $this->addNav($navs);
         return $this->nav;
 }
-public function RedirectNews404 (Application $app, Managers $managers,HTTPRequest $request)
+public function RedirectNews404 ( HTTPRequest $request)
 {
-    if (($request->getExists('id') == TRUE) && ($managers->getManagerOf('News')->getUnique($request->getData('id')) == NULL)) {
-        if ($app->name() == 'Frontend') {
-            $app->user()->setFlash('Accès interdit');
-            $app->httpResponse()->redirect('/');
+    if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('News')->getUnique($request->getData('id')) == NULL)) {
+        if ($this->app()->name() == 'Frontend') {
+            $this->app()->user()->setFlash('Accès interdit');
+            $this->app()->httpResponse()->redirect('/');
         }
         else
         {
-            $app->user()->setFlash('Accès interdit');
-            $app->httpResponse()->redirect('/admin/');
+            $this->app()->user()->setFlash('Accès interdit');
+            $this->app()->httpResponse()->redirect('/admin/');
 
         }
     }
-    elseif (($managers->getManagerOf('News')->getUnique($request->getData('id')) != NULL ) && ($request->getExists('id') == TRUE ))
+    elseif (($this->managers->getManagerOf('News')->getUnique($request->getData('id')) != NULL ) && ($request->getExists('id') == TRUE ))
     {
-        if ($app->name() == 'Frontend') {
-            if (!($app->user()->isUser()) || ($app->user()->getAttribute('log') != $managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur())) {
-                if (!($app->user()->isUser()))
+        if ($this->app()->name() == 'Frontend') {
+            if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur())) {
+                if (!($this->app()->user()->isUser()))
                 {
-                    $app->user()->setFlash('Veuillez vous connecter');
+                    $this->app()->user()->setFlash('Veuillez vous connecter');
                 }
                 else {
-                    $app->user()->setFlash('Accès interdit');
+                    $this->app()->user()->setFlash('Accès interdit');
 
                 }
-                $app->httpResponse()->redirect('/');
+                $this->app()->httpResponse()->redirect('/');
             }
 
-        } elseif  ($app->name() == 'Backend') {
-            if (!($app->user()->isAuthenticated()))
+        } elseif  ($this->app()->name() == 'Backend') {
+            if (!($this->app()->user()->isAuthenticated()))
             {
-                $app->httpResponse()->redirect('/admin/');
+                $this->app()->httpResponse()->redirect('/admin/');
             }
 
         }
 
     }
-elseif( !($app->user()->isUser()) && ($request->getExists('id') != true ) && $app->name()=='Frontend')
+elseif( !($this->app()->user()->isUser()) && ($request->getExists('id') != true ) && $this->app()->name()=='Frontend')
 {
-    $app->user()->setFlash('Veuillez vous connecter');
+    $this->app()->user()->setFlash('Veuillez vous connecter');
 
-    $app->httpResponse()->redirect('/');
-
-}
+    $this->app()->httpResponse()->redirect('/');
 
 }
-    public function RedirectComments404 (Application $app, Managers $managers,HTTPRequest $request)
+
+}
+    public function RedirectComments404 (HTTPRequest $request)
     {
-        if (($request->getExists('id') == TRUE) && ($managers->getManagerOf('Comments')->get($request->getData('id')) == false)) {
+        if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('Comments')->get($request->getData('id')) == false)) {
 
-            if ($app->name() == 'Frontend') {
-                $app->user()->setFlash('Accès interdit');
-            $app->httpResponse()->redirect('/');
+            if ($this->app()->name() == 'Frontend') {
+                $this->app()->user()->setFlash('Accès interdit');
+            $this->app()->httpResponse()->redirect('/');
         }
             else
             {
-                $app->user()->setFlash('Accès interdit');
-                $app->httpResponse()->redirect('/admin/');
+                $this->app()->user()->setFlash('Accès interdit');
+                $this->app()->httpResponse()->redirect('/admin/');
 
             }
 
 
 
         }
-        elseif (($managers->getManagerOf('Comments')->get($request->getData('id')) != false) && ($request->getExists('id') == TRUE ))
+        elseif (($this->managers->getManagerOf('Comments')->get($request->getData('id')) != false) && ($request->getExists('id') == TRUE ))
         {
-            if ($app->name() == 'Frontend') {
+            if ($this->app()->name() == 'Frontend') {
 
-                if (!($app->user()->isUser()) || ($app->user()->getAttribute('log') != $managers->getManagerOf('Comments')->get($request->getData('id'))->auteur())) {
+                if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur())) {
 
-                    if (!($app->user()->isUser()))
+                    if (!($this->app()->user()->isUser()))
                     {
-                        $app->user()->setFlash('Veuillez vous connecter');
+                        $this->app()->user()->setFlash('Veuillez vous connecter');
                     }
                     else {
-                        $app->user()->setFlash('Accès interdit');
+                        $this->app()->user()->setFlash('Accès interdit');
 
                     }
-                    $app->httpResponse()->redirect('/');
+                    $this->app()->httpResponse()->redirect('/');
                 }
 
-            } elseif  ($app->name() == 'Backend') {
-                if (!($app->user()->isAuthenticated()))
+            } elseif  ($this->app()->name() == 'Backend') {
+                if (!($this->app()->user()->isAuthenticated()))
                 {
-                    $app->httpResponse()->redirect('/admin/');
+                    $this->app()->httpResponse()->redirect('/admin/');
                 }
 
             }
@@ -146,31 +147,34 @@ elseif( !($app->user()->isUser()) && ($request->getExists('id') != true ) && $ap
 
     }
 
-    public function RedirectConnect(Application $app)
+    public function RedirectConnect()
     {
-        if (($app->name()=='Backend') && ($app->user()->isUser()))
+        if (($this->app()->name()=='Backend') && ($this->app()->user()->isUser()))
         {
-            $app->httpResponse()->redirect('/');
+            $this->app()->httpResponse()->redirect('/');
 
         }
-        if(($app->name()=='Frontend') && ($app->user()->isAuthenticated()))
+        if(($this->app()->name()=='Frontend') && ($this->app()->user()->isAuthenticated()))
         {
-            $app->httpResponse()->redirect('/admin/');
+            $this->app()->httpResponse()->redirect('/admin/');
 
         }
-        if (($app->name()=='Frontend') && ($app->user()->isUser()))
+        if (($this->app()->name()=='Frontend') && ($this->app()->user()->isUser()))
         {
-            $app->user()->setFlash('Vous êtes déjà connecté');
-            $app->httpResponse()->redirect('/');
+            $this->app()->user()->setFlash('Vous êtes déjà connecté');
+            $this->app()->httpResponse()->redirect('/');
         }
-        if (($app->name()=='Backend') && ($app->user()->isAuthenticated()))
+        if (($this->app()->name()=='Backend') && ($this->app()->user()->isAuthenticated()))
         {
-            $app->user()->setFlash('Vous êtes déjà connecté');
-            $app->httpResponse()->redirect('/admin/');
+            $this->app()->user()->setFlash('Vous êtes déjà connecté');
+            $this->app()->httpResponse()->redirect('/admin/');
         }
 
     }
-
+    public function addLinks(array $links)
+    {
+        array_merge($this->links, $links);
+    }
 
 }
 

@@ -1,8 +1,10 @@
 <?php
 namespace OCFram;
+use OCFram\Centrale;
 
 abstract class BackController extends ApplicationComponent
 {
+    use Centrale;
     protected $action = '';
     protected $module = '';
     protected $page = null;

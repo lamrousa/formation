@@ -4,14 +4,13 @@ namespace App\Backend\Modules\Connexion;
 use Entity\OutsideUser;
 use \OCFram\BackController;
 use \OCFram\HTTPRequest;
-use OCFram\Centrale;
 
 class ConnexionController extends BackController
 {
     public function executeIndex(HTTPRequest $request)
-    {        $center = new Centrale();
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
-        $center->RedirectConnect($this->app());
+    {
+        $this->page->addVar('menu',$this->BuildMenu());
+        $this->RedirectConnect($this->app());
 
             $this->page->addVar('title', 'Connexion');
 
@@ -45,9 +44,8 @@ class ConnexionController extends BackController
 
 
 
-        $center = new Centrale();
 
-        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+        $this->page->addVar('menu',$this->BuildMenu());
     }
 
 }
