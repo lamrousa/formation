@@ -17,8 +17,12 @@
         <p>Comment ça, il n'y a presque rien ?</p>
     </header>
 
-    <nav>
+
+   <nav>
         <ul>
+            <?php
+            echo $menu;
+            /*
 
             <?php if ($user->isAuthenticated() == false ) {?>
             <li><a href="/">Accueil</a></li>
@@ -35,7 +39,7 @@
 
             <?php }  ;?>
             <?php if ($user->isUser() ) {?>
-            <li><a href="<?=$Connexionlogout?>">Deconnexion</a></li>
+                <li><a href="<?=$Connexionlogout?>">Deconnexion</a></li>
                 <li><a href="<?=$Newsinsert?>">Ajouter une news</a></li>
                 <li><a href="<?=$Newsmynews?>">Mes news</a></li>
 
@@ -43,17 +47,17 @@
 
 
             <?php } if (isset($Connexionsignup) && isset($Connexionlogin)) {?>
-            <?php if ($user->isAuthenticated() ==false && $user->isUser() ==false ) {?>
-                <li><a href="<?=$Connexionsignup?>">Inscription</a></li>
-            <li><a href="<?=$Connexionlogin?>">Connexion</a></li>
-            <?php } }?>
+                <?php if ($user->isAuthenticated() ==false && $user->isUser() ==false ) {?>
+                    <li><a href="<?=$Connexionsignup?>">Inscription</a></li>
+                    <li><a href="<?=$Connexionlogin?>">Connexion</a></li>
+                <?php } }?>
 
 
 
 
 
-        </ul>
-    </nav>
+     */ ?>    </ul>
+   </nav>
 
     <div id="content-wrap">
         <section id="main">

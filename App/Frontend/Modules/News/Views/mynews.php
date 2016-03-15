@@ -47,7 +47,7 @@ foreach ($listeCom as $com)
     <td>
 
 
-        <a href="<?= $NewsupdateComment[ $com['id']]?>"><img src="/images/update.png" alt="Modifier" /></a> <a href="<?= $NewsupdateComment[ $com['id']] ?>"><img src="/images/delete.png" alt="Supprimer" /></a></td>
+        <a href="<?= $NewsupdateComment[ $com['id']]?>"><img src="/images/update.png" alt="Modifier" /></a> <a href="<?= $NewsdeleteComment[ $com['id']] ?>"><img src="/images/delete.png" alt="Supprimer" /></a></td>
 </table>
 
 <?php }}

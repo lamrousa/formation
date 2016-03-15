@@ -78,4 +78,9 @@ abstract class BackController extends ApplicationComponent
     {
         return $this->action;
     }
+
+    public function managers()
+    {
+        return $this->managers;
+    }
 }

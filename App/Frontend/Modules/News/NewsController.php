@@ -2,6 +2,7 @@
 namespace App\Frontend\Modules\News;
 
 use \OCFram\BackController;
+use OCFram\Centrale;
 use \OCFram\HTTPRequest;
 use \Entity\Comment;
 use \FormBuilder\CommentFormBuilder;
@@ -50,6 +51,10 @@ class NewsController extends BackController
         $this->page->addVar('listeNews', $listeNews);
 
         $this->page->addVar('Newsshow', $Newsshow);
+
+        $center = new Centrale();
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
 
     }
 
@@ -108,6 +113,9 @@ class NewsController extends BackController
         $this->page->addVar('authors', $authors);
         $this->page->addVar('auteur', $auteur);
         $this->page->addVar('comments', $comments);
+        $center = new Centrale();
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
 
     }
 
@@ -161,93 +169,108 @@ class NewsController extends BackController
         $this->page->addVar('comment', $comment);
         $this->page->addVar('form', $form->createView());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
+        $center = new Centrale();
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
 
     }
 
     /*Ajout user */
     public function executeInsert(HTTPRequest $request)
     {
+        $center= new Centrale();
+        $center->RedirectNews404($this->app(), $this->managers(),$request);
+
         $this->processForm($request);
 
         $this->page->addVar('title', 'Ajout d\'une news');
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+
 
 
     }
 
     public function executeMynews(HTTPRequest $request)
     {
-        $this->page->addVar('title', 'Mes news');
-        $manager = $this->managers->getManagerOf('News');
+        $center= new Centrale();
+        $center->RedirectNews404($this->app(), $this->managers(),$request);
 
-        $listeNews = $manager->getListByAuthor($this->app()->user()->getAttribute('log'));
-        $listeCom = $this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('log'));
-        $listeComnews = $this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('log'));
+            $this->page->addVar('title', 'Mes news');
+            $manager = $this->managers->getManagerOf('News');
+
+            $listeNews = $manager->getListByAuthor($this->app()->user()->getAttribute('log'));
+            $listeCom = $this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('log'));
+            $listeComnews = $this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('log'));
 
 
-        if ($listeNews != NULL) {
-            foreach ($listeNews as $news) {
-                $Newsupdate[$news->id()] = $this->page->getSpecificLink('News', 'update', array($news->id()));
-                $Newsdelete[$news->id()] = $this->page->getSpecificLink('News', 'delete', array($news->id()));
+            if ($listeNews != NULL) {
+                foreach ($listeNews as $news) {
+                    $Newsupdate[$news->id()] = $this->page->getSpecificLink('News', 'update', array($news->id()));
+                    $Newsdelete[$news->id()] = $this->page->getSpecificLink('News', 'delete', array($news->id()));
 
+                }
+                $this->page->addVar('Newsupdate', $Newsupdate);
+                $this->page->addVar('Newsdelete', $Newsdelete);
             }
-            $this->page->addVar('Newsupdate', $Newsupdate);
-            $this->page->addVar('Newsdelete', $Newsdelete);
-        }
-        if ($listeCom != NULL) {
-            foreach ($listeCom as $com) {
-                $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
-                $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
+            if ($listeCom != NULL) {
+                foreach ($listeCom as $com) {
+                    $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
+                    $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
 
+                }
+                $this->page->addVar('NewsupdateComment', $NewsupdateComment);
+                $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
             }
-            $this->page->addVar('NewsupdateComment', $NewsupdateComment);
-            $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
-        }
-        if ($listeComnews != NULL) {
-            foreach ($listeComnews as &$comnews) {
-                /*$comnews['titre']=htmlentities('<br>');
-                   $comnews[1]=htmlentities('<br>');
-                var_dump($comnews);*/
+            if ($listeComnews != NULL) {
+                foreach ($listeComnews as &$comnews) {
+                    /*$comnews['titre']=htmlentities('<br>');
+                       $comnews[1]=htmlentities('<br>');
+                    var_dump($comnews);*/
 
-                $Newsshow[$comnews['nid']] = $this->page->getSpecificLink('News', 'show', array([$comnews['nid']]));
+                    $Newsshow[$comnews['nid']] = $this->page->getSpecificLink('News', 'show', array([$comnews['nid']]));
 
+                }
+
+                $this->page->addVar('Newsshow', $Newsshow);
             }
 
-            $this->page->addVar('Newsshow', $Newsshow);
-        }
+            $this->page->addVar('listeComnews', $listeComnews);
+            $this->page->addVar('listeNews', $listeNews);
+            $this->page->addVar('listeCom', $listeCom);
+            $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
 
-        $this->page->addVar('listeComnews', $listeComnews);
-        $this->page->addVar('listeNews', $listeNews);
-        $this->page->addVar('listeCom', $listeCom);
-        $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+
 
     }
 
+
+
     public function executeDeleteComment(HTTPRequest $request)
     {
+                $center= new Centrale();
+                $center->RedirectComments404($this->app(), $this->managers(),$request);
 
-        if ($this->managers->getManagerOf('Comments')->get($request->getData('id')) == false) {
-            $this->app->httpResponse()->redirect404();
-        } else {
-            if ($this->app->user()->getAttribute('log') == $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur()) {
+
                 $this->managers->getManagerOf('Comments')->delete($request->getData('id'));
 
                 $this->app->user()->setFlash('Le commentaire a bien été supprimé !');
 
                 $this->app->httpResponse()->redirect('.');
-            } else {
-                $this->app->httpResponse()->redirect404();
-            }
-        }
+
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+
     }
 
     public function executeUpdateComment(HTTPRequest $request)
     {
-        if ($this->managers->getManagerOf('Comments')->get($request->getData('id')) == false) {
-            $this->app->httpResponse()->redirect404();
-        } else {
+        $center= new Centrale();
+        $center->RedirectComments404($this->app(), $this->managers(),$request);
+
             $this->page->addVar('title', 'Modification d\'un commentaire');
 
-            if ($this->app->user()->getAttribute('log') == $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur()) {
                 if ($request->method() == 'POST') {
                     $comment = new Comment([
                         'id' => $request->getData('id'),
@@ -272,36 +295,28 @@ class NewsController extends BackController
                 }
 
                 $this->page->addVar('form', $form->createView());
-            } else {
-                $this->app->httpResponse()->redirect404();
 
-            }
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
         }
-    }
+
 
     public function executeUpdate(HTTPRequest $request)
-    {
-        if ($this->managers->getManagerOf('News')->getUnique($request->getData('id')) === NULL) {
-            $this->app->httpResponse()->redirect404();
-        } else {
-            if ($this->app->user()->getAttribute('log') == $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur()) {
+    {     $center= new Centrale();
+        $center->RedirectNews404($this->app(), $this->managers(),$request);
+
+        $this->processForm($request);
+     $this->page->addVar('title', 'Modification d\'une news');
 
 
-                $this->processForm($request);
-
-                $this->page->addVar('title', 'Modification d\'une news');
-            } else {
-                $this->app->httpResponse()->redirect404();
-            }
-
-
-        }
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
     }
 
     public function executeDelete(HTTPRequest $request)
     {
-        if ($this->managers->getManagerOf('News')->getUnique($request->getData('id')) != NULL) {
-            if ($this->app->user()->getAttribute('log') == $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur()) {
+        $center= new Centrale();
+        $center->RedirectNews404($this->app(), $this->managers(),$request);
+
                 $newsId = $request->getData('id');
 
                 $this->managers->getManagerOf('News')->delete($newsId);
@@ -310,14 +325,9 @@ class NewsController extends BackController
                 $this->app->user()->setFlash('La news a bien été supprimée !');
 
                 $this->app->httpResponse()->redirect('.');
-            } else {
-                $this->app->httpResponse()->redirect404();
 
-            }
-        } else {
-            $this->app->httpResponse()->redirect404();
 
-        }
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
 
     }
 
@@ -384,6 +394,10 @@ class NewsController extends BackController
 
 
         }
+
+        $center = new Centrale();
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
     }
 
     public function executeShowauthoruser(HTTPRequest $request)
@@ -404,6 +418,10 @@ class NewsController extends BackController
         $this->page->addVar('listnews', $listenews);
         $this->page->addVar('listcom', $ListCom);
         $this->page->addVar('auteur', $auteur);
+
+        $center = new Centrale();
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
     }
 
     public function sendmail($id,$email)
@@ -445,5 +463,8 @@ class NewsController extends BackController
 
             }
         }
+        $center = new Centrale();
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
     }
 }

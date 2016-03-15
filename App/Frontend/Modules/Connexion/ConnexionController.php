@@ -4,12 +4,16 @@ namespace App\Frontend\Modules\Connexion;
 use Entity\OutsideUser;
 use \OCFram\BackController;
 use \OCFram\HTTPRequest;
+use OCFram\Centrale;
 
 class ConnexionController extends BackController
 
 {
     public function executeSignup (HTTPRequest $request)
     {
+        $center = new Centrale();
+        $center->RedirectConnect($this->app());
+
         $this->page->addVar('title','signin');
         if ($request->postExists('slogin'))
         {
@@ -54,9 +58,14 @@ class ConnexionController extends BackController
         }
 
 
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+
     }
     public function executeLogin (HTTPRequest $request)
     {
+        $center = new Centrale();
+        $center->RedirectConnect($this->app());
+
         $this->page->addVar('title','login');
         if ($request->postExists('llogin')) {
             $login = $request->postData('llogin');
@@ -92,6 +101,8 @@ class ConnexionController extends BackController
             }
         }
 
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
+
     }
 
 
@@ -108,5 +119,8 @@ class ConnexionController extends BackController
         $this->app->user()->setFlash('Deconnexion reussie');
         $this->app->httpResponse()->redirect('.');
     }
+    $center = new Centrale();
+
+    $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
 }
 }

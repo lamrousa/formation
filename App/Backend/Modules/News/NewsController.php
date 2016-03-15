@@ -8,11 +8,15 @@ use \Entity\Comment;
 use \FormBuilder\CommentFormBuilder;
 use \FormBuilder\NewsFormBuilder;
 use \OCFram\FormHandler;
+use OCFram\Centrale;
 
 class NewsController extends BackController
 {
     public function executeDelete(HTTPRequest $request)
     {
+        $center= new Centrale();
+        $center->RedirectNews404($this->app(), $this->managers(),$request);
+
         $newsId = $request->getData('id');
 
         $this->managers->getManagerOf('News')->delete($newsId);
@@ -21,15 +25,24 @@ class NewsController extends BackController
         $this->app->user()->setFlash('La news a bien été supprimée !');
 
         $this->app->httpResponse()->redirect('.');
+
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
     }
 
     public function executeDeleteComment(HTTPRequest $request)
     {
+        $center= new Centrale();
+        $center->RedirectComments404($this->app(), $this->managers(),$request);
+
         $this->managers->getManagerOf('Comments')->delete($request->getData('id'));
 
         $this->app->user()->setFlash('Le commentaire a bien été supprimé !');
 
       $this->app->httpResponse()->redirect('.');
+
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
     }
 
     public function executeIndex(HTTPRequest $request)
@@ -41,6 +54,10 @@ class NewsController extends BackController
         $this->page->addVar('listeNews', $manager->getList());
 
         $this->page->addVar('nombreNews', $manager->count());
+
+        $center = new Centrale();
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
     }
 
     public function executeInsert(HTTPRequest $request)
@@ -48,17 +65,29 @@ class NewsController extends BackController
         $this->processForm($request);
 
         $this->page->addVar('title', 'Ajout d\'une news');
+        $center = new Centrale();
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
     }
 
     public function executeUpdate(HTTPRequest $request)
     {
+        $center= new Centrale();
+        $center->RedirectNews404($this->app(), $this->managers(),$request);
+
         $this->processForm($request);
 
         $this->page->addVar('title', 'Modification d\'une news');
+
+
+        $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
     }
 
     public function executeUpdateComment(HTTPRequest $request)
 {
+    $center= new Centrale();
+    $center->RedirectComments404($this->app(), $this->managers(),$request);
+
     $this->page->addVar('title', 'Modification d\'un commentaire');
 
     if ($request->method() == 'POST')
@@ -89,6 +118,8 @@ class NewsController extends BackController
     }
 
     $this->page->addVar('form', $form->createView());
+
+    $this->page->addVar('menu',$center->BuildMenu($this->app(),$this->page()));
 }
 
     public function processForm(HTTPRequest $request)
