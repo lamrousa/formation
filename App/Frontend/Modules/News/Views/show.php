@@ -52,3 +52,15 @@ foreach ($comments as $comment)
 ?>
 
 <p><a href="<?= $NewsinsertComment[$news->id()] ?>">Ajouter un commentaire</a></p>
+<button id="toto" >toto</button>
+<p id="maison"></p>
+
+
+
+<script>$('#toto').click(function() {
+    $('h2').append(' ***');
+
+  });
+
+</script>
+<script></script>

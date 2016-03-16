@@ -38,6 +38,14 @@ class HTTPResponse extends ApplicationComponent
     {
         $this->page = $page;
     }
+/*
+ * Ajouté par moi même
+ *
+ */
+    public function getPage()
+    {
+        return $this->page;
+    }
 
     // Changement par rapport à la fonction setcookie() : le dernier argument est par défaut à true
     public function setCookie($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = false, $httpOnly = true)

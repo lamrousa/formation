@@ -62,6 +62,8 @@
     <div id="content-wrap">
         <section id="main">
             <?php if ($user->hasFlash()) echo '<p style="text-align: center;">', $user->getFlash(), '</p>'; ?>
+            <script src="//code.jquery.com/jquery.js"></script>
+
 
             <?= $content ?>
         </section>
@@ -69,5 +71,6 @@
 
     <footer></footer>
 </div>
+
 </body>
 </html>

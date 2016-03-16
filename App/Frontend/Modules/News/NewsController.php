@@ -118,7 +118,9 @@ class NewsController extends BackController
 
     public function executeInsertComment(HTTPRequest $request)
     {
+        //$this->setHtml(false);
         // Si le formulaire a été envoyé.
+        $this->Build();
 
         if ($request->method() == 'POST') {
             if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
@@ -167,7 +169,6 @@ class NewsController extends BackController
         $this->page->addVar('form', $form->createView());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
 
-        $this->Build();
 
     }
 
@@ -547,5 +548,10 @@ class NewsController extends BackController
 
         }
 
+    }
+
+    public function executeTest(HTTPRequest $request)
+    {
+       $this->page()->addVar('toto', 'Maison');
     }
 }

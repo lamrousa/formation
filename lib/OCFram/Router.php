@@ -39,7 +39,6 @@ class Router
 
                     $route->setVars($listVars);
                 }
-
                 return $route;
             }
         }

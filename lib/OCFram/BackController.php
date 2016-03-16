@@ -7,6 +7,7 @@ abstract class BackController extends ApplicationComponent
     use Centrale;
     protected $action = '';
     protected $module = '';
+    //protected $html = true;
     protected $page = null;
     protected $view = '';
     protected $managers = null;
@@ -31,7 +32,6 @@ abstract class BackController extends ApplicationComponent
         {
             throw new \RuntimeException('L\'action "'.$this->action.'" n\'est pas définie sur ce module');
         }
-
         $this->$method($this->app->httpRequest());
     }
 
@@ -85,4 +85,15 @@ abstract class BackController extends ApplicationComponent
     {
         return $this->managers;
     }
+
+  /*  public function setHtml($html = false)
+    {
+        $this->html = $html;
+    }
+
+    public function getHtml()
+    {
+        return $this->html;
+    }*/
+
 }

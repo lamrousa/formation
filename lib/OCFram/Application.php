@@ -10,6 +10,7 @@ abstract class Application
     protected $name;
     protected $user;
     protected $config;
+    protected $bool = false ;
 
     public function __construct()
     {
@@ -34,15 +35,22 @@ abstract class Application
         foreach ($routes as $route)
         {
             $vars = [];
+            $format = NULL ;
 
             // On regarde si des variables sont présentes dans l'URL.
             if ($route->hasAttribute('vars'))
             {
                 $vars = explode(',', $route->getAttribute('vars'));
             }
+            //Ajout perso
+            if ($route->hasAttribute('format'))
+            {
+                $format = $route->getAttribute('format');
+            }
+
 
             // On ajoute la route au routeur.
-            $router->addRoute(new Route($route->getAttribute('url'), $route->getAttribute('module'), $route->getAttribute('action'), $vars));
+            $router->addRoute(new Route($route->getAttribute('url'), $route->getAttribute('module'), $route->getAttribute('action'), $vars, $format));
         }
 
         try
@@ -50,7 +58,6 @@ abstract class Application
             // On récupère la route correspondante à l'URL.
 
             $matchedRoute = $router->getRoute($this->httpRequest->requestURI());
-
         }
         catch (\RuntimeException $e)
         {
@@ -69,6 +76,7 @@ abstract class Application
         // On instancie le contrôleur.
         $controllerClass = 'App\\'.$this->name.'\\Modules\\'.$matchedRoute->module().'\\'.$matchedRoute->module().'Controller';
 
+       $this->bool = $matchedRoute->hasFormat();
         return new $controllerClass($this, $matchedRoute->module(), $matchedRoute->action());
     }
 

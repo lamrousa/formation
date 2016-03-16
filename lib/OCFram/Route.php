@@ -15,20 +15,30 @@ class Route
     protected $module;
     protected $url;
     protected $varNames;
+    protected $format;
     protected $vars = [];
 
-    public function __construct($url, $module, $action, array $varNames)
+    public function __construct($url, $module, $action, array $varNames, $format = NULL)
     {
         $this->setUrl($url);
         $this->setModule($module);
         $this->setAction($action);
         $this->setVarNames($varNames);
+        if ($format)
+        {
+            $this->setFormat($format);
+        }
 
     }
 
     public function hasVars()
     {
         return isset($this->vars);
+    }
+    public function hasFormat()
+    {
+        return isset($this->format);
+
     }
 
     public function match($url)
@@ -90,5 +100,13 @@ class Route
     {
         return $this->vars;
     }
+    public function format()
+    {
+        return $this->format;
+    }
 
+    public function setFormat($format)
+    {
+        $this->format = $format;
+    }
 }

@@ -5,6 +5,7 @@ class Page extends ApplicationComponent
 {
     protected $contentFile;
     protected $vars = [];
+    protected $ishtml = true ;
 
     public function addVar($var, $value)
     {
@@ -17,6 +18,7 @@ class Page extends ApplicationComponent
     }
 
     public function getGeneratedPage()
+    {   if ($this->ishtml == true)
     {
         if (!file_exists($this->contentFile))
         {
@@ -34,6 +36,11 @@ class Page extends ApplicationComponent
         require __DIR__.'/../../App/'.$this->app->name().'/Templates/layout.php';
         return ob_get_clean();
     }
+    else
+    {
+        extract($this->vars);
+        require $this->contentFile;
+    }}
 
     public function setContentFile($contentFile)
     {
@@ -127,6 +134,15 @@ class Page extends ApplicationComponent
         return $this->vars;
     }
 
+    public function setIshtml($ishtml = false)
+    {
+        $this->ishtml = $ishtml;
+    }
+
+    public function getIshtml()
+    {
+        return $this->ishtml;
+    }
 
 
 
