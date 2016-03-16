@@ -9,21 +9,25 @@
 namespace OCFram;
 
 
+use Composer\DependencyResolver\Request;
 use OCFram\BackController;
 use OCFram\HTTPRequest;
 trait Centrale
 {     protected $nav = '';
     protected $links =[];
+    protected $cookie;
+    protected $IsCookie = false ;
+    protected $connect = false ;
 
 
-    public function addNav(array $navs)
+    protected function addNav(array $navs)
     {
         foreach ($navs as $key => $nav)
         {
         $this->nav .= '<li> <a href ="' . $nav . '">' . $key . '</a></li>';
         }
     }
-    public function BuildMenu()
+    protected function BuildMenu()
     {
       $this->page()->getLinks();
         extract ($this->page()->getVars());
@@ -51,106 +55,30 @@ trait Centrale
 
        $navs=array_merge($navs,$this->links);
         $this->addNav($navs);
-        return $this->nav;
-}
-public function RedirectNews404 ( HTTPRequest $request)
-{
-    if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('News')->getUnique($request->getData('id')) == NULL)) {
-        if ($this->app()->name() == 'Frontend') {
-            $this->app()->user()->setFlash('Accès interdit');
-            $this->app()->httpResponse()->redirect('/');
-        }
-        else
-        {
-            $this->app()->user()->setFlash('Accès interdit');
-            $this->app()->httpResponse()->redirect('/admin/');
+        $this->page->addVar('menu',$this->nav);
 
-        }
-    }
-    elseif (($this->managers->getManagerOf('News')->getUnique($request->getData('id')) != NULL ) && ($request->getExists('id') == TRUE ))
+}
+    public function Build()
     {
-        if ($this->app()->name() == 'Frontend') {
-            if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur())) {
-                if (!($this->app()->user()->isUser()))
-                {
-                    $this->app()->user()->setFlash('Veuillez vous connecter');
-                }
-                else {
-                    $this->app()->user()->setFlash('Accès interdit');
-
-                }
-                $this->app()->httpResponse()->redirect('/');
-            }
-
-        } elseif  ($this->app()->name() == 'Backend') {
-            if (!($this->app()->user()->isAuthenticated()))
-            {
-                $this->app()->httpResponse()->redirect('/admin/');
-            }
-
-        }
-
-    }
-elseif( !($this->app()->user()->isUser()) && ($request->getExists('id') != true ) && $this->app()->name()=='Frontend')
-{
-    $this->app()->user()->setFlash('Veuillez vous connecter');
-
-    $this->app()->httpResponse()->redirect('/');
-
-}
-
-}
-    public function RedirectComments404 (HTTPRequest $request)
-    {
-        if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('Comments')->get($request->getData('id')) == false)) {
-
-            if ($this->app()->name() == 'Frontend') {
-                $this->app()->user()->setFlash('Accès interdit');
-            $this->app()->httpResponse()->redirect('/');
-        }
-            else
-            {
-                $this->app()->user()->setFlash('Accès interdit');
-                $this->app()->httpResponse()->redirect('/admin/');
-
-            }
-
-
-
-        }
-        elseif (($this->managers->getManagerOf('Comments')->get($request->getData('id')) != false) && ($request->getExists('id') == TRUE ))
+        if ($this->connect == true)
         {
-            if ($this->app()->name() == 'Frontend') {
-
-                if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur())) {
-
-                    if (!($this->app()->user()->isUser()))
-                    {
-                        $this->app()->user()->setFlash('Veuillez vous connecter');
-                    }
-                    else {
-                        $this->app()->user()->setFlash('Accès interdit');
-
-                    }
-                    $this->app()->httpResponse()->redirect('/');
-                }
-
-            } elseif  ($this->app()->name() == 'Backend') {
-                if (!($this->app()->user()->isAuthenticated()))
-                {
-                    $this->app()->httpResponse()->redirect('/admin/');
-                }
-
-            }
-
+            $this->RedirectConnect();
         }
+        if ($this->IsCookie == true )
+        {
+            $this->setCookie($request);
+        }
+        $this->BuildMenu();
 
     }
 
-    public function RedirectConnect()
+
+    protected function RedirectConnect()
     {
         if (($this->app()->name()=='Backend') && ($this->app()->user()->isUser()))
         {
+            $this->app()->user()->setFlash('Accès interdit');
+
             $this->app()->httpResponse()->redirect('/');
 
         }
@@ -171,10 +99,27 @@ elseif( !($this->app()->user()->isUser()) && ($request->getExists('id') != true 
         }
 
     }
-    public function addLinks(array $links)
+    protected function addLinks(array $links)
     {
         array_merge($this->links, $links);
     }
+    protected function setCookie(HTTPRequest $request)
+    {
+       $this->cookie =$request->cookieData('cookie');
+    }
+    protected function getCookie()
+    {
+        return $this->cookie;
+    }
 
+    public function setConnect($connect = true )
+    {
+        $this->connect = $connect;
+    }
+
+    public function setIsCookie($IsCookie = true)
+    {
+        $this->IsCookie = $IsCookie;
+    }
 }
 

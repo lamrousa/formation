@@ -25,12 +25,12 @@ class NewsController extends BackController
         $this->app->httpResponse()->redirect('.');
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
     }
 
     public function executeDeleteComment(HTTPRequest $request)
     {
-       $this->RedirectComments404($request);
+      $this->RedirectComments404($request);
 
         $this->managers->getManagerOf('Comments')->delete($request->getData('id'));
 
@@ -39,11 +39,13 @@ class NewsController extends BackController
       $this->app->httpResponse()->redirect('.');
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
     }
 
     public function executeIndex(HTTPRequest $request)
     {
+        $this->Build();
+
         $this->page->addVar('title', 'Gestion des news');
 
         $manager = $this->managers->getManagerOf('News');
@@ -53,7 +55,6 @@ class NewsController extends BackController
         $this->page->addVar('nombreNews', $manager->count());
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
     }
 
     public function executeInsert(HTTPRequest $request)
@@ -62,7 +63,7 @@ class NewsController extends BackController
 
         $this->page->addVar('title', 'Ajout d\'une news');
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
     }
 
     public function executeUpdate(HTTPRequest $request)
@@ -74,7 +75,7 @@ class NewsController extends BackController
         $this->page->addVar('title', 'Modification d\'une news');
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
     }
 
     public function executeUpdateComment(HTTPRequest $request)
@@ -112,7 +113,7 @@ class NewsController extends BackController
 
     $this->page->addVar('form', $form->createView());
 
-    $this->page->addVar('menu',$this->BuildMenu());
+    $this->Build();
 }
 
     public function processForm(HTTPRequest $request)
@@ -158,5 +159,98 @@ class NewsController extends BackController
         }
 
         $this->page->addVar('form', $form->createView());
+    }
+    public function RedirectNews404 ( HTTPRequest $request)
+    {
+        if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('News')->getUnique($request->getData('id')) == NULL)) {
+            if ($this->app()->name() == 'Frontend') {
+                $this->app()->user()->setFlash('Accès interdit');
+                $this->app()->httpResponse()->redirect('/');
+            }
+            else
+            {
+                $this->app()->user()->setFlash('Accès interdit');
+                $this->app()->httpResponse()->redirect('/admin/');
+
+            }
+        }
+        elseif (($this->managers->getManagerOf('News')->getUnique($request->getData('id')) != NULL ) && ($request->getExists('id') == TRUE ))
+        {
+            if ($this->app()->name() == 'Frontend') {
+                if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur())) {
+                    if (!($this->app()->user()->isUser()))
+                    {
+                        $this->app()->user()->setFlash('Veuillez vous connecter');
+                    }
+                    else {
+                        $this->app()->user()->setFlash('Accès interdit');
+
+                    }
+                    $this->app()->httpResponse()->redirect('/');
+                }
+
+            } elseif  ($this->app()->name() == 'Backend') {
+                if (!($this->app()->user()->isAuthenticated()))
+                {
+                    $this->app()->httpResponse()->redirect('/admin/');
+                }
+
+            }
+
+        }
+        elseif( !($this->app()->user()->isUser()) && ($request->getExists('id') != true ) && $this->app()->name()=='Frontend')
+        {
+            $this->app()->user()->setFlash('Veuillez vous connecter');
+
+            $this->app()->httpResponse()->redirect('/');
+
+        }
+
+    }
+    public function RedirectComments404 (HTTPRequest $request)
+    {
+        if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('Comments')->get($request->getData('id')) == false)) {
+
+            if ($this->app()->name() == 'Frontend') {
+                $this->app()->user()->setFlash('Accès interdit');
+                $this->app()->httpResponse()->redirect('/');
+            }
+            else
+            {
+                $this->app()->user()->setFlash('Accès interdit');
+                $this->app()->httpResponse()->redirect('/admin/');
+
+            }
+
+
+
+        }
+        elseif (($this->managers->getManagerOf('Comments')->get($request->getData('id')) != false) && ($request->getExists('id') == TRUE ))
+        {
+            if ($this->app()->name() == 'Frontend') {
+
+                if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur())) {
+
+                    if (!($this->app()->user()->isUser()))
+                    {
+                        $this->app()->user()->setFlash('Veuillez vous connecter');
+                    }
+                    else {
+                        $this->app()->user()->setFlash('Accès interdit');
+
+                    }
+                    $this->app()->httpResponse()->redirect('/');
+                }
+
+            } elseif  ($this->app()->name() == 'Backend') {
+                if (!($this->app()->user()->isAuthenticated()))
+                {
+                    $this->app()->httpResponse()->redirect('/admin/');
+                }
+
+            }
+
+        }
+
     }
 }

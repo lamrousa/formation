@@ -10,7 +10,8 @@ class ConnexionController extends BackController
 {
     public function executeSignup (HTTPRequest $request)
     {
-        $this->RedirectConnect($this->app());
+        $this->connect = true;
+        $this->Build();
 
         $this->page->addVar('title','signin');
         if ($request->postExists('slogin'))
@@ -56,12 +57,13 @@ class ConnexionController extends BackController
         }
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
 
     }
     public function executeLogin (HTTPRequest $request)
     {
-        $this->RedirectConnect($this->app());
+        $this->connect = true;
+        $this->Build();
+
 
         $this->page->addVar('title','login');
         if ($request->postExists('llogin')) {
@@ -98,13 +100,14 @@ class ConnexionController extends BackController
             }
         }
 
-        $this->page->addVar('menu',$this->BuildMenu());
 
     }
 
 
    public function executeLogout (HTTPRequest $request)
 {
+    $this->Build();
+
     $this->page->addVar('title','DeleteUser');
     if ($this->app->user()->isUser() == true )
     {
@@ -117,6 +120,5 @@ class ConnexionController extends BackController
         $this->app->httpResponse()->redirect('.');
     }
 
-    $this->page->addVar('menu',$this->BuildMenu());
 }
 }

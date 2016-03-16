@@ -51,7 +51,7 @@ class NewsController extends BackController
 
         $this->page->addVar('Newsshow', $Newsshow);
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
 
 
     }
@@ -112,7 +112,7 @@ class NewsController extends BackController
         $this->page->addVar('auteur', $auteur);
         $this->page->addVar('comments', $comments);
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
 
     }
 
@@ -167,7 +167,7 @@ class NewsController extends BackController
         $this->page->addVar('form', $form->createView());
         $this->page->addVar('title', 'Ajout d\'un commentaire');
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
 
     }
 
@@ -180,7 +180,7 @@ class NewsController extends BackController
 
         $this->page->addVar('title', 'Ajout d\'une news');
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
 
 
 
@@ -234,7 +234,7 @@ class NewsController extends BackController
             $this->page->addVar('listeCom', $listeCom);
             $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
 
 
     }
@@ -253,7 +253,7 @@ class NewsController extends BackController
                 $this->app->httpResponse()->redirect('.');
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
 
     }
 
@@ -289,7 +289,7 @@ class NewsController extends BackController
                 $this->page->addVar('form', $form->createView());
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
         }
 
 
@@ -301,7 +301,7 @@ class NewsController extends BackController
      $this->page->addVar('title', 'Modification d\'une news');
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
     }
 
     public function executeDelete(HTTPRequest $request)
@@ -318,7 +318,7 @@ class NewsController extends BackController
                 $this->app->httpResponse()->redirect('.');
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
 
     }
 
@@ -387,7 +387,7 @@ class NewsController extends BackController
         }
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
     }
 
     public function executeShowauthoruser(HTTPRequest $request)
@@ -410,7 +410,7 @@ class NewsController extends BackController
         $this->page->addVar('auteur', $auteur);
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
     }
 
     public function sendmail($id,$email)
@@ -453,6 +453,99 @@ class NewsController extends BackController
             }
         }
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
+    }
+    public function RedirectNews404 ( HTTPRequest $request)
+    {
+        if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('News')->getUnique($request->getData('id')) == NULL)) {
+            if ($this->app()->name() == 'Frontend') {
+                $this->app()->user()->setFlash('Accès interdit');
+                $this->app()->httpResponse()->redirect('/');
+            }
+            else
+            {
+                $this->app()->user()->setFlash('Accès interdit');
+                $this->app()->httpResponse()->redirect('/admin/');
+
+            }
+        }
+        elseif (($this->managers->getManagerOf('News')->getUnique($request->getData('id')) != NULL ) && ($request->getExists('id') == TRUE ))
+        {
+            if ($this->app()->name() == 'Frontend') {
+                if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur())) {
+                    if (!($this->app()->user()->isUser()))
+                    {
+                        $this->app()->user()->setFlash('Veuillez vous connecter');
+                    }
+                    else {
+                        $this->app()->user()->setFlash('Accès interdit');
+
+                    }
+                    $this->app()->httpResponse()->redirect('/');
+                }
+
+            } elseif  ($this->app()->name() == 'Backend') {
+                if (!($this->app()->user()->isAuthenticated()))
+                {
+                    $this->app()->httpResponse()->redirect('/admin/');
+                }
+
+            }
+
+        }
+        elseif( !($this->app()->user()->isUser()) && ($request->getExists('id') != true ) && $this->app()->name()=='Frontend')
+        {
+            $this->app()->user()->setFlash('Veuillez vous connecter');
+
+            $this->app()->httpResponse()->redirect('/');
+
+        }
+
+    }
+    public function RedirectComments404 (HTTPRequest $request)
+    {
+        if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('Comments')->get($request->getData('id')) == false)) {
+
+            if ($this->app()->name() == 'Frontend') {
+                $this->app()->user()->setFlash('Accès interdit');
+                $this->app()->httpResponse()->redirect('/');
+            }
+            else
+            {
+                $this->app()->user()->setFlash('Accès interdit');
+                $this->app()->httpResponse()->redirect('/admin/');
+
+            }
+
+
+
+        }
+        elseif (($this->managers->getManagerOf('Comments')->get($request->getData('id')) != false) && ($request->getExists('id') == TRUE ))
+        {
+            if ($this->app()->name() == 'Frontend') {
+
+                if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur())) {
+
+                    if (!($this->app()->user()->isUser()))
+                    {
+                        $this->app()->user()->setFlash('Veuillez vous connecter');
+                    }
+                    else {
+                        $this->app()->user()->setFlash('Accès interdit');
+
+                    }
+                    $this->app()->httpResponse()->redirect('/');
+                }
+
+            } elseif  ($this->app()->name() == 'Backend') {
+                if (!($this->app()->user()->isAuthenticated()))
+                {
+                    $this->app()->httpResponse()->redirect('/admin/');
+                }
+
+            }
+
+        }
+
     }
 }

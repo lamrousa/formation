@@ -9,8 +9,9 @@ class ConnexionController extends BackController
 {
     public function executeIndex(HTTPRequest $request)
     {
-        $this->page->addVar('menu',$this->BuildMenu());
-        $this->RedirectConnect($this->app());
+       $this->connect = true;
+        $this->Build();
+
 
             $this->page->addVar('title', 'Connexion');
 
@@ -45,7 +46,7 @@ class ConnexionController extends BackController
 
 
 
-        $this->page->addVar('menu',$this->BuildMenu());
+        $this->Build();
     }
 
 }
