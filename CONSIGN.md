@@ -1,4 +1,4 @@
-## Exercice for Erwan
+## Exercice for Aghiles
 
 # 0 - Build the full FrameWork from OCRoom : Done !
 
@@ -56,3 +56,9 @@ This part consist to add a functionnality for ask a route for a Controller and a
 * Idem pour la gestion de cookies pour la reconnexion, pour la redirection automatique en cas de non connexion lors de certaines actions, etc.
 * En fait, il faudrait gérer la centralisation des actions des contrôleurs dans un nouvel élément du framework
 * Il faut créer un nouveau composant (ne pas le mettre dans Application ou autre)
+
+# 8 - Add Feature : Ajax ! Flower Party :)
+* Actuellement, toutes les pages retournées par les applications (Front et Back) retournent des pages générées en HTML. 
+* Faire en sorte que lorsque l'on veut un retour JSON parfait, on puisse l'avoir à la demande. 
+* Dans un premier temps, déterminer quel process va permettre de déterminer le type/format de retour que l'on attend. Valider cette approche avec Baptiste ou moi-même.
+* Dans un second temps mettre en place un test bateau selon le principe arrêté.
