@@ -180,7 +180,6 @@ class NewsController extends BackController
                 if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur())) {
                     if (!($this->app()->user()->isUser()))
                     {
-                        var_dump(2);  ;
                         $this->app()->user()->setFlash('Veuillez vous connecter');
                     }
                     else {
@@ -201,7 +200,6 @@ class NewsController extends BackController
         }
         elseif( !($this->app()->user()->isUser()) && ($request->getExists('id') != true ) && ($this->app()->name()=='Frontend') && !($this->app()->user()->isAuthenticated()))
         {
-            var_dump(3);
             $this->app()->user()->setFlash('Veuillez vous connecter');
 
             $this->app()->httpResponse()->redirect('/');
@@ -214,13 +212,11 @@ class NewsController extends BackController
         if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('Comments')->get($request->getData('id')) == false)) {
 
             if ($this->app()->name() == 'Frontend') {
-                var_dump(7);  ;
                 $this->app()->user()->setFlash('Accès interdit');
                 $this->app()->httpResponse()->redirect('/');
             }
             else
             {
-                var_dump(8);  ;
                 $this->app()->user()->setFlash('Accès interdit');
                 $this->app()->httpResponse()->redirect('/admin/');
 
@@ -236,11 +232,11 @@ class NewsController extends BackController
                 if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur())) {
 
                     if (!($this->app()->user()->isUser()))
-                    { var_dump(1);
+                    {
                         $this->app()->user()->setFlash('Veuillez vous connecter');
                     }
                     else {
-                        var_dump(9);  ;
+
                         $this->app()->user()->setFlash('Accès interdit');
 
                     }

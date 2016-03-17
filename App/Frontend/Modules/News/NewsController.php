@@ -460,7 +460,6 @@ class NewsController extends BackController
     {
         if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('News')->getUnique($request->getData('id')) == NULL)) {
             if ($this->app()->name() == 'Frontend') {
-                var_dump(10);  ;
                 $this->app()->user()->setFlash('Accès interdit');
                 $this->app()->httpResponse()->redirect('/');
             }
@@ -477,7 +476,6 @@ class NewsController extends BackController
                 if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur())) {
                     if (!($this->app()->user()->isUser()))
                     {
-                        var_dump(4);
                         $this->app()->user()->setFlash('Veuillez vous connecter');
                     }
                     else {
@@ -497,7 +495,7 @@ class NewsController extends BackController
 
         }
         elseif( !($this->app()->user()->isUser()) && ($request->getExists('id') != true ) && $this->app()->name()=='Frontend')
-        {   var_dump(5);
+        {
             $this->app()->user()->setFlash('Veuillez vous connecter');
 
             $this->app()->httpResponse()->redirect('/');
@@ -510,13 +508,11 @@ class NewsController extends BackController
         if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('Comments')->get($request->getData('id')) == false)) {
 
             if ($this->app()->name() == 'Frontend') {
-                var_dump(11);  ;
                 $this->app()->user()->setFlash('Accès interdit');
                 $this->app()->httpResponse()->redirect('/');
             }
             else
             {
-                var_dump(12);  ;
 
                 $this->app()->user()->setFlash('Accès interdit');
                 $this->app()->httpResponse()->redirect('/admin/');
@@ -534,11 +530,9 @@ class NewsController extends BackController
 
                     if (!($this->app()->user()->isUser()) && !($this->app()->user()->isAuthenticated()))
                     {
-                        var_dump(6);
                         $this->app()->user()->setFlash('Veuillez vous connecter');
                     }
                     elseif (!($this->app()->user()->isAuthenticated())) {
-                        var_dump(14);  ;
 
                         $this->app()->user()->setFlash('Accès interdit');
                         $this->app()->httpResponse()->redirect('/');
@@ -559,7 +553,7 @@ class NewsController extends BackController
     }
 
     public function executeTest(HTTPRequest $request)
-    {
+    { die();
         if ($request->method() == 'POST') {
             $news= (int) $request->postData('news');
             $msg='';
@@ -627,7 +621,7 @@ class NewsController extends BackController
         }}
     public function executeShowDynamicForm(HTTPRequest $request)
     {
-        if ($request->method() == 'POST' && $request->postData('nom')=='ok')
+        if ($request->method() == 'POST' && $request->postExists('news'))
         {
 
             $comment = new Comment;
@@ -639,7 +633,10 @@ class NewsController extends BackController
                 $formBuilder->build();
             }
             $form = $formBuilder->form();
+
             $this->page->addVar('form', $form->createView());
+            $this->page->addVar('news', $request->postData('news'));
+
         }
 }
 

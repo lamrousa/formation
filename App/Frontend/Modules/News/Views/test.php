@@ -1,10 +1,15 @@
 
 <p style="text-align: center;"><?= $msg ?> </p>
 <?php
-foreach ($comments as $comment)
-{
+$coms = [];
 
-    ?>
+foreach ($comments as $comment) {
+    $comn = array('id' => $comment->id(), 'auteur' => $comment['auteur'], 'contenu' => $comment['contenu'], 'date' => $comment['date']);
+    $coms[]= $comn;
+}
+echo json_encode($coms);
+
+   /* ?>
     <fieldset>
         <legend>
             Posté par <strong><?= htmlspecialchars($comment['auteur']) ?>

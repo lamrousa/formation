@@ -64,6 +64,7 @@ foreach ($comments as $comment)
 
 
 </form>
+<p id="test"></p>
 
 <script>
   $(document).ready(function() {
@@ -76,7 +77,7 @@ foreach ($comments as $comment)
         // Envoi de la requête HTTP en mode asynchrone
         $.post(
           'showDynamicForm.php', // Le nom du fichier indiqué dans le formulaire
-      { nom: 'ok'}, // La méthode indiquée dans le formulaire (get ou post)
+      { news: <?= $news->id() ?>}, // La méthode indiquée dans le formulaire (get ou post)
          function(data) { // Je récupère la réponse du fichier PHP
             $('#ICI').html(data); // J'affiche cette réponse
           }
@@ -101,6 +102,13 @@ foreach ($comments as $comment)
       var email = $('[name="email"]').val();
       var contenu = $('[name="contenu"]').val();
 
+      var postData = {
+        "auteur" : auteur,
+      "email" : email ,
+      "news" : news,
+      "contenu" : contenu
+    }
+
       //var $data = $this.serialize() ;
 
       // Je vérifie une première fois pour ne pas lancer la requête HTTP
@@ -111,22 +119,28 @@ foreach ($comments as $comment)
 
       else {
 
-        $.post(
+       /* $.post(
             'test.php', // Le nom du fichier indiqué dans le formulaire
             { news:  news, auteur: auteur, email: email, contenu: contenu }, // La méthode indiquée dans le formulaire (get ou post)
             function(data) { // Je récupère la réponse du fichier PHP
               $('#result').html(data); // J'affiche cette réponse
             }
-        );
+        );*/
+        $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: "test.php",
+          data: postData,
+          success: function(){
+            alert('Items added');
+          },
+          error: function(e){
+            console.log(e.message);
+          }
+        });
       }
     });
   });
 </script>
 
-<script>$('#toto').click(function() {
-    $('h2').append(' ***');
 
-  });
-
-</script>
-<script></script>
