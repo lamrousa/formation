@@ -38,6 +38,7 @@ class Page extends ApplicationComponent
     }
     else
     {
+        $user = $this->app->user();
         extract($this->vars);
         require $this->contentFile;
     }}

@@ -15,5 +15,7 @@
   <route url="/showauthoruser-([0-9]+)\.html" module="News" action="showauthoruser" vars="id" />
   <route url="/comment-update-([0-9]+)\.html" module="News" action="updateComment" vars="id" />
   <route url="/comment-delete-([0-9]+)\.html" module="News" action="deleteComment" vars="id" />
-  <route url="/test\.json" module="News" action="test" format="js" />
+  <route url="/test\.php" module="News" action="test" format="js" />
+  <route url="/showDynamicForm\.php" module="News" action="showDynamicForm" format="js" />
+
 </routes>

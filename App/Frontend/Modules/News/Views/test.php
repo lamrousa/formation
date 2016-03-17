@@ -1,12 +1,23 @@
 
-
-
+<p style="text-align: center;"><?= $msg ?> </p>
 <?php
-/**
- * Created by PhpStorm.
- * User: alamrous
- * Date: 16/03/2016
- * Time: 16:58
- */
+foreach ($comments as $comment)
+{
 
-echo $toto;
+    ?>
+    <fieldset>
+        <legend>
+            Posté par <strong><?= htmlspecialchars($comment['auteur']) ?>
+
+            </strong>
+            le <?= $comment['date']->format('d/m/Y à H\hi') ?>
+            <?php if ($user->isAuthenticated()) { ?> -
+                <a href="<?=  $NewsupdateComment[$comment->id()] ?>">Modifier</a> |
+                <a href="<?=  $NewsdeleteComment[$comment->id()] ?>">Supprimer</a>
+            <?php } ?>
+        </legend>
+        <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>
+
+    </fieldset>
+    <?php
+}

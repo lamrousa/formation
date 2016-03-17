@@ -7,6 +7,8 @@ class CommentsManagerPDO extends CommentsManager
 {
     protected function add(Comment $comment)
     {
+        if (filter_var($comment->email(), FILTER_VALIDATE_EMAIL) == true)
+        {
         $q = $this->dao->prepare('INSERT INTO comments SET news = :news, auteur = :auteur, contenu = :contenu, email = :email,  date = NOW()');
 
         $q->bindValue(':news', $comment->news(), \PDO::PARAM_INT);
@@ -18,6 +20,8 @@ class CommentsManagerPDO extends CommentsManager
         $q->execute();
 
         $comment->setId($this->dao->lastInsertId());
+    }
+        else throw new \InvalidArgumentException('L\'email n\'est pas dans le  bon format');
     }
 
     public function delete($id)
@@ -40,7 +44,8 @@ class CommentsManagerPDO extends CommentsManager
         $q = $this->dao->prepare('
             SELECT id, news, auteur, contenu, email, date
             FROM comments
-            WHERE news = :news');
+            WHERE news = :news
+            ORDER BY date ');
         $q->bindValue(':news', $news, \PDO::PARAM_INT);
         $q->execute();
 

@@ -26,6 +26,7 @@ class FrontendApplication extends Application
 
        if ($this->bool == true)
         {
+
             $this->httpResponse()->getPage()->setIshtml(false);
         }
 

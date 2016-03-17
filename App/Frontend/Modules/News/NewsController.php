@@ -97,10 +97,10 @@ class NewsController extends BackController
 
                             $Newsshowuser [$com['auteur']] = $this->page->getSpecificLink('News', 'showuser', array($auth->id()));
                         } else $Newsshowuser [$com['auteur']] = NULL;
-
                     }
 
                 }
+                $Newsshowuser [$com['auteur']] = NULL;
             }
             $this->page->addVar('Newsshowuser', $Newsshowuser);
             $this->page->addVar('NewsupdateComment', $NewsupdateComment);
@@ -460,6 +460,7 @@ class NewsController extends BackController
     {
         if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('News')->getUnique($request->getData('id')) == NULL)) {
             if ($this->app()->name() == 'Frontend') {
+                var_dump(10);  ;
                 $this->app()->user()->setFlash('Accès interdit');
                 $this->app()->httpResponse()->redirect('/');
             }
@@ -476,6 +477,7 @@ class NewsController extends BackController
                 if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('News')->getUnique($request->getData('id'))->auteur())) {
                     if (!($this->app()->user()->isUser()))
                     {
+                        var_dump(4);
                         $this->app()->user()->setFlash('Veuillez vous connecter');
                     }
                     else {
@@ -495,7 +497,7 @@ class NewsController extends BackController
 
         }
         elseif( !($this->app()->user()->isUser()) && ($request->getExists('id') != true ) && $this->app()->name()=='Frontend')
-        {
+        {   var_dump(5);
             $this->app()->user()->setFlash('Veuillez vous connecter');
 
             $this->app()->httpResponse()->redirect('/');
@@ -508,11 +510,14 @@ class NewsController extends BackController
         if (($request->getExists('id') == TRUE) && ($this->managers->getManagerOf('Comments')->get($request->getData('id')) == false)) {
 
             if ($this->app()->name() == 'Frontend') {
+                var_dump(11);  ;
                 $this->app()->user()->setFlash('Accès interdit');
                 $this->app()->httpResponse()->redirect('/');
             }
             else
             {
+                var_dump(12);  ;
+
                 $this->app()->user()->setFlash('Accès interdit');
                 $this->app()->httpResponse()->redirect('/admin/');
 
@@ -527,15 +532,18 @@ class NewsController extends BackController
 
                 if (!($this->app()->user()->isUser()) || ($this->app()->user()->getAttribute('log') != $this->managers->getManagerOf('Comments')->get($request->getData('id'))->auteur())) {
 
-                    if (!($this->app()->user()->isUser()))
+                    if (!($this->app()->user()->isUser()) && !($this->app()->user()->isAuthenticated()))
                     {
+                        var_dump(6);
                         $this->app()->user()->setFlash('Veuillez vous connecter');
                     }
-                    else {
+                    elseif (!($this->app()->user()->isAuthenticated())) {
+                        var_dump(14);  ;
+
                         $this->app()->user()->setFlash('Accès interdit');
+                        $this->app()->httpResponse()->redirect('/');
 
                     }
-                    $this->app()->httpResponse()->redirect('/');
                 }
 
             } elseif  ($this->app()->name() == 'Backend') {
@@ -552,6 +560,87 @@ class NewsController extends BackController
 
     public function executeTest(HTTPRequest $request)
     {
-       $this->page()->addVar('toto', 'Maison');
-    }
+        if ($request->method() == 'POST') {
+            $news= (int) $request->postData('news');
+            $msg='';
+
+            if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
+                $comment = new Comment([
+                    'news' => $news,
+                    'auteur' => $this->app->user()->getAttribute('log'),
+                    'contenu' => $request->postData('contenu'),
+                    'email' => $this->app->user()->getAttribute('mail'),
+
+                ]);
+                $email= $this->app->user()->getAttribute('mail');
+
+            } else {
+                $comment = new Comment([
+                    'news' => $news,
+                    'auteur' => $request->postData('auteur'),
+                    'contenu' => $request->postData('contenu'),
+                    'email' => $request->postData('email'),
+
+                ]);
+                $email=$request->postData('email');
+            }
+            if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && !($this->app()->user()->isAuthenticated()))
+            {
+                $msg .='L\'email est invalide';
+            }
+            else
+            {
+
+            $formBuilder = new CommentFormBuilder($comment);
+
+            if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
+                $formBuilder->buildUser();
+            } else {
+                $formBuilder->build();
+            }
+            $form = $formBuilder->form();
+
+            $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
+
+            if ($formHandler->process()) {
+                $this->sendmail($request->postData('news'),$email);
+                $msg.='Votre commentaire a bien été ajouté';
+
+
+            }
+               }
+            $comments = $this->managers->getManagerOf('Comments')->getListOf( $request->postData('news'));
+            if ($comments != NULL) {
+                foreach ($comments as $com) {
+
+                    $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
+                    $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
+
+                    $this->page->addVar('NewsupdateComment', $NewsupdateComment);
+                    $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
+                                      $this->page->addVar('comments', $comments);
+
+                }
+            }
+            $this->page()->addVar('msg',$msg) ;
+
+        }}
+    public function executeShowDynamicForm(HTTPRequest $request)
+    {
+        if ($request->method() == 'POST' && $request->postData('nom')=='ok')
+        {
+
+            $comment = new Comment;
+
+            $formBuilder = new CommentFormBuilder($comment);
+            if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
+                $formBuilder->buildUser();
+            } else {
+                $formBuilder->build();
+            }
+            $form = $formBuilder->form();
+            $this->page->addVar('form', $form->createView());
+        }
+}
+
 }

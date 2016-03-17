@@ -70,7 +70,7 @@ class ConnexionController extends BackController
             $login = $request->postData('llogin');
             $password = $request->postData('lpassword');
 
-            //var_dump($this->managers->getManagerOf('Users')->getUser($login)); die();
+            //var_dump($this->managers->getManagerOf('Users')->getUser($login));  ;
             if ($this->managers->getManagerOf('Users')->getUser($login) != NULL)
             {
 
