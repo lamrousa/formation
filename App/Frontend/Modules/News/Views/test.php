@@ -1,6 +1,13 @@
 
-<p style="text-align: center;"><?= $msg ?> </p>
 <?php
+
+    print json_encode($comments);
+
+/*
+<p style="text-align: center;"><?= $msg ?> </p>
+ */?>
+<?php
+/*
 $coms = [];
 
 foreach ($comments as $comment) {
@@ -25,4 +32,4 @@ echo json_encode($coms);
 
     </fieldset>
     <?php
-}
+}*/

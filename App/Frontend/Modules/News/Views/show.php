@@ -53,6 +53,9 @@ foreach ($comments as $comment)
 
 
 </div>
+<div id="wines">
+
+</div>
 
 <p><a href="<?= $NewsinsertComment[$news->id()] ?>">Ajouter un commentaire</a></p>
 
@@ -61,10 +64,8 @@ foreach ($comments as $comment)
 
 <form action="" method="post" id="monForm">
   <h3 id="ICI"></h3>
-
-
 </form>
-<p id="test"></p>
+
 
 <script>
   $(document).ready(function() {
@@ -88,59 +89,53 @@ foreach ($comments as $comment)
 </script>
 
 
-<script>
-  $(document).ready(function() {
-    // Lorsque je soumets le formulaire
-    $('#monForm').on('submit', function(e) {
-      e.preventDefault(); // J'empêche le comportement par défaut du navigateur, c-à-d de soumettre le formulaire
 
-      var $this = $(this); // L'objet jQuery du formulaire
+<script type="text/javascript">
+  function isValidEmailAddress(emailAddress) {
+    var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
+    return pattern.test(emailAddress);
+  };
 
-      // Je récupère les valeurs
-      var news = <?= $news->id()  ?> ;
+  $(document).ready(function(){
+    $('#monForm').on('submit', function() { // This event fires when a button is clicked
+      var news = $('[name="news"]').val();
       var auteur = $('[name="auteur"]').val();
       var email = $('[name="email"]').val();
       var contenu = $('[name="contenu"]').val();
 
-      var postData = {
-        "auteur" : auteur,
-      "email" : email ,
-      "news" : news,
-      "contenu" : contenu
-    }
-
-      //var $data = $this.serialize() ;
-
-      // Je vérifie une première fois pour ne pas lancer la requête HTTP
-      // si je sais que mon PHP renverra une erreur
-      if(auteur === '' ||contenu === '') {
-        alert('Les champs doivent êtres remplis');
+      if (auteur === '' || contenu ==='')   { // If clicked buttons value is all, we post every wine
+        alert('Champs vides');
       }
-
+          else if (!isValidEmailAddress(email))
+      {
+        alert('Email Invalide');
+      }
       else {
 
-       /* $.post(
-            'test.php', // Le nom du fichier indiqué dans le formulaire
-            { news:  news, auteur: auteur, email: email, contenu: contenu }, // La méthode indiquée dans le formulaire (get ou post)
-            function(data) { // Je récupère la réponse du fichier PHP
-              $('#result').html(data); // J'affiche cette réponse
-            }
-        );*/
-        $.ajax({
-          type: "POST",
-          dataType: "json",
-          url: "test.php",
-          data: postData,
-          success: function(){
-            alert('Items added');
-          },
-          error: function(e){
-            console.log(e.message);
-          }
-        });
+
+        $.ajax({ // ajax call starts
+              url: 'test.php', // JQuery loads serverside.php
+              type: "POST",
+              data: 'news=' + news + '&auteur=' + auteur + '&email=' + email + '&contenu=' + contenu, // Send value of the clicked button
+              dataType: 'json' // Choosing a JSON datatype
+            })
+            .done(function (data) { // Variable data contains the data we get from serverside
+
+
+              // If clicked buttons value is red, we post only red wines
+              for (var i in data) {
+                $('#wines').append(' <fieldset><legend>Posté par <strong>' + data[i].auteur + '</strong> le ' + data[i].date + '</legend><p>' + data[i].contenu + '</p>                    </fieldset>');
+              }
+
+
+            });
       }
+
+
+      return false; // keeps the page from not refreshing
     });
   });
 </script>
+
 
 

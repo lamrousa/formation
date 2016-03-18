@@ -553,10 +553,21 @@ class NewsController extends BackController
     }
 
     public function executeTest(HTTPRequest $request)
-    { die();
-        if ($request->method() == 'POST') {
-            $news= (int) $request->postData('news');
-            $msg='';
+    {
+        // Get value of clicked button
+
+
+        $news= $request->postData('news');
+
+// Red wine table
+
+// Combine red and white tables into one multidimensional table
+
+
+        //$this->page()->addVar('comment',$comment);
+
+
+
 
             if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
                 $comment = new Comment([
@@ -580,10 +591,12 @@ class NewsController extends BackController
             }
             if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && !($this->app()->user()->isAuthenticated()))
             {
-                $msg .='L\'email est invalide';
+                $msg ='L\'email est invalide';
             }
             else
             {
+               $id = $this->managers->getManagerOf('Comments')->getLastId($news);
+
 
             $formBuilder = new CommentFormBuilder($comment);
 
@@ -597,28 +610,30 @@ class NewsController extends BackController
             $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
 
             if ($formHandler->process()) {
-                $this->sendmail($request->postData('news'),$email);
-                $msg.='Votre commentaire a bien été ajouté';
+               // $this->sendmail($request->postData('news'),$email);
+                $msg='Votre commentaire a bien été ajouté';
 
 
             }
-               }
-            $comments = $this->managers->getManagerOf('Comments')->getListOf( $request->postData('news'));
-            if ($comments != NULL) {
-                foreach ($comments as $com) {
+                $comments = $this->managers->getManagerOf('Comments')->getListAfterId($id,$news);
 
+
+            if ($comments != NULL) {
+                //$tableau = array(array());
+                foreach ($comments as $com) {
+/*
                     $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
                     $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
 
                     $this->page->addVar('NewsupdateComment', $NewsupdateComment);
                     $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
-                                      $this->page->addVar('comments', $comments);
-
+                    */
+                    $tableau[$com->id()]= array("auteur" => $com->auteur(),"email" => $com->email(),"contenu" => $com->contenu(), "date" => $com->date());
                 }
+                $this->page->addVar('comments', $tableau);
             }
-            $this->page()->addVar('msg',$msg) ;
-
-        }}
+            }
+        }
     public function executeShowDynamicForm(HTTPRequest $request)
     {
         if ($request->method() == 'POST' && $request->postExists('news'))

@@ -142,6 +142,31 @@ class CommentsManagerPDO extends CommentsManager
 
         return $q->fetchAll() ;
     }
+    public function getLastId($news)
+    {
+        $q = $this->dao->prepare('SELECT id FROM comments
+        WHERE news = :news
+        ORDER BY id DESC
+        LIMIT 1
+        ');
+
+        $q->bindValue(':news', (int) $news, \PDO::PARAM_INT);
+        $q->execute();
+
+        return $q->fetchColumn();
+    }
+    public function getListAfterId($id,$news)
+    {
+        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email FROM comments WHERE id > :id AND news= :news');
+        $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
+        $q->bindValue(':news', (int) $news, \PDO::PARAM_INT);
+
+        $q->execute();
+
+        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
+
+        return $q->fetchAll();
+    }
 
 
 }
