@@ -562,13 +562,16 @@ class NewsController extends BackController
 
         }
 
+
     }
+
 
     public function executeTest(HTTPRequest $request)
     {
         // Get value of clicked button
-
-
+       // $this->page()->setIshtml();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
         $news= $request->postData('news');
 
 // Red wine table
@@ -646,6 +649,13 @@ class NewsController extends BackController
         $this->page->addVar('msg',$msg);
 
 
+    }
+    else
+    {
+        $this->app()->user()->setFlash('Accès interdit');
+
+        $this->app()->httpResponse()->redirect('/');
+    }
     }
 
 }

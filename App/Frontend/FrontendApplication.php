@@ -26,8 +26,8 @@ class FrontendApplication extends Application
 
        if ($this->bool == true)
         {
-
             $this->httpResponse()->getPage()->setIshtml(false);
+            var_dump($this->httpResponse()->getPage()->getIshtml());
         }
 
         $this->httpResponse->send();

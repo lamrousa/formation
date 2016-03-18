@@ -1,4 +1,4 @@
-
+<sript src="notify.min.js"></sript>
 
 <p>Par <em>
     <?php if ($auteur != NULL ) { ?>
@@ -62,8 +62,8 @@ foreach ($comments as $comment)
 
 <form action="" method="post" id="monForm" >
   <noscript>
-</form>
-<form action="<?=$NewsinsertComment[$news->id()]?>" method="post"  >
+        </form>
+        <form action="<?=$NewsinsertComment[$news->id()]?>" method="post"  >
 
   </noscript>
 <?= $form ?>
@@ -109,12 +109,14 @@ foreach ($comments as $comment)
                 if (i != "msg")
                 {
                 $('#wines').append(' <fieldset><legend>Posté par <strong>' + data[i].auteur + '</strong> le ' + data[i].date + '</legend><p>' + data[i].contenu + '</p>                    </fieldset>');
+
               }}}
               else
               { alert('Email non valide');
 
               }
             });      }
+
       return false; // keeps the page from not refreshing
     });
   });

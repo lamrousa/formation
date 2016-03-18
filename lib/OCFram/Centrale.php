@@ -60,6 +60,8 @@ trait Centrale
 }
     public function Build()
     {
+
+
         if ($this->connect == true)
         {
             $this->RedirectConnect();
@@ -98,6 +100,16 @@ trait Centrale
             $this->app()->httpResponse()->redirect('/admin/');
         }
 
+    }
+    protected function RedirectAjax()
+    {
+        if ($this->page()->getIshtml() == false )
+        {
+
+            $this->app()->user()->setFlash('Accès interdit');
+
+            $this->app()->httpResponse()->redirect('/');
+        }
     }
     protected function addLinks(array $links)
     {
