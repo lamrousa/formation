@@ -54,48 +54,33 @@ foreach ($comments as $comment)
 
 </div>
 <div id="wines">
-
 </div>
 
-<p><a href="<?= $NewsinsertComment[$news->id()] ?>">Ajouter un commentaire</a></p>
 
 
-<button id="Live">Commentaire en direct</button>
 
-<form action="" method="post" id="monForm">
-  <h3 id="ICI"></h3>
+
+<form action="" method="post" id="monForm" >
+  <noscript>
+</form>
+<form action="<?=$NewsinsertComment[$news->id()]?>" method="post"  >
+
+  </noscript>
+<?= $form ?>
+  <input type ="hidden" name="news" value= "<?= $news->id() ?>" />
+
+  <input type="submit" value="Commenter" />
+
 </form>
 
+<div id="print">
+  <form action="" method="post" id="monForm" >
+</div>
 
-<script>
-  $(document).ready(function() {
-    // Lorsque je soumets le formulaire
-    $('#Live').click(function() {
-
-
-      var $data = 'OK'  ;
-
-        // Envoi de la requête HTTP en mode asynchrone
-        $.post(
-          'showDynamicForm.php', // Le nom du fichier indiqué dans le formulaire
-      { news: <?= $news->id() ?>}, // La méthode indiquée dans le formulaire (get ou post)
-         function(data) { // Je récupère la réponse du fichier PHP
-            $('#ICI').html(data); // J'affiche cette réponse
-          }
-        );
-
-    });
-  });
-</script>
 
 
 
 <script type="text/javascript">
-  function isValidEmailAddress(emailAddress) {
-    var pattern = new RegExp(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/);
-    return pattern.test(emailAddress);
-  };
-
   $(document).ready(function(){
     $('#monForm').on('submit', function() { // This event fires when a button is clicked
       var news = $('[name="news"]').val();
@@ -106,10 +91,7 @@ foreach ($comments as $comment)
       if (auteur === '' || contenu ==='')   { // If clicked buttons value is all, we post every wine
         alert('Champs vides');
       }
-          else if (!isValidEmailAddress(email))
-      {
-        alert('Email Invalide');
-      }
+
       else {
 
 
@@ -120,18 +102,19 @@ foreach ($comments as $comment)
               dataType: 'json' // Choosing a JSON datatype
             })
             .done(function (data) { // Variable data contains the data we get from serverside
-
-
               // If clicked buttons value is red, we post only red wines
+              if (data.msg === "Commentaire bien ajouté")
+              {
               for (var i in data) {
+                if (i != "msg")
+                {
                 $('#wines').append(' <fieldset><legend>Posté par <strong>' + data[i].auteur + '</strong> le ' + data[i].date + '</legend><p>' + data[i].contenu + '</p>                    </fieldset>');
+              }}}
+              else
+              { alert('Email non valide');
+
               }
-
-
-            });
-      }
-
-
+            });      }
       return false; // keeps the page from not refreshing
     });
   });

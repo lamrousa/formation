@@ -68,6 +68,17 @@ class NewsController extends BackController
         $this->page->addVar('news', $news);
         $comments = $this->managers->getManagerOf('Comments')->getListOf($news->id());
         $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->id());
+        $comment = new Comment;
+
+        $formBuilder = new CommentFormBuilder($comment);
+        if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
+            $formBuilder->buildUser();
+        } else {
+            $formBuilder->build();
+        }
+        $form = $formBuilder->form();
+
+        $this->page->addVar('form', $form->createView());
 
 
         if ($auteur != NULL) {
@@ -111,6 +122,7 @@ class NewsController extends BackController
         $this->page->addVar('authors', $authors);
         $this->page->addVar('auteur', $auteur);
         $this->page->addVar('comments', $comments);
+
 
         $this->Build();
 
@@ -568,7 +580,6 @@ class NewsController extends BackController
 
 
 
-
             if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
                 $comment = new Comment([
                     'news' => $news,
@@ -589,9 +600,9 @@ class NewsController extends BackController
                 ]);
                 $email=$request->postData('email');
             }
-            if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && !($this->app()->user()->isAuthenticated()))
+            if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && ($request->postData('email') != ''))
             {
-                $msg ='L\'email est invalide';
+                $msg =false;
             }
             else
             {
@@ -611,7 +622,7 @@ class NewsController extends BackController
 
             if ($formHandler->process()) {
                // $this->sendmail($request->postData('news'),$email);
-                $msg='Votre commentaire a bien été ajouté';
+                $msg=true;
 
 
             }
@@ -619,7 +630,6 @@ class NewsController extends BackController
 
 
             if ($comments != NULL) {
-                //$tableau = array(array());
                 foreach ($comments as $com) {
 /*
                     $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
@@ -633,26 +643,9 @@ class NewsController extends BackController
                 $this->page->addVar('comments', $tableau);
             }
             }
-        }
-    public function executeShowDynamicForm(HTTPRequest $request)
-    {
-        if ($request->method() == 'POST' && $request->postExists('news'))
-        {
+        $this->page->addVar('msg',$msg);
 
-            $comment = new Comment;
 
-            $formBuilder = new CommentFormBuilder($comment);
-            if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
-                $formBuilder->buildUser();
-            } else {
-                $formBuilder->build();
-            }
-            $form = $formBuilder->form();
-
-            $this->page->addVar('form', $form->createView());
-            $this->page->addVar('news', $request->postData('news'));
-
-        }
-}
+    }
 
 }

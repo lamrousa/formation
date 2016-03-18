@@ -1,8 +1,15 @@
 
 <?php
-
+if ($msg == true) {
+    $mesg="Commentaire bien ajouté";
+    $comments=array_merge(array("msg" => $mesg),$comments);
     print json_encode($comments);
-
+}
+else
+{
+    $mesg= array ("msg" =>"Email non valide");
+    print json_encode($mesg);
+}
 /*
 <p style="text-align: center;"><?= $msg ?> </p>
  */?>

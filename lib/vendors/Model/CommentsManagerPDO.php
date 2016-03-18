@@ -7,7 +7,7 @@ class CommentsManagerPDO extends CommentsManager
 {
     protected function add(Comment $comment)
     {
-        if (filter_var($comment->email(), FILTER_VALIDATE_EMAIL) == true)
+        if (filter_var($comment->email(), FILTER_VALIDATE_EMAIL) == true || $comment->email()=='')
         {
         $q = $this->dao->prepare('INSERT INTO comments SET news = :news, auteur = :auteur, contenu = :contenu, email = :email,  date = NOW()');
 
