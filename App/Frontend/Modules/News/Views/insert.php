@@ -4,5 +4,6 @@
     <?= $form ?>
     
     <input type="submit" value="Ajouter" />
+    <p align="left"><span style="color: #b82720"> * : obligatoire</span></p>
   </h3>
 </form>

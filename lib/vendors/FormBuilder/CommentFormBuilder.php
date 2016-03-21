@@ -13,7 +13,7 @@ class CommentFormBuilder extends FormBuilder
     public function build()
     {
         $this->form->add(new StringField([
-            'label' => 'Auteur',
+            'label' => 'Auteur <span style="color: #b82720"> * </span>',
             'name' => 'auteur',
             'maxLength' => 50,
             'validators' => [
@@ -22,7 +22,7 @@ class CommentFormBuilder extends FormBuilder
             ],
         ]))
         ->add(new StringField([
-            'label' => 'Email (Facultatif)',
+            'label' => 'Email',
             'name' => 'email',
             'maxLength' => 50,
             'validators' => [
@@ -31,7 +31,7 @@ class CommentFormBuilder extends FormBuilder
         ]))
 
             ->add(new TextField([
-                'label' => 'Contenu',
+                'label' => 'Contenu <span style="color: #b82720"> * </span>',
                 'name' => 'contenu',
                 'rows' => 7,
                 'cols' => 50,
@@ -44,7 +44,7 @@ class CommentFormBuilder extends FormBuilder
     public function buildUser()
     {
         $this->form->add(new TextField([
-                'label' => 'Contenu',
+                'label' => 'Contenu <span style="color: #b82720"> * </span>',
                 'name' => 'contenu',
                 'rows' => 7,
                 'cols' => 50,

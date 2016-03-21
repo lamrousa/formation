@@ -280,8 +280,10 @@ if ($listeNews)
         $this->RedirectComments404($request);
 
             $this->page->addVar('title', 'Modification d\'un commentaire');
+        $news=$this->managers->getManagerOf('Comments')->getNewsbyCommentId($request->getData('id'));
 
-                if ($request->method() == 'POST') {
+
+        if ($request->method() == 'POST') {
                     $comment = new Comment([
                         'id' => $request->getData('id'),
                         'auteur' => $this->app->user()->getAttribute('log'),
@@ -301,7 +303,7 @@ if ($listeNews)
                 if ($formHandler->process()) {
                     $this->app->user()->setFlash('Le commentaire a bien été modifié');
 
-                    $this->app->httpResponse()->redirect('.');
+                    $this->app->httpResponse()->redirect( $this->page->getSpecificLink('News', 'show', array($news)));
                 }
 
                 $this->page->addVar('form', $form->createView());

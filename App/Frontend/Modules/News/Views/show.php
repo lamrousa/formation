@@ -1,4 +1,3 @@
-<sript src="notify.min.js"></sript>
 
 <p>Par <em>
     <?php if ($auteur != NULL ) { ?>
@@ -6,7 +5,7 @@
 <?php } else { ?>
     <?= $news['auteur'] ?> <?php } ?>
   </em> , le <?= $news['dateAjout']->format('d/m/Y à H\hi') ?></p>
-<h2><?= $news['titre'] ?></h2>
+<h2 id="box"><?= $news['titre'] ?></h2>
 <p><?= nl2br($news['contenu']) ?></p>
 
 <?php if ($news['dateAjout'] != $news['dateModif']) { ?>
@@ -67,8 +66,9 @@ foreach ($comments as $comment)
   </noscript>
 <?= $form ?>
   <input type ="hidden" name="news" value= "<?= $news->id() ?>" />
+          <i>  <i><p align="right"><span style="color: #b82720"> * : Champ Obligatoire</span></p></i></i>
 
-  <input type="submit" value="Commenter" />
+  <input id="box2" type="submit" value="Commenter" />
 
 </form>
 

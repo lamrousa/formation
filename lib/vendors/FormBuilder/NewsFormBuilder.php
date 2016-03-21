@@ -12,7 +12,7 @@ class NewsFormBuilder extends FormBuilder
     public function build()
     {
         $this->form->add(new StringField([
-            'label' => 'Auteur',
+            'label' => 'Auteur <span style="color: #b82720"> * </span>',
             'name' => 'auteur',
             'maxLength' => 20,
             'validators' => [
@@ -21,7 +21,7 @@ class NewsFormBuilder extends FormBuilder
             ],
         ]))
             ->add(new StringField([
-                'label' => 'Titre',
+                'label' => 'Titre <span style="color: #b82720"> * </span>',
                 'name' => 'titre',
                 'maxLength' => 100,
                 'validators' => [
@@ -30,7 +30,7 @@ class NewsFormBuilder extends FormBuilder
                 ],
             ]))
             ->add(new TextField([
-                'label' => 'Contenu',
+                'label' => 'Contenu <span style="color: #b82720"> * </span>',
                 'name' => 'contenu',
                 'rows' => 8,
                 'cols' => 60,
@@ -42,7 +42,7 @@ class NewsFormBuilder extends FormBuilder
     public function Userbuild ()
     {
         $this->form->add(new StringField([
-        'label' => 'Titre',
+        'label' => 'Titre <span style="color: #b82720"> * </span>',
         'name' => 'titre',
         'maxLength' => 100,
         'validators' => [
@@ -51,7 +51,7 @@ class NewsFormBuilder extends FormBuilder
         ],
     ]))
         ->add(new TextField([
-            'label' => 'Contenu',
+            'label' => 'Contenu <span style="color: #b82720"> * </span>',
             'name' => 'contenu',
             'rows' => 8,
             'cols' => 60,

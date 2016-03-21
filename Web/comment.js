@@ -15,7 +15,7 @@
 
 
             if (auteur === '' || contenu ==='')   { // If clicked buttons value is all, we post every wine
-                alert('Champs vides');
+                $("#box2").notify("Champs vides", "error");
             }
 
             else {
@@ -37,9 +37,11 @@
                                     $('#wines').append(commentbuilder(data[i]));
                                     $('#monForm').find("input[type=text], textarea").val("");
 
-                                }}}
+                                }}
+                            $("#box").notify("Commentaire Ajouté", "success");
+                        }
                         else if (data.msg == 0)
-                        { alert('Email non valide');
+                        {$("#box2").notify("Email Invalide.", "error");
 
                         }
                     });      }

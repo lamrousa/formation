@@ -72,7 +72,9 @@
     <footer></footer>
 </div>
 <script src="//code.jquery.com/jquery.js"></script>
+<script src="notify.js"></script>
 <script src="comment.js"></script>
+
 
 </body>
 </html>
