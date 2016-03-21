@@ -14,7 +14,7 @@
 <?php } ?>
 
 <?php /* <p><a href="commenter-<?= $news['id'] ?>.html">Ajouter un commentaire</a></p> */?>
-<div id="result">
+<div id="wines">
 <?php
 if (empty($comments))
 {
@@ -28,7 +28,7 @@ foreach ($comments as $comment)
 {
 
   ?>
-  <fieldset>
+  <fieldset data-id="<?= $comment->id()?>">
     <legend>
       Posté par <strong>
 
@@ -52,11 +52,14 @@ foreach ($comments as $comment)
 ?>
 
 
-</div>
-<div id="wines">
+
 </div>
 
+<script>
+  $("#result fieldset:last").data('id');
+  $("#result").find('fieldset:last');
 
+</script>
 
 
 
@@ -81,12 +84,17 @@ foreach ($comments as $comment)
 
 
 <script type="text/javascript">
+
+
+
   $(document).ready(function(){
     $('#monForm').on('submit', function() { // This event fires when a button is clicked
       var news = $('[name="news"]').val();
       var auteur = $('[name="auteur"]').val();
       var email = $('[name="email"]').val();
       var contenu = $('[name="contenu"]').val();
+      var com =   $("#wines fieldset:last").data('id');
+
 
       if (auteur === '' || contenu ==='')   { // If clicked buttons value is all, we post every wine
         alert('Champs vides');
@@ -98,7 +106,7 @@ foreach ($comments as $comment)
         $.ajax({ // ajax call starts
               url: 'test.php', // JQuery loads serverside.php
               type: "POST",
-              data: 'news=' + news + '&auteur=' + auteur + '&email=' + email + '&contenu=' + contenu, // Send value of the clicked button
+              data: 'news=' + news + '&auteur=' + auteur + '&email=' + email + '&contenu=' + contenu + '&com=' + com, // Send value of the clicked button
               dataType: 'json' // Choosing a JSON datatype
             })
             .done(function (data) { // Variable data contains the data we get from serverside
@@ -108,7 +116,7 @@ foreach ($comments as $comment)
               for (var i in data) {
                 if (i != "msg")
                 {
-                $('#wines').append(' <fieldset><legend>Posté par <strong>' + data[i].auteur + '</strong> le ' + data[i].date + '</legend><p>' + data[i].contenu + '</p>                    </fieldset>');
+                $('#wines').append(commentbuilder(data[i]));
 
               }}}
               else
@@ -120,6 +128,27 @@ foreach ($comments as $comment)
       return false; // keeps the page from not refreshing
     });
   });
+
+
+  function commentbuilder(comment)
+  {
+   return $('<fieldset></fieldset>')
+       .attr("data-id", comment.id)
+           .append (  $('<legend></legend>')
+            .append('Posté par ')
+            .append (  $('<strong></strong>')
+                .append(comment.auteur))
+                .append(' le ')
+                .append(comment.date))
+
+       .append($('<p></p>')
+
+           .append(comment.contenu)
+       )
+
+
+
+  }
 </script>
 
 

@@ -609,7 +609,7 @@ class NewsController extends BackController
             }
             else
             {
-               $id = $this->managers->getManagerOf('Comments')->getLastId($news);
+               $id = $request->postData('com');
 
 
             $formBuilder = new CommentFormBuilder($comment);
@@ -641,7 +641,7 @@ class NewsController extends BackController
                     $this->page->addVar('NewsupdateComment', $NewsupdateComment);
                     $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
                     */
-                    $tableau[$com->id()]= array("auteur" => $com->auteur(),"email" => $com->email(),"contenu" => $com->contenu(), "date" => $com->date());
+                    $tableau[$com->id()]= array("auteur" => $com->auteur(),"email" => $com->email(),"contenu" => $com->contenu(), "date" => $com->date(), "id" => $com->id());
                 }
                 $this->page->addVar('comments', $tableau);
             }
