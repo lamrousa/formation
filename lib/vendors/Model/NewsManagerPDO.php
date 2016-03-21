@@ -14,6 +14,7 @@ class NewsManagerPDO extends NewsManager
         $requete->bindValue(':contenu', $news->contenu());
 
         $requete->execute();
+
     }
 
     public function count()

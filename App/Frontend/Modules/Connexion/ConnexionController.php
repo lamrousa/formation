@@ -25,13 +25,13 @@ class ConnexionController extends BackController
         {
             if ($AUC_password == $confirmation)
             {
-            var_dump($AUC_login);var_dump(crypt('mdp','BDD'));  var_dump($AUC_email) ;
         if ($this->managers->getManagerOf('Users')->getUser($AUC_login) == NULL )
         {
             $user = new OutsideUser;
             $user->setLogin($AUC_login);
             $user->setPassword($AUC_password);
             $user->setEmail($AUC_email);
+            $user->setState(1);
 
             $this->managers->getManagerOf('Users')->addUser($user);
             $this->page->addVar('OutUser',$user);
@@ -82,6 +82,7 @@ class ConnexionController extends BackController
                         $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('id', $this->managers->getManagerOf('Users')->getUser($login)->id());
                         $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('log', $this->managers->getManagerOf('Users')->getUser($login)->login());
                        $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('mail', $this->managers->getManagerOf('Users')->getUser($login)->email());
+                        $this->managers->getManagerOf('Users')->getUser($login)->setAttribute('state', $this->managers->getManagerOf('Users')->getUser($login)->state());
 
 
                         $this->app->user()->setFlash('Connexion Reussie');

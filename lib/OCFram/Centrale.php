@@ -37,7 +37,7 @@ trait Centrale
     }
         elseif(($this->app()->user()->isAuthenticated()) && ($this->app()->name() == 'Backend'))
         {
-            $navs = array('Admin' => $adminNewsindex , 'Deconnexion' => $adminConnexionlogout, 'Ajouter une news ' => $adminNewsinsert );
+            $navs = array('Liste des News' => "/",'Mes News' => $adminNewsmynews,'Admin' => $adminNewsindex , 'Deconnexion' => $adminConnexionlogout, 'Ajouter une news ' => $adminNewsinsert );
 
         }
 

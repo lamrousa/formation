@@ -26,7 +26,8 @@ class NewsController extends BackController
 
         $listeNews = $manager->getList(0, $nombreNews);
 
-
+if ($listeNews)
+{
         foreach ($listeNews as $news) {
             if (strlen($news->contenu()) > $nombreCaracteres) {
                 $debut = substr($news->contenu(), 0, $nombreCaracteres);
@@ -47,9 +48,10 @@ class NewsController extends BackController
 
 
         }
-        $this->page->addVar('listeNews', $listeNews);
 
-        $this->page->addVar('Newsshow', $Newsshow);
+    $this->page->addVar('Newsshow', $Newsshow);
+}
+        $this->page->addVar('listeNews', $listeNews);
 
         $this->Build();
 
@@ -136,6 +138,7 @@ class NewsController extends BackController
 
         if ($request->method() == 'POST') {
             if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
+                var_dump(1);
                 $comment = new Comment([
                     'news' => $request->getData('news'),
                     'auteur' => $this->app->user()->getAttribute('log'),
@@ -215,6 +218,7 @@ class NewsController extends BackController
                 foreach ($listeNews as $news) {
                     $Newsupdate[$news->id()] = $this->page->getSpecificLink('News', 'update', array($news->id()));
                     $Newsdelete[$news->id()] = $this->page->getSpecificLink('News', 'delete', array($news->id()));
+                    $Newsshow[$news->id()] = $this->page->getSpecificLink('News', 'show', array($news->id()));
 
                 }
                 $this->page->addVar('Newsupdate', $Newsupdate);
@@ -239,13 +243,14 @@ class NewsController extends BackController
 
                 }
 
-                $this->page->addVar('Newsshow', $Newsshow);
+              //  $this->page->addVar('Newsshow', $Newsshow);
             }
 
             $this->page->addVar('listeComnews', $listeComnews);
             $this->page->addVar('listeNews', $listeNews);
             $this->page->addVar('listeCom', $listeCom);
             $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
+        $this->page->addVar('Newsshow', $Newsshow);
 
         $this->Build();
 
@@ -338,8 +343,11 @@ class NewsController extends BackController
     public function processForm(HTTPRequest $request)
     {
         if ($request->method() == 'POST') {
+     $log = $this->app->user()->getAttribute('log');
+
+
             $news = new News([
-                'auteur' => $this->app->user()->getAttribute('log'),
+                'auteur' => $log,
                 'titre' => $request->postData('titre'),
                 'contenu' => $request->postData('contenu')
             ]);
@@ -633,6 +641,14 @@ class NewsController extends BackController
 
 
             if ($comments != NULL) {
+                if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true)
+                {
+                   $etat=$this->app->user()->getAttribute('state');
+                }
+                else
+                {
+                    $etat=0;
+                }
                 foreach ($comments as $com) {
 /*
                     $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
@@ -641,7 +657,7 @@ class NewsController extends BackController
                     $this->page->addVar('NewsupdateComment', $NewsupdateComment);
                     $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
                     */
-                    $tableau[$com->id()]= array("auteur" => $com->auteur(),"email" => $com->email(),"contenu" => $com->contenu(), "date" => $com->date(), "id" => $com->id());
+                    $tableau[$com->id()]= array("auteur" => $com->auteur(),"email" => $com->email(),"contenu" => $com->contenu(), "date" => $com->date(), "id" => $com->id(), "etat"=>$etat);
                 }
                 $this->page->addVar('comments', $tableau);
             }

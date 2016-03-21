@@ -55,7 +55,11 @@ foreach ($comments as $comment)
 
 </div>
 
+<script>
+  $("#result fieldset:last").data('id');
+  $("#result").find('fieldset:last');
 
+</script>
 
 
 

@@ -29,7 +29,7 @@
                     })
                     .done(function (data) { // Variable data contains the data we get from serverside
                         // If clicked buttons value is red, we post only red wines
-                        if (data.msg === "Commentaire bien ajouté")
+                        if (data.msg == 1)
                         {
                             for (var i in data) {
                                 if (i != "msg")
@@ -37,7 +37,7 @@
                                     $('#wines').append(commentbuilder(data[i]));
 
                                 }}}
-                        else
+                        else if (data.msg == 0)
                         { alert('Email non valide');
 
                         }
@@ -50,12 +50,21 @@
 
 function commentbuilder(comment)
 {
+    if (comment.etat == 2)
+    {
+        var auteur = '[Admin]' + comment.auteur;
+    }
+    else
+    {
+        var auteur = comment.auteur;
+
+    }
     return $('<fieldset></fieldset>')
         .attr("data-id", comment.id)
         .append (  $('<legend></legend>')
             .append('Posté par ')
             .append (  $('<strong></strong>')
-                .append(comment.auteur))
+                .append(auteur))
             .append(' le ')
             .append(comment.date))
 

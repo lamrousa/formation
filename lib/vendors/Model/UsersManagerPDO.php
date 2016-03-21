@@ -25,7 +25,7 @@ class UsersManagerPDO extends UsersManager
      }
      public function getUser($login)
      {
-         $q=$this->dao->prepare('SELECT AUC_id,AUC_login, AUC_password, AUC_email FROM t_app_userc WHERE AUC_login = :login');
+         $q=$this->dao->prepare('SELECT AUC_id,AUC_login, AUC_password, AUC_email, AUC_state FROM t_app_userc WHERE AUC_login = :login');
          $q->bindValue(':login', $login);
          $q->execute();
        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\OutsideUser');

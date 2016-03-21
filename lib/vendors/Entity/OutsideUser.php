@@ -22,6 +22,7 @@ class OutsideUser extends User
 
     const USERE_USERC_VALID =1 ;
     const USERE_USERC_INVALID = 0 ;
+    const USERE_USERC_ADMIN = 2;
 
   /*  public function __construct($AUC_login, $AUC_password, $AUC_email=NULL)
     {
@@ -104,5 +105,10 @@ class OutsideUser extends User
         $this->AUC_password= htmlentities($this->AUC_password);
         $this->AUC_email= htmlentities($this->AUC_email);
 
+    }
+
+    public function setState($AUC_state)
+    {
+        $this->AUC_state = $AUC_state;
     }
 }
