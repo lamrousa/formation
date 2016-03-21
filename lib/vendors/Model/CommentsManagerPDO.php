@@ -24,6 +24,7 @@ class CommentsManagerPDO extends CommentsManager
         else throw new \InvalidArgumentException('L\'email n\'est pas dans le  bon format');
     }
 
+
     public function delete($id)
     {
         $this->dao->exec('DELETE FROM comments WHERE id = '.(int) $id);
@@ -166,6 +167,15 @@ class CommentsManagerPDO extends CommentsManager
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
 
         return $q->fetchAll();
+    }
+    public function getNewsbyCommentId($id)
+    {
+        $q=$this->dao->prepare('SELECT news.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.id = :id');
+        $q->bindValue(':id',$id, \PDO::PARAM_STR);
+        $q->execute();
+
+
+        return $q->fetch() ;
     }
 
 

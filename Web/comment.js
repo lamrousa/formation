@@ -35,6 +35,7 @@
                                 if (i != "msg")
                                 {
                                     $('#wines').append(commentbuilder(data[i]));
+                                    $('#monForm').find("input[type=text], textarea").val("");
 
                                 }}}
                         else if (data.msg == 0)
@@ -50,23 +51,35 @@
 
 function commentbuilder(comment)
 {
-    if (comment.etat == 2)
-    {
-        var auteur = '[Admin]' + comment.auteur;
-    }
-    else
-    {
-        var auteur = comment.auteur;
+ if (comment.etat != 0) {
+     var link ='<a href=\"'+ comment.link +'\"> </a>'  ;
+if (comment.etat == 2)
+{
+    var modiflink ='<a href=\"'+comment.update+'\">Modifier</a> |';
+    var dellink ='<a href=\"'+comment.delete+'\">Supprimer</a>';
 
-    }
+}
+
+ }
+    else {
+     var link = '<span></span>';
+     var modiflink = '';
+     var dellink = '';
+ }
+
     return $('<fieldset></fieldset>')
         .attr("data-id", comment.id)
         .append (  $('<legend></legend>')
             .append('Posté par ')
+            .append($(link)
             .append (  $('<strong></strong>')
-                .append(auteur))
+                .append(comment.auteur)))
             .append(' le ')
-            .append(comment.date))
+            .append(comment.date)
+            .append(modiflink)
+            .append(dellink)
+
+        )
 
         .append($('<p></p>')
 

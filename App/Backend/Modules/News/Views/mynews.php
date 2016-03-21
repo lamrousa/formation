@@ -4,7 +4,7 @@
 
 if (empty($listeNews))
 {
-    ?>  <p> Aucune news postée    <a href="<?=$Newsinsert?>">Ajouter une news </a>
+    ?>  <p> Aucune news postée    <a href="<?=$adminNewsinsert?>">Ajouter une news </a>
     </p> <?php }  ?>
 <table>
   <tr><th>Titre</th><th>Date d'ajout</th><th>Dernière modification</th><th>Action</th></tr>
