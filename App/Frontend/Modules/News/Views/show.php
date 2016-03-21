@@ -14,6 +14,7 @@
 
 <?php /* <p><a href="commenter-<?= $news['id'] ?>.html">Ajouter un commentaire</a></p> */?>
 <div id="wines">
+  <div id="top"></div>
 <?php
 if (empty($comments))
 {

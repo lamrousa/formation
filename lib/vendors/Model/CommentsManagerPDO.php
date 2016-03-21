@@ -46,7 +46,7 @@ class CommentsManagerPDO extends CommentsManager
             SELECT id, news, auteur, contenu, email, date
             FROM comments
             WHERE news = :news
-            ORDER BY date
+            ORDER BY date DESC
              LIMIT 15');
         $q->bindValue(':news', $news, \PDO::PARAM_INT);
         $q->execute();
@@ -148,7 +148,7 @@ class CommentsManagerPDO extends CommentsManager
     {
         $q = $this->dao->prepare('SELECT id FROM comments
         WHERE news = :news
-        ORDER BY id DESC
+        ORDER BY id
         LIMIT 1
         ');
 
@@ -157,7 +157,20 @@ class CommentsManagerPDO extends CommentsManager
 
         return $q->fetchColumn();
     }
-    public function getListAfterId($id,$news)
+    public function getListAfterIdScroll($id,$news)
+    {
+        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email FROM comments WHERE id < :id AND news= :news
+ORDER BY id DESC');
+        $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
+        $q->bindValue(':news', (int) $news, \PDO::PARAM_INT);
+
+        $q->execute();
+
+        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
+
+        return $q->fetchAll();
+    }
+    public function getListAfterIdRefresh($id,$news)
     {
         $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email FROM comments WHERE id > :id AND news= :news');
         $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
@@ -169,9 +182,11 @@ class CommentsManagerPDO extends CommentsManager
 
         return $q->fetchAll();
     }
+
     public function getNewsbyCommentId($id)
     {
-        $q=$this->dao->prepare('SELECT news.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.id = :id');
+        $q=$this->dao->prepare('SELECT news.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.id = :id
+ORDER BY id DESC');
         $q->bindValue(':id',$id, \PDO::PARAM_STR);
         $q->execute();
 

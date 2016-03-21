@@ -712,8 +712,14 @@ if ($listeNews)
 
             $news= $request->postData('news');
             $com = $request->postData('com');
+            $sens=$request->postData('sens');
             $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news);
-            $comments = $this->managers->getManagerOf('Comments')->getListAfterId($com,$news);
+
+if ($sens =='bottom') {
+    $comments = $this->managers->getManagerOf('Comments')->getListAfterIdScroll($com, $news);
+}elseif ($sens=='top') {$comments=$this->managers->getManagerOf('Comments')->getListAfterIdRefresh($com,$news);}
+
+
             if ($comments != NULL) {
                 if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true)
                 {

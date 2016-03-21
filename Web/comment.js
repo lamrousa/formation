@@ -11,7 +11,7 @@
             var auteur = $('[name="auteur"]').val();
             var email = $('[name="email"]').val();
             var contenu = $('[name="contenu"]').val();
-            var com =   $("#wines fieldset:last").data('id');
+            var com =   $("#wines fieldset:first").data('id');
 
 
             if (auteur === '' || contenu ==='')   { // If clicked buttons value is all, we post every wine
@@ -52,10 +52,11 @@
             if($(window).scrollTop() + $(window).height() == $(document).height()) {
                 var com =   $("#wines fieldset:last").data('id');
                 var news= $("#wines fieldset:last").data('news');
+                var sens = "bottom";
                 $.ajax({ // ajax call starts
                     url: 'showDynamic.php', // JQuery loads serverside.php
                     type: "POST",
-                    data: 'news=' + news + '&com=' + com, // Send value of the clicked button
+                    data: 'news=' + news + '&com=' + com +'&sens=' + sens, // Send value of the clicked button
                     dataType: 'json' // Choosing a JSON datatype
                 })
                     .done(function (data) { // Variable data contains the data we get from serverside
@@ -78,12 +79,14 @@
             }
         });
         setInterval(function(){
-            var com =   $("#wines fieldset:last").data('id');
-            var news= $("#wines fieldset:last").data('news');
+            var com =   $("#wines fieldset:first").data('id');
+            var news= $("#wines fieldset:first").data('news');
+            var sens = "top";
+
             $.ajax({ // ajax call starts
                 url: 'showDynamic.php', // JQuery loads serverside.php
                 type: "POST",
-                data: 'news=' + news + '&com=' + com, // Send value of the clicked button
+                data: 'news=' + news + '&com=' + com +'&sens=' + sens, // Send value of the clicked button
                 dataType: 'json' // Choosing a JSON datatype
             })
                 .done(function (data) { // Variable data contains the data we get from serverside
@@ -93,7 +96,7 @@
                         for (var i in data) {
                             if (i != "nb")
                             {
-                                $('#wines').append(commentbuilder(data[i]));
+                                $('#top').append(commentbuilder(data[i]));
                             }}
                         $("#box").notify(data.nb + " Commentaire(s) Ajouté(s)", "success",  { position:"right" });
                     }
