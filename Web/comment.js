@@ -48,6 +48,59 @@
 
             //return false; // keeps the page from not refreshing
         });
+        $(window).scroll(function() {
+            if($(window).scrollTop() + $(window).height() == $(document).height()) {
+                var com =   $("#wines fieldset:last").data('id');
+                var news= $("#wines fieldset:last").data('news');
+                $.ajax({ // ajax call starts
+                    url: 'showDynamic.php', // JQuery loads serverside.php
+                    type: "POST",
+                    data: 'news=' + news + '&com=' + com, // Send value of the clicked button
+                    dataType: 'json' // Choosing a JSON datatype
+                })
+                    .done(function (data) { // Variable data contains the data we get from serverside
+                        // If clicked buttons value is red, we post only red wines
+                        if (data.nb != 0)
+                        {
+                            for (var i in data) {
+                                if (i != "nb")
+                                {
+                                    $('#wines').append(commentbuilder(data[i]));
+                                }}
+                            $("#box").notify(data.nb + " Commentaires Affichés", "success",  { position:"right" });
+                        }
+                        else if (data.nb == 0)
+                        {$("#box2").notify("No more Comments to show", "warn");
+
+                        }
+                    });
+
+            }
+        });
+        setInterval(function(){
+            var com =   $("#wines fieldset:last").data('id');
+            var news= $("#wines fieldset:last").data('news');
+            $.ajax({ // ajax call starts
+                url: 'showDynamic.php', // JQuery loads serverside.php
+                type: "POST",
+                data: 'news=' + news + '&com=' + com, // Send value of the clicked button
+                dataType: 'json' // Choosing a JSON datatype
+            })
+                .done(function (data) { // Variable data contains the data we get from serverside
+                    // If clicked buttons value is red, we post only red wines
+                    if (data.nb != 0)
+                    {
+                        for (var i in data) {
+                            if (i != "nb")
+                            {
+                                $('#wines').append(commentbuilder(data[i]));
+                            }}
+                        $("#box").notify(data.nb + " Commentaire(s) Ajouté(s)", "success",  { position:"right" });
+                    }
+
+                });
+
+        }, 4000)
     });
 
 
@@ -71,6 +124,7 @@ if (comment.etat == 2)
 
     return $('<fieldset></fieldset>')
         .attr("data-id", comment.id)
+        .attr("data-news", comment.news)
         .append (  $('<legend></legend>')
             .append('Posté par ')
             .append($(link)
@@ -91,3 +145,6 @@ if (comment.etat == 2)
 
 
 }
+
+
+

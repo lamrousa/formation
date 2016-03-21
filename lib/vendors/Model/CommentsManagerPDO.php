@@ -46,7 +46,8 @@ class CommentsManagerPDO extends CommentsManager
             SELECT id, news, auteur, contenu, email, date
             FROM comments
             WHERE news = :news
-            ORDER BY date ');
+            ORDER BY date
+             LIMIT 15');
         $q->bindValue(':news', $news, \PDO::PARAM_INT);
         $q->execute();
 

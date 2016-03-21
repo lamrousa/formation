@@ -27,7 +27,7 @@ foreach ($comments as $comment)
 {
 
   ?>
-  <fieldset data-id="<?= $comment->id()?>">
+  <fieldset data-id="<?= $comment->id()?>" data-news="<?=$news['id']?>">
     <legend>
       Posté par <strong>
 

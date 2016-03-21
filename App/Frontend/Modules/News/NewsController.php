@@ -579,10 +579,10 @@ if ($listeNews)
     public function executeTest(HTTPRequest $request)
     {
         // Get value of clicked button
-       // $this->page()->setIshtml();
+        // $this->page()->setIshtml();
         if ($_SERVER['REQUEST_METHOD'] == 'POST')
         {
-        $news= $request->postData('news');
+            $news= $request->postData('news');
             $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news);
 
 // Red wine table
@@ -590,7 +590,7 @@ if ($listeNews)
 // Combine red and white tables into one multidimensional table
 
 
-        //$this->page()->addVar('comment',$comment);
+            //$this->page()->addVar('comment',$comment);
 
 
 
@@ -615,40 +615,109 @@ if ($listeNews)
                 ]);
                 $email=$request->postData('email');
             }
+
             if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && ($request->postData('email') != ''))
             {
                 $msg =false;
             }
             else
             {
-               $id = $request->postData('com');
+                $id = $request->postData('com');
 
+                $formBuilder = new CommentFormBuilder($comment);
+                if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
 
-            $formBuilder = new CommentFormBuilder($comment);
+                    $formBuilder->buildUser();
+                } else {
 
-            if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
-                $formBuilder->buildUser();
-            } else {
-                $formBuilder->build();
-            }
-            $form = $formBuilder->form();
+                    $formBuilder->build();
+                }
+                $form = $formBuilder->form();
 
-            $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
+                $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
 
-            if ($formHandler->process()) {
-               // $this->sendmail($request->postData('news'),$email);
+                if ($formHandler->process())
+                {
+                    // $this->sendmail($request->postData('news'),$email);
+                    $msg=true;
+                }
 
-                $msg=true;
-
-
-            }
                 $comments = $this->managers->getManagerOf('Comments')->getListAfterId($id,$news);
 
 
+                if ($comments != NULL) {
+                    if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true)
+                    {
+                        $etat=$this->app->user()->getAttribute('state');
+                    }
+                    else
+                    {
+                        $etat=0;
+                    }
+                    foreach ($comments as $com) {
+                        $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
+                        $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
+                        $Newsshowuser [$com['auteur']] = '';
+
+                        if ($authors != NULL) {
+
+                            foreach ($authors as $auth) {
+                                if ($auth->login() == $com['auteur']) {
+
+                                    $Newsshowuser [$com['auteur']] = $this->page->getSpecificLink('News', 'showuser', array($auth->id()));
+                                }
+                            }
+
+                        }
+                        /*
+                                            $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
+                                            $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
+
+                                            $this->page->addVar('NewsupdateComment', $NewsupdateComment);
+                                            $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
+                                            */
+                        $tableau[$com->id()]= array(
+                            "auteur" => $com->auteur(),
+                            "email" => $com->email(),
+                            "contenu" => $com->contenu(),
+                            "date" => $com->date(),
+                            "id" => $com->id(),
+                            "news"=>$news,
+                            "etat"=>$etat,
+                            "link"  => $Newsshowuser [$com['auteur']],
+                            "delete" =>$NewsdeleteComment[$com->id()],
+                            "update" => $NewsupdateComment[$com->id()] );
+                    }
+                    $this->page->addVar('comments', $tableau);
+                }
+            }
+            $this->page->addVar('msg',$msg);
+
+
+        }
+        else
+        {
+            $this->app()->user()->setFlash('Accès interdit');
+
+            $this->app()->httpResponse()->redirect('/');
+        }
+
+    }
+    public function executeShowDynamic(HTTPRequest $request)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST')
+        {
+            $count=0;
+
+
+            $news= $request->postData('news');
+            $com = $request->postData('com');
+            $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news);
+            $comments = $this->managers->getManagerOf('Comments')->getListAfterId($com,$news);
             if ($comments != NULL) {
                 if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true)
                 {
-                   $etat=$this->app->user()->getAttribute('state');
+                    $etat=$this->app->user()->getAttribute('state');
                 }
                 else
                 {
@@ -669,37 +738,29 @@ if ($listeNews)
                         }
 
                     }
-/*
-                    $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
-                    $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
 
-                    $this->page->addVar('NewsupdateComment', $NewsupdateComment);
-                    $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
-                    */
                     $tableau[$com->id()]= array(
                         "auteur" => $com->auteur(),
                         "email" => $com->email(),
                         "contenu" => $com->contenu(),
                         "date" => $com->date(),
                         "id" => $com->id(),
+                        "news"=>$news,
                         "etat"=>$etat,
                         "link"  => $Newsshowuser [$com['auteur']],
                         "delete" =>$NewsdeleteComment[$com->id()],
                         "update" => $NewsupdateComment[$com->id()] );
+                    $count= $count + 1;
                 }
                 $this->page->addVar('comments', $tableau);
             }
-            }
-        $this->page->addVar('msg',$msg);
+            $this->page->addVar('nb',$count);
 
+        }
+        else
+        {
+            $this->app()->user()->setFlash('Accès interdit');
 
-    }
-    else
-    {
-        $this->app()->user()->setFlash('Accès interdit');
-
-        $this->app()->httpResponse()->redirect('/');
-    }
-    }
-
-}
+            $this->app()->httpResponse()->redirect('/');
+        }
+    }}
