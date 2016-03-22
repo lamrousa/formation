@@ -27,6 +27,7 @@
   <input  type="submit" value="Commenter" />
 
 </form>
+<div id="box2"> </div>
 
 <div id="wines">
   <div id="top"></div>
@@ -69,15 +70,12 @@ foreach ($comments as $comment)
 
 
 </div>
-<div id="box2"> </div>
 
 
 
 
 
-<div id="print">
-  <form action="" method="post" id="monForm" >
-</div>
+
 
 
 

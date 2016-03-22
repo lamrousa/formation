@@ -69,10 +69,10 @@
                                 {
                                   (commentbuilder(data[i])).hide().appendTo('#wines').fadeIn("slow");
                                 }}
-                            $("#box2").notify(data.nb + " Commentaires Affichés", { position:"right",className: "success"});
+                            $("#wines fieldset:last").notify(data.nb + " Commentaires Affichés", { position:"right",className: "success"});
                         }
                         else if (data.nb == 0)
-                        {$("#box2").notify("No more Comments to show", { position:"right",className: "info"});
+                        {$("#wines fieldset:last").notify("No more Comments to show", { position:"right",className: "info"});
 
                         }
                     });
