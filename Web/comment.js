@@ -104,7 +104,34 @@
 
                 });
 
-        }, 4000)
+        }, 4000);
+
+        setInterval(function(){
+            var count = 0;
+
+            $("#wines fieldset").each(function(){
+                var com =  $(this).data('id');
+                $.ajax({
+                    url: 'check.php', // JQuery loads serverside.php
+                    type: "POST",
+                    data: 'com=' + com, // Send value of the clicked button
+                    dataType: 'json' // Choosing a JSON datatype
+
+                })
+                    .done(function(data){
+                        if(data.check == 0)
+                        {
+                            count = count + 1 ;
+                            $("#box").notify( count + " Commentaire(s) Supprimé(s)", { position:"right",className: "info"});
+                            //$(this).parents().remove('"#wines fieldset[data-id=\''+com + '\']"');
+                            $(" fieldset[data-id=\'"+com + "\']").remove();
+                        }
+
+                    })
+
+            }
+                )
+        },6000);
     });
 
 

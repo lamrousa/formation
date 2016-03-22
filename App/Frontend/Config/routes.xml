@@ -17,5 +17,7 @@
   <route url="/comment-delete-([0-9]+)\.html" module="News" action="deleteComment" vars="id" />
   <route url="/test\.php" module="News" action="test" format="js" />
   <route url="/showDynamic\.php" module="News" action="showDynamic" format="js" />
+  <route url="/check\.php" module="News" action="check" format="js" />
+
 
 </routes>

@@ -781,4 +781,31 @@ if ($sens =='bottom') {
 
             $this->app()->httpResponse()->redirect('/');
         }
-    }}
+    }
+    public function executeCheck(HTTPRequest $request)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST')
+    {
+        if ($request->postExists('com')) {
+            $id = $request->postData('com');
+            if ($this->managers()->getManagerOf('Comments')->get($id))
+            {
+                $check=1;
+
+            }
+            else
+            {
+                $check=0;
+            }
+            $this->page()->addVar('check',$check);
+        }
+    }
+    else
+    {
+        $this->app()->user()->setFlash('Accès interdit');
+
+        $this->app()->httpResponse()->redirect('/');
+    }
+
+    }
+}
