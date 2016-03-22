@@ -9,7 +9,10 @@ class Comment extends Entity
         $auteur,
         $contenu,
         $email,
-        $date;
+        $date,
+        $user,
+        $link=[];
+
 
     const AUTEUR_INVALIDE = 1;
     const CONTENU_INVALIDE = 2;
@@ -95,4 +98,25 @@ class Comment extends Entity
         $this->email= htmlentities($this->email);
 
     }
+    public function setKeyLink($key,$AUC_link)
+    {
+        $this->link[$key] = $AUC_link;
+    }
+
+
+    public function link($key)
+    {
+        return $this->link[$key];
+    }
+
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    public function user()
+    {
+        return $this->user;
+    }
+
 }

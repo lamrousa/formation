@@ -19,6 +19,7 @@ class OutsideUser extends User
     protected $AUC_state;
     protected $AUC_dateAdd;
     protected $AUC_dateEnd;
+    protected $AUC_link;
 
     const USERE_USERC_VALID =1 ;
     const USERE_USERC_INVALID = 0 ;
@@ -111,4 +112,16 @@ class OutsideUser extends User
     {
         $this->AUC_state = $AUC_state;
     }
+
+    public function setLink($AUC_link)
+    {
+        $this->AUC_link = $AUC_link;
+    }
+
+
+    public function link()
+    {
+        return $this->AUC_link;
+    }
+
 }

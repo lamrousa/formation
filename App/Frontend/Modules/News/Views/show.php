@@ -1,7 +1,7 @@
 
 <p>Par <em>
     <?php if ($auteur != NULL ) { ?>
-    <a href="<?= $Newsshowauthoruser[$auteur->login()] ?>"><?= $auteur->login() ?></a>
+    <a href="<?= $news['link']['show'] ?>"><?= $auteur->login() ?></a>
 <?php } else { ?>
     <?= $news['auteur'] ?> <?php } ?>
   </em> , le <?= $news['dateAjout']->format('d/m/Y à H\hi') ?></p>
@@ -17,7 +17,7 @@
 <form action="" method="post" id="monForm" >
   <noscript>
 </form>
-<form action="<?=$NewsinsertComment[$news->id()]?>" method="post"  >
+<form action="<?=$news->link('insertComment')?>" method="post"  >
 
   </noscript>
   <?= $form ?>
@@ -28,6 +28,7 @@
 
 </form>
 <div id="box2"> </div>
+<div id="print"></div>
 
 <div id="wines">
   <div id="top"></div>
@@ -48,28 +49,39 @@ foreach ($comments as $comment)
     <legend>
       Posté par <strong>
 
-        <?php   if ($Newsshowuser [$comment['auteur']] !=NULL ) {
+        <?php   if ($comment ['link']['user'] !=NULL ) {
         ?>
-        <a href="<?= $Newsshowuser[$comment['auteur']]?>">
+        <a href="<?=$comment ['link']['user']?>">
         <?= htmlspecialchars($comment['auteur']) ?> </a>
         <?php  } else  {echo htmlspecialchars($comment['auteur']);} ?>
 
       </strong>le <?= $comment['date']->format('d/m/Y à H\hi') ?>
       <?php if ($user->isAuthenticated()) { ?> -
-        <a href="<?=  $NewsupdateComment[$comment->id()] ?>">Modifier</a> |
-        <a href="<?=  $NewsdeleteComment[$comment->id()] ?>">Supprimer</a>
+        <a href="<?=  $comment->link('update') ?>">Modifier</a> |
+        <a href="<?= $comment['link']['delete'] ?>">Supprimer</a>
       <?php } ?>
     </legend>
     <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>
   </fieldset>
   <?php
-}}
+}
+}
+
+
+//foreach ($Comment_a as $Comment) :
+//  include(__DIR__.'/show/comment.php');
+//endforeach;
 
 ?>
 
 
 
 </div>
+
+<form action="" method="post" id="testForm" >
+  <label>Test</label><input type="text" name="test" />
+  <input type="submit" value="Cliquer"/>
+</form>
 
 
 

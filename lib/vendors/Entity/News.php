@@ -9,7 +9,10 @@ class News extends Entity
       $titre,
       $contenu,
       $dateAjout,
-      $dateModif;
+      $dateModif,
+      $user,
+      $link=[];
+
 
   const AUTEUR_INVALIDE = 1;
   const TITRE_INVALIDE = 2;
@@ -94,5 +97,25 @@ class News extends Entity
     $this->titre= htmlentities($this->titre);
     $this->contenu= htmlentities($this->contenu);
 
+  }
+  public function setLink($key,$AUC_link)
+  {
+    $this->link[$key] = $AUC_link;
+  }
+
+
+  public function link($key)
+  {
+    return $this->link[$key];
+  }
+
+  public function setUser($user)
+  {
+    $this->user = $user;
+  }
+
+  public function user()
+  {
+    return $this->user;
   }
 }

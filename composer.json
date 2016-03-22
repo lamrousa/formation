@@ -1,6 +1,7 @@
 {
     "require": {
         "mobiledetect/mobiledetectlib": "^2.8",
-        "phpmailer/phpmailer": "^5.2"
+        "phpmailer/phpmailer": "^5.2",
+        "avplab/php-html-builder": "^1.0"
     }
 }

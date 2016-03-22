@@ -13,7 +13,7 @@ if (empty($listeNews))
   {
 
 
-      echo '<tr><td> <a href="',$Newsshow[ $news->id()],'">', $news['titre'], '</a></td><td>le ', $news['dateAjout']->format('d/m/Y à H\hi'), '</td><td>', ($news['dateAjout'] == $news['dateModif'] ? '-' : 'le '.$news['dateModif']->format('d/m/Y à H\hi')), '</td><td><a href="',$Newsupdate[ $news['id']], '"><img src="/images/update.png" alt="Modifier" /></a> <a href="',$Newsdelete[ $news['id']],'"><img src="/images/delete.png" alt="Supprimer" /></a></td></tr>', "\n";
+      echo '<tr><td> <a href="',$Newsshow[ $news->id()],'">', $news['titre'], '</a></td><td>le ', $news['dateAjout']->format('d/m/Y à H\hi'), '</td><td>', ($news['dateAjout'] == $news['dateModif'] ? '-' : 'le '.$news['dateModif']->format('d/m/Y à H\hi')), '</td><td><a href="',$news['link']['update'], '"><img src="/images/update.png" alt="Modifier" /></a> <a href="',$news['link']['delete'],'"><img src="/images/delete.png" alt="Supprimer" /></a></td></tr>', "\n";
   }
   ?>
 </table>
@@ -50,7 +50,7 @@ if (empty($listeCom))
             <td>
 
 
-                <a href="<?= $NewsupdateComment[ $com['id']]?>"><img src="/images/update.png" alt="Modifier" /></a> <a href="<?= $NewsdeleteComment[ $com['id']] ?>"><img src="/images/delete.png" alt="Supprimer" /></a></td>
+                <a href="<?= $com->link('update')?>"><img src="/images/update.png" alt="Modifier" /></a> <a href="<?=$comment['link']['delete'][ $com['id']] ?>"><img src="/images/delete.png" alt="Supprimer" /></a></td>
     </tr>
 
 <?php }

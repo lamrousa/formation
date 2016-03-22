@@ -31,8 +31,8 @@ echo json_encode($coms);
             </strong>
             le <?= $comment['date']->format('d/m/Y à H\hi') ?>
             <?php if ($user->isAuthenticated()) { ?> -
-                <a href="<?=  $NewsupdateComment[$comment->id()] ?>">Modifier</a> |
-                <a href="<?=  $NewsdeleteComment[$comment->id()] ?>">Supprimer</a>
+                <a href="<?=  $comment->link('update') ?>">Modifier</a> |
+                <a href="<?= $comment['link']['delete'] ?>">Supprimer</a>
             <?php } ?>
         </legend>
         <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>

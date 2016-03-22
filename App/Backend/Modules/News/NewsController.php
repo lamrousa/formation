@@ -267,22 +267,20 @@ class NewsController extends BackController
 
         if ($listeNews != NULL) {
             foreach ($listeNews as $news) {
-                $Newsupdate[$news->id()] = $this->page->getSpecificLink('News', 'update', array($news->id()));
-                $Newsdelete[$news->id()] = $this->page->getSpecificLink('News', 'delete', array($news->id()));
-                $Newsshow[$news->id()] = $this->page->getSpecificLink('News', 'show', array($news->id()));
+               $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->id())));
+                $news->setLink('delete',$this->page->getSpecificLink('News', 'delete', array($news->id())));
+               $news->setLink('show',$this->page->getSpecificLink('News', 'show', array($news->id())));
 
             }
-            $this->page->addVar('Newsupdate', $Newsupdate);
-            $this->page->addVar('Newsdelete', $Newsdelete);
+
         }
         if ($listeCom != NULL) {
             foreach ($listeCom as $com) {
-                $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
-                $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
+             $com->setKeyLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
+              $com->setKeyLink('delete',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
 
             }
-            $this->page->addVar('NewsupdateComment', $NewsupdateComment);
-            $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
+
         }
         if ($listeComnews != NULL) {
             foreach ($listeComnews as &$comnews) {
@@ -294,14 +292,16 @@ class NewsController extends BackController
 
             }
 
-          //  $this->page->addVar('Newsshow', $Newsshow);
+          //  ;
         }
 
         $this->page->addVar('listeComnews', $listeComnews);
         $this->page->addVar('listeNews', $listeNews);
         $this->page->addVar('listeCom', $listeCom);
-        $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
         $this->page->addVar('Newsshow', $Newsshow);
+
+        $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
+        ;
 
         $this->Build();
 
@@ -333,40 +333,35 @@ class NewsController extends BackController
 
 
         if ($auteur != NULL) {
-            $Newsshowauthoruser [$news->auteur()] = $this->page->getSpecificLink('News', 'showauthoruser', array($auteur->id()));
+            $news->setLink('user',$this->page->getSpecificLink('News', 'showauthoruser', array($auteur->id())));
             $auteur->clean_msg();
 
         } else {
-            $Newsshowauthoruser [$news->auteur()] = NULL;
+            $news->setLink('user',NULL);
         }
 
-        $this->page->addVar('Newsshowauthoruser', $Newsshowauthoruser);
 
 
-        $NewsinsertComment[$news->id()] = $this->page->getSpecificLink('News', 'insertComment', array($news->id()));
-        $this->page->addVar('NewsinsertComment', $NewsinsertComment);
+        $news->setLink('insertComment', $this->page->getSpecificLink('News', 'insertComment', array($news->id())));
 
 
         if ($comments != NULL) {
             foreach ($comments as $com) {
 
-                $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
-                $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
+             $com->setKeyLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
+              $com->setKeyLink('delete',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
 
                 if ($authors != NULL) {
                     foreach ($authors as $auth) {
                         if ($auth->login() == $com['auteur']) {
 
-                            $Newsshowuser [$com['auteur']] = $this->page->getSpecificLink('News', 'showuser', array($auth->id()));
-                        } else $Newsshowuser [$com['auteur']] = NULL;
+                            $com->setLink('user',$this->page->getSpecificLink('News', 'showuser', array($auth->id())));
+                        } else $com->setLink('user',NULL);
                     }
 
                 }
-                $Newsshowuser [$com['auteur']] = NULL;
+                $com->setLink('user',NULL);
             }
-            $this->page->addVar('Newsshowuser', $Newsshowuser);
-            $this->page->addVar('NewsupdateComment', $NewsupdateComment);
-            $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
 
 
         }
