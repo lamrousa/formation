@@ -642,7 +642,7 @@ if ($listeNews)
                     $msg=true;
                 }
 
-                $comments = $this->managers->getManagerOf('Comments')->getListAfterId($id,$news);
+                $comments = $this->managers->getManagerOf('Comments')->getListAfterIdRefresh($id,$news);
 
 
                 if ($comments != NULL) {
@@ -655,6 +655,8 @@ if ($listeNews)
                         $etat=0;
                     }
                     foreach ($comments as $com) {
+
+
                         $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
                         $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
                         $Newsshowuser [$com['auteur']] = '';
@@ -680,7 +682,7 @@ if ($listeNews)
                             "auteur" => $com->auteur(),
                             "email" => $com->email(),
                             "contenu" => $com->contenu(),
-                            "date" => $com->date(),
+                            "date" => $com->date()->format('d/m/Y à H\hi'),
                             "id" => $com->id(),
                             "news"=>$news,
                             "etat"=>$etat,
@@ -717,7 +719,9 @@ if ($listeNews)
 
 if ($sens =='bottom') {
     $comments = $this->managers->getManagerOf('Comments')->getListAfterIdScroll($com, $news);
-}elseif ($sens=='top') {$comments=$this->managers->getManagerOf('Comments')->getListAfterIdRefresh($com,$news);}
+}elseif ($sens=='top')
+{
+    $comments=$this->managers->getManagerOf('Comments')->getListAfterIdRefresh($com,$news);}
 
 
             if ($comments != NULL) {
@@ -749,7 +753,7 @@ if ($sens =='bottom') {
                         "auteur" => $com->auteur(),
                         "email" => $com->email(),
                         "contenu" => $com->contenu(),
-                        "date" => $com->date(),
+                        "date" => $com->date()->format('d/m/Y à H\hi'),
                         "id" => $com->id(),
                         "news"=>$news,
                         "etat"=>$etat,

@@ -54,7 +54,7 @@ foreach ($comments as $comment)
 
 
 </div>
-
+<div id="box2"> </div>
 
 
 
@@ -69,7 +69,7 @@ foreach ($comments as $comment)
   <input type ="hidden" name="news" value= "<?= $news->id() ?>" />
           <i>  <i><p align="right"><span style="color: #b82720"> * : Champ Obligatoire</span></p></i></i>
 
-  <input id="box2" type="submit" value="Commenter" />
+  <input  type="submit" value="Commenter" />
 
 </form>
 

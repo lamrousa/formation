@@ -128,8 +128,10 @@ class CommentsManagerPDO extends CommentsManager
 
         $comments= $q->fetchAll();
         if ($comments ) {
-            foreach ($comments as $comment) {
-                //$comment->clean_msg();
+            foreach ($comments as $comment)
+            {
+                $comment->setDate(new \DateTime($comment->date()));
+                $comment->clean_msg();
             }
         }
         return $comments;
@@ -160,7 +162,8 @@ class CommentsManagerPDO extends CommentsManager
     public function getListAfterIdScroll($id,$news)
     {
         $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email FROM comments WHERE id < :id AND news= :news
-ORDER BY id DESC');
+ORDER BY id DESC
+LIMIT 5');
         $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $q->bindValue(':news', (int) $news, \PDO::PARAM_INT);
 
@@ -168,11 +171,17 @@ ORDER BY id DESC');
 
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
 
-        return $q->fetchAll();
+        $comments= $q->fetchAll();
+        foreach ($comments as $comment)
+        {
+            $comment->setDate(new \DateTime($comment->date()));
+            $comment->clean_msg();
+        }
+        return $comments;
     }
     public function getListAfterIdRefresh($id,$news)
     {
-        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email FROM comments WHERE id > :id AND news= :news');
+        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email FROM comments WHERE id > :id AND news= :news ORDER BY id DESC ');
         $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $q->bindValue(':news', (int) $news, \PDO::PARAM_INT);
 
@@ -180,7 +189,13 @@ ORDER BY id DESC');
 
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
 
-        return $q->fetchAll();
+        $comments= $q->fetchAll();
+        foreach ($comments as $comment)
+        {
+            $comment->setDate(new \DateTime($comment->date()));
+            $comment->clean_msg();
+        }
+        return $comments;
     }
 
     public function getNewsbyCommentId($id)

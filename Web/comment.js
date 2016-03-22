@@ -34,7 +34,7 @@
                             for (var i in data) {
                                 if (i != "msg")
                                 {
-                                    $('#wines').append(commentbuilder(data[i]));
+                                    $('#top').prepend(commentbuilder(data[i]));
                                     $('#monForm').find("input[type=text], textarea").val("");
 
                                 }}
@@ -66,12 +66,12 @@
                             for (var i in data) {
                                 if (i != "nb")
                                 {
-                                    $('#wines').append(commentbuilder(data[i]));
+                                  (commentbuilder(data[i])).hide().appendTo('#wines').fadeIn("slow");
                                 }}
-                            $("#box").notify(data.nb + " Commentaires Affichés", "success",  { position:"right" });
+                            $("#box2").notify(data.nb + " Commentaires Affichés", { position:"right",className: "success"});
                         }
                         else if (data.nb == 0)
-                        {$("#box2").notify("No more Comments to show", "warn");
+                        {$("#box2").notify("No more Comments to show", { position:"right",className: "info"});
 
                         }
                     });
@@ -96,7 +96,7 @@
                         for (var i in data) {
                             if (i != "nb")
                             {
-                                $('#top').append(commentbuilder(data[i]));
+                                (commentbuilder(data[i])).hide().prependTo('#top').fadeIn("slow");
                             }}
                         $("#box").notify(data.nb + " Commentaire(s) Ajouté(s)", "success",  { position:"right" });
                     }
@@ -109,21 +109,27 @@
 
 function commentbuilder(comment)
 {
- if (comment.etat != 0) {
-     var link ='<a href=\"'+ comment.link +'\"> </a>'  ;
+
 if (comment.etat == 2)
 {
     var modiflink ='<a href=\"'+comment.update+'\">Modifier</a> |';
     var dellink ='<a href=\"'+comment.delete+'\">Supprimer</a>';
 
-}
-
- }
-    else {
+}else {
      var link = '<span></span>';
      var modiflink = '';
      var dellink = '';
  }
+    if (comment.link=='')
+    {
+        var link = '<span></span>';
+
+    }
+    else
+    {
+        var link ='<a href=\"'+ comment.link +'\"> </a>'  ;
+
+    }
 
     return $('<fieldset></fieldset>')
         .attr("data-id", comment.id)
