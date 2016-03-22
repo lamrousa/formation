@@ -625,6 +625,14 @@ if ($listeNews)
             if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && ($request->postData('email') != ''))
             {
                 $msg =false;
+                $this->page()->addVar('raison','Email invalide');
+
+            }
+            elseif(($request->postExists('auteur')) &&($this->managers()->getManagerOf('Users')->getUser($request->postData('auteur'))))
+
+            {
+                $msg=false;
+                $this->page()->addVar('raison','Nom d\'auteur non disponible');
             }
             else
             {
@@ -677,13 +685,7 @@ if ($listeNews)
                             }
 
                         }
-                        /*
-                                            $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
-                                            $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
 
-                                            $this->page->addVar('NewsupdateComment', $NewsupdateComment);
-                                            $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
-                                            */
                         $tableau[$com->id()]= array(
                             "auteur" => $com->auteur(),
                             "email" => $com->email(),

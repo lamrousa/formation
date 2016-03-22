@@ -39,7 +39,7 @@
 
                                 }}
                             $("html, body").animate({ scrollTop: 0 }, "slow");
-                            $("#box").notify("Commentaire Ajouté", "success");
+                            $("#box2").notify("Commentaire Ajouté", { position:"right",className: "success"});
                         }
                         else if (data.msg == 0)
                         {$("#box2").notify(data.raison, { position:"right",className: "error"});
