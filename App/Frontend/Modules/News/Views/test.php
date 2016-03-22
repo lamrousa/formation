@@ -7,7 +7,7 @@ if ($msg == true) {
 }
 else
 {
-    $mesg= array ("msg" =>0);
+    $mesg= array ("msg" =>0, "raison" => $raison);
     print json_encode($mesg);
 }
 /*

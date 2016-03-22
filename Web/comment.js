@@ -41,7 +41,7 @@
                             $("#box").notify("Commentaire Ajouté", "success");
                         }
                         else if (data.msg == 0)
-                        {$("#box2").notify("Email Invalide.", "error");
+                        {$("#box2").notify(data.raison, { position:"right",className: "error"});
 
                         }
                     });      }
@@ -98,7 +98,7 @@
                             {
                                 (commentbuilder(data[i])).hide().prependTo('#top').fadeIn("slow");
                             }}
-                        $("#box").notify(data.nb + " Commentaire(s) Ajouté(s)", "success",  { position:"right" });
+                        $("#box").notify(data.nb + " Commentaire(s) Ajouté(s)", { position:"right",className: "success"});
                     }
 
                 });
