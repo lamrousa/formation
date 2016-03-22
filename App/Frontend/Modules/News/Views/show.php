@@ -13,6 +13,21 @@
 <?php } ?>
 
 <?php /* <p><a href="commenter-<?= $news['id'] ?>.html">Ajouter un commentaire</a></p> */?>
+
+<form action="" method="post" id="monForm" >
+  <noscript>
+</form>
+<form action="<?=$NewsinsertComment[$news->id()]?>" method="post"  >
+
+  </noscript>
+  <?= $form ?>
+  <input type ="hidden" name="news" value= "<?= $news->id() ?>" />
+  <i>  <i><p align="right"><span style="color: #b82720"> * : Champ Obligatoire</span></p></i></i>
+
+  <input  type="submit" value="Commenter" />
+
+</form>
+
 <div id="wines">
   <div id="top"></div>
 <?php
@@ -59,19 +74,6 @@ foreach ($comments as $comment)
 
 
 
-<form action="" method="post" id="monForm" >
-  <noscript>
-        </form>
-        <form action="<?=$NewsinsertComment[$news->id()]?>" method="post"  >
-
-  </noscript>
-<?= $form ?>
-  <input type ="hidden" name="news" value= "<?= $news->id() ?>" />
-          <i>  <i><p align="right"><span style="color: #b82720"> * : Champ Obligatoire</span></p></i></i>
-
-  <input  type="submit" value="Commenter" />
-
-</form>
 
 <div id="print">
   <form action="" method="post" id="monForm" >

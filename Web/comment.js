@@ -38,6 +38,7 @@
                                     $('#monForm').find("input[type=text], textarea").val("");
 
                                 }}
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
                             $("#box").notify("Commentaire Ajouté", "success");
                         }
                         else if (data.msg == 0)

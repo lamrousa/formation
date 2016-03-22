@@ -582,16 +582,22 @@ if ($listeNews)
     }
 
 
-    /**
-     * @param HTTPRequest $request
-     */
     public function executeTest(HTTPRequest $request)
     {
-
+        // Get value of clicked button
+        // $this->page()->setIshtml();
         if ($_SERVER['REQUEST_METHOD'] == 'POST')
         {
             $news= $request->postData('news');
             $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news);
+
+// Red wine table
+
+// Combine red and white tables into one multidimensional table
+
+
+            //$this->page()->addVar('comment',$comment);
+
 
 
             if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
@@ -619,7 +625,6 @@ if ($listeNews)
             if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && ($request->postData('email') != ''))
             {
                 $msg =false;
-                $this->page()->addVar('raison','email invalide');
             }
             else
             {
@@ -630,28 +635,18 @@ if ($listeNews)
 
                     $formBuilder->buildUser();
                 } else {
-                    if ($this->managers->getManagerOf('Users')->getUser($request->postData('auteur')))
-                {
-                        $msg =false;
-                    $this->page->addVar('msg',$msg);
-
-                    $this->page()->addVar('raison','Nom d\'auteur indisponible, veuillez changer ');
-                    return;
-                    }
 
                     $formBuilder->build();
                 }
                 $form = $formBuilder->form();
 
                 $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
-                if ($this->managers->getManagerOf('Users')->getUser($request->postData('auteur')))
 
-
-                    if ($formHandler->process())
-                    {
-                        // $this->sendmail($request->postData('news'),$email);
-                        $msg=true;
-                    }
+                if ($formHandler->process())
+                {
+                    // $this->sendmail($request->postData('news'),$email);
+                    $msg=true;
+                }
 
                 $comments = $this->managers->getManagerOf('Comments')->getListAfterIdRefresh($id,$news);
 
@@ -682,7 +677,13 @@ if ($listeNews)
                             }
 
                         }
+                        /*
+                                            $NewsupdateComment[$com->id()] = $this->page->getSpecificLink('News', 'updateComment', array($com->id()));
+                                            $NewsdeleteComment[$com->id()] = $this->page->getSpecificLink('News', 'deleteComment', array($com->id()));
 
+                                            $this->page->addVar('NewsupdateComment', $NewsupdateComment);
+                                            $this->page->addVar('NewsdeleteComment', $NewsdeleteComment);
+                                            */
                         $tableau[$com->id()]= array(
                             "auteur" => $com->auteur(),
                             "email" => $com->email(),
