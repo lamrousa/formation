@@ -10,6 +10,7 @@ if ($msg == true) {
         ob_end_clean();
 
 $a.=$output;
+
     endforeach;
 
     $result=array("msg" => $mesg,"valeur"=>$a);

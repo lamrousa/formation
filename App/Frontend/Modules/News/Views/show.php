@@ -74,10 +74,7 @@ endforeach;
 
 </div>
 
-<form action="" method="post" id="testForm" >
-  <label>Test</label><input type="text" name="test" />
-  <input type="submit" value="Cliquer"/>
-</form>
+
 
 
 
