@@ -49,7 +49,16 @@ class NewsController extends BackController
 
         $manager = $this->managers->getManagerOf('News');
 
-        $this->page->addVar('listeNews', $manager->getList());
+            $listeNews_a= $manager->getList();
+        foreach ($listeNews_a as $news) :
+
+            /** @var News $news */
+            $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->id())));
+            $news->setLink('delete', $this->page->getSpecificLink('News', 'delete', array($news->id())));
+            $news->setLink('show', $this->page->getSpecificLink('News', 'show', array($news->id())));
+
+            endforeach;
+        $this->page->addVar('listeNews_a', $listeNews_a);
 
         $this->page->addVar('nombreNews', $manager->count());
 
@@ -355,5 +364,75 @@ class NewsController extends BackController
 
 
         $this->Build();
+    }
+    public function executeShow(HTTPRequest $request)
+    {
+        $news = $this->managers->getManagerOf('News')->getUnique($request->getData('id'));
+        $auteur = $this->managers->getManagerOf('News')->getIdOfAuthorUsingId($request->getData('id'));
+
+        if (empty($news)) {
+            $this->app->httpResponse()->redirect404();
+        }
+        $this->page->addVar('title', $news->titre());
+        $this->page->addVar('news', $news);
+        $comments = $this->managers->getManagerOf('Comments')->getListOf($news->id());
+        $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->id());
+        $comment = new Comment;
+
+        $formBuilder = new CommentFormBuilder($comment);
+        if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
+            $formBuilder->buildUser();
+        } else {
+            $formBuilder->build();
+        }
+        $form = $formBuilder->form();
+
+        $this->page->addVar('form', $form->createView());
+
+
+        if ($auteur != NULL) {
+            $news->setLink('show',$this->page->getSpecificLink('News', 'showauthoruser', array($auteur->id())));
+            $auteur->clean_msg();
+
+        } else {
+            $news->setLink('user',NULL);
+        }
+
+
+        $news->setLink('insertComment',$this->page->getSpecificLink('News', 'insertComment', array($news->id())));
+
+
+        if ($comments != NULL) {
+            foreach ($comments as $com) {
+
+                $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
+                $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
+
+                if ($authors != NULL) {
+
+                    foreach ($authors as $auth) {
+                        if ($auth->login() == $com['auteur']) {
+
+                            $com->setLink('user',$this->page->getSpecificLink('News', 'showuser', array($auth->id())));
+                        }
+                    }
+
+                }
+            }
+
+        }
+        $this->page->addVar('authors', $authors);
+        $this->page->addVar('auteur', $auteur);
+        $this->page->addVar('comments', $comments);
+        if($this->app()->user()->getAttribute('id') != NULL) {
+            $usr=$this->app()->user()->getAttribute('id');
+        }
+        else
+        {
+            $usr='';
+        }
+        $this->page()->addVar('id',$usr);
+        $this->Build();
+
     }
 }

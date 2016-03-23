@@ -13,4 +13,5 @@
   <route url="/admin/showuser-([0-9]+)\.html" module="News" action="showuser" vars="id" />
   <route url="/admin/showauthoruser-([0-9]+)\.html" module="News" action="showauthoruser"
          />
+
 </routes>
