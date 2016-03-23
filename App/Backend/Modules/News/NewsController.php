@@ -129,8 +129,10 @@ class NewsController extends BackController
         if ($request->method() == 'POST')
         {
             $news = new News([
-                'auteur' => $this->app->user()->getAttribute('log'),                'titre' => $request->postData('titre'),
-                'contenu' => $request->postData('contenu')
+                'auteur' => $this->app->user()->getAttribute('log'),
+                'titre' => $request->postData('titre'),
+                'contenu' => $request->postData('contenu'),
+                'user' =>$this->app->user()->getAttribute('id')
             ]);
 
             if ($request->getExists('id'))
@@ -267,18 +269,26 @@ class NewsController extends BackController
         $this->RedirectNews404($request);
 
         $this->page->addVar('title', 'Mes news');
-        $manager = $this->managers->getManagerOf('News');
 
-        $listeNews = $manager->getListByAuthor($this->app()->user()->getAttribute('log'));
-        $listeCom = $this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('log'));
-        $listeComnews = $this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('log'));
+        $listeNews = $this->managers->getManagerOf('News')->getListByAuthor($this->app()->user()->getAttribute('id'));
+        $listeCom = $this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('id'));
+        $listeComnews = $this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('id'));
+
 
 
         if ($listeNews != NULL) {
             foreach ($listeNews as $news) {
-               $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->id())));
+                $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->id())));
                 $news->setLink('delete',$this->page->getSpecificLink('News', 'delete', array($news->id())));
-               $news->setLink('show',$this->page->getSpecificLink('News', 'show', array($news->id())));
+                $news->setLink('show',$this->page->getSpecificLink('News', 'show', array($news->id())));
+
+            }
+        }
+        if ($listeCom != NULL) {
+            foreach ($listeCom as $com) {
+                $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
+                $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
+                $com->setLink('show',$this->page->getSpecificLink('News', 'show', array($com->news())));
 
             }
 
@@ -308,9 +318,8 @@ class NewsController extends BackController
 
         $this->page->addVar('listeNews', $listeNews);
         $this->page->addVar('listeCom', $listeCom);
-
         $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
-        ;
+
 
         $this->Build();
 
@@ -328,8 +337,8 @@ class NewsController extends BackController
 
         }
         if ($auteur != NULL) {
-            $ListCom = $this->managers->getManagerOf('Comments')->getListByAuthor($auteur->login());
-            $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur->login());
+            $ListCom = $this->managers->getManagerOf('Comments')->getListByAuthor($auteur->id());
+            $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur->id());
 
             $this->page->addVar('listnews', $listenews);
             $this->page->addVar('listcom', $ListCom);

@@ -21,7 +21,7 @@ foreach ($listcom as $com)
 { ?>
 
 
-    <h2>Commentaire de <?= $auteur->login() ?> Le <?=  $com['date']?> </h2>
+    <h2>Commentaire de <?= $auteur->login() ?> Le <?=  $com['date']->format('d/m/Y à H\hi')?> </h2>
     <p><?= nl2br($com['contenu']) ?></p>
     <p>   <a href="news-<?= $com['news'] ?>.html"> Voir l'article correspondant </a> </p>
 
