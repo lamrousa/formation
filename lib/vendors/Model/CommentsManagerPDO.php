@@ -164,7 +164,7 @@ class CommentsManagerPDO extends CommentsManager
     }
     public function getListAfterIdScroll($id,$news)
     {
-        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email FROM comments WHERE id < :id AND news= :news
+        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email, user FROM comments WHERE id < :id AND news= :news
 ORDER BY id DESC
 LIMIT 5');
         $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
@@ -184,7 +184,7 @@ LIMIT 5');
     }
     public function getListAfterIdRefresh($id,$news)
     {
-        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email FROM comments WHERE id > :id AND news= :news ORDER BY id DESC ');
+        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email, user FROM comments WHERE id > :id AND news= :news ORDER BY id DESC ');
         $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $q->bindValue(':news', (int) $news, \PDO::PARAM_INT);
 

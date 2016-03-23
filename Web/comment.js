@@ -5,7 +5,7 @@
 
 
     $(document).ready(function(){
-       $('#monForm').on('submit', function(e) {
+     /*  $('#monForm').on('submit', function(e) {
             e.preventDefault();// This event fires when a button is clicked
             var news = $('[name="news"]').val();
             var auteur = $('[name="auteur"]').val();
@@ -48,7 +48,8 @@
                     });      }
 
             //return false; // keeps the page from not refreshing
-        });
+        });*/
+
         $(window).scroll(function() {
             if($(window).scrollTop() + $(window).height() == $(document).height()) {
                 var com =   $("#wines fieldset:last").data('id');
@@ -132,6 +133,50 @@
             }
                 )
         },2000);
+        $('#monForm').on('submit', function(e) {
+            e.preventDefault();// This event fires when a button is clicked
+            var news = $('[name="news"]').val();
+            var auteur = $('[name="auteur"]').val();
+            var email = $('[name="email"]').val();
+            var contenu = $('[name="contenu"]').val();
+            var com =   $("#wines fieldset:first").data('id');
+
+
+            if (auteur === '' || contenu ==='')   { // If clicked buttons value is all, we post every wine
+                $("#box2").notify("Champs vides", "error");
+            }
+
+            else {
+
+
+                $.ajax({ // ajax call starts
+                        url: 'test2.php', // JQuery loads serverside.php
+                        type: "POST",
+                        data: 'news=' + news + '&auteur=' + auteur + '&email=' + email + '&contenu=' + contenu + '&com=' + com, // Send value of the clicked button
+                        dataType: 'json' // Choosing a JSON datatype
+                    })
+                    .done(function (data) { // Variable data contains the data we get from serverside
+                        // If clicked buttons value is red, we post only red wines
+                        if (data.msg == 1)
+                        {
+                            for (var i in data) {
+                                if (i != "msg")
+                                {
+                                    $('#top').prepend(data.valeur);
+                                    $('#monForm').find("input[type=text], textarea").val("");
+
+                                }}
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                            $("#box2").notify("Commentaire Ajouté", { position:"right",className: "success"});
+                        }
+                        else if (data.msg == 0)
+                        {$("#box2").notify(data.raison, { position:"right",className: "error"});
+
+                        }
+                    });      }
+
+            //return false; // keeps the page from not refreshing
+        });
 
 
 

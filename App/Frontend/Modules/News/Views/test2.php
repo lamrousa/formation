@@ -1,8 +1,19 @@
 <?php
 if ($msg == true) {
     $mesg=1;
-    $comments=array_merge(array("msg" => $mesg),$comments);
-    print json_encode($comments);
+    $a='';
+    foreach ($comments as $Comment) :
+        $code=file_get_contents(__DIR__.'/show/comment.php');
+        ob_start();
+        print eval('?>'. $code);
+        $output = ob_get_contents();
+        ob_end_clean();
+
+$a.=$output;
+    endforeach;
+
+    $result=array("msg" => $mesg,"valeur"=>$a);
+    print json_encode($result);
 }
 else
 {

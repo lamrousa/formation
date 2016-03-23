@@ -114,8 +114,6 @@ if ($listeNews)
                 }
             }
 
-
-
         }
         $this->page->addVar('authors', $authors);
         $this->page->addVar('auteur', $auteur);
@@ -820,7 +818,6 @@ if ($sens =='bottom') {
     }
     public function executeTest2(HTTPRequest $request)
     {
-
         // Get value of clicked button
         // $this->page()->setIshtml();
         if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -828,12 +825,7 @@ if ($sens =='bottom') {
             $news= $request->postData('news');
             $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news);
 
-// Red wine table
 
-// Combine red and white tables into one multidimensional table
-
-
-            //$this->page()->addVar('comment',$comment);
 
 
 
@@ -843,6 +835,7 @@ if ($sens =='bottom') {
                     'auteur' => $this->app->user()->getAttribute('log'),
                     'contenu' => $request->postData('contenu'),
                     'email' => $this->app->user()->getAttribute('mail'),
+                    'user' =>  $this->app->user()->getAttribute('id'),
 
                 ]);
                 $email= $this->app->user()->getAttribute('mail');
@@ -908,9 +901,8 @@ if ($sens =='bottom') {
                     foreach ($comments as $com) {
 
 
-                     $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-                      $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
-                        $com->setLink('user','');
+                        $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
+                        $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
 
                         if ($authors != NULL) {
 
@@ -923,31 +915,20 @@ if ($sens =='bottom') {
 
                         }
 
-                        $tableau[$com->id()]= array(
-                            "auteur" => $com->auteur(),
-                            "email" => $com->email(),
-                            "contenu" => $com->contenu(),
-                            "date" => $com->date()->format('d/m/Y à H\hi'),
-                            "id" => $com->id(),
-                            "news"=>$news,
-                            "etat"=>$etat,
-                            "link"  =>$com->link('user'),
-                            "delete" =>$com->link('delete'),
-                            "update" => $com->link('update') );
+
                     }
-
-                    //$this->page->addVar('comments', $tableau);
-                    foreach ($tableau as $tab)
-                    {
-                    $builder = new HtmlComment();
-                    $string=$builder->Build($tab);
-                        $reponse[$tab['id']]=array("lien" => $string);
-                }
-                   $this->page->addVar('comments', $reponse);
-
+                    $this->page->addVar('comments', $comments);
                 }
             }
             $this->page->addVar('msg',$msg);
+            if($this->app()->user()->getAttribute('id') != NULL) {
+                $usr=$this->app()->user()->getAttribute('id');
+            }
+            else
+            {
+                $usr='';
+            }
+            $this->page()->addVar('id',$usr);
 
 
         }
@@ -957,9 +938,6 @@ if ($sens =='bottom') {
 
             $this->app()->httpResponse()->redirect('/');
         }
-
-
-
 
     }
 
