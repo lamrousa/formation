@@ -5,7 +5,7 @@
 
 
     $(document).ready(function(){
-      /*  $('#monForm').on('submit', function(e) {
+       $('#monForm').on('submit', function(e) {
             e.preventDefault();// This event fires when a button is clicked
             var news = $('[name="news"]').val();
             var auteur = $('[name="auteur"]').val();
@@ -48,7 +48,7 @@
                     });      }
 
             //return false; // keeps the page from not refreshing
-        });*/
+        });
         $(window).scroll(function() {
             if($(window).scrollTop() + $(window).height() == $(document).height()) {
                 var com =   $("#wines fieldset:last").data('id');
@@ -131,30 +131,9 @@
 
             }
                 )
-        },4000);
+        },2000);
 
-        $('#monForm').on('submit', function(e){
-            e.preventDefault();
-            var news = $('[name="news"]').val();
-            var auteur = $('[name="auteur"]').val();
-            var email = $('[name="email"]').val();
-            var contenu = $('[name="contenu"]').val();
-            var com =   $("#wines fieldset:first").data('id');
 
-            $.ajax({ // ajax call starts
-                    url: 'test2.php', // JQuery loads serverside.php
-                    type: "POST",
-                    data: 'news=' + news + '&auteur=' + auteur + '&email=' + email + '&contenu=' + contenu + '&com=' + com,// Send value of the clicked button
-                    dataType: 'json' // Choosing a JSON datatype
-                })
-                .done(function (data) {
-
-                    for (var i in data) {
-                        if (data.msg==0)
-                        $("#top").append(data[i].lien);
-                    }
-                })
-                });
 
     });
 
@@ -162,7 +141,7 @@
 function commentbuilder(comment)
 {
 
-if (comment.etat == 2)
+if ((comment.etat == 2))
 {
     var modiflink ='<a href=\"'+comment.update+'\">Modifier</a> |';
     var dellink ='<a href=\"'+comment.delete+'\">Supprimer</a>';

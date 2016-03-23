@@ -13,19 +13,20 @@
     <legend>
         Posté par
         <strong>
-            <?php if ($Comment['auteur'] !=NULL ) : ?>
+            <?php if ($Comment->link('user') ==NULL ) : ?>
                 <?=htmlspecialchars($Comment['auteur']); ?>
             <?php else : ?>
-                <a href="<?=$Comment['User']['profillink']?>">
-                    <?= htmlspecialchars($Comment['User']['login']) ?>
+                <a href="<?=$Comment->link('user')?>">
+                    <?= htmlspecialchars($Comment['auteur']) ?>
                 </a>
             <?php endif; ?>
         </strong>
         le <?= $Comment['date']->format('d/m/Y à H\hi') ; ?>
-        <?php if (isset($Comment['link'])) : ?>
+        <?php
+        if (($Comment->user()==$id) || ($user->isAuthenticated())) :  ?>
             -
-            <a href="<?=$Comment['link']['update'];?>">Modifier</a> |
-            <a href="<?=$Comment['link']['delete']?>">Supprimer</a>
+            <a href="<?=$Comment->link('update');?>">Modifier</a> |
+            <a href="<?=$Comment->link('delete')?>">Supprimer</a>
         <?php endif; ?>
     </legend>
     <p><?= nl2br(htmlspecialchars($Comment['contenu'])) ?></p>

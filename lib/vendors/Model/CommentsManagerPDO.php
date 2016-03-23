@@ -9,12 +9,15 @@ class CommentsManagerPDO extends CommentsManager
     {
         if (filter_var($comment->email(), FILTER_VALIDATE_EMAIL) == true || $comment->email()=='')
         {
-        $q = $this->dao->prepare('INSERT INTO comments SET news = :news, auteur = :auteur, contenu = :contenu, email = :email,  date = NOW()');
+
+        $q = $this->dao->prepare('INSERT INTO comments SET news = :news, auteur = :auteur, contenu = :contenu, email = :email,  date = NOW(),user = :userr');
 
         $q->bindValue(':news', $comment->news(), \PDO::PARAM_INT);
         $q->bindValue(':auteur', $comment->auteur(), \PDO::PARAM_STR);
         $q->bindValue(':contenu', $comment->contenu(), \PDO::PARAM_STR);
         $q->bindValue(':email', $comment->email(), \PDO::PARAM_STR);
+            $q->bindValue(':userr', $comment->user(), \PDO::PARAM_STR);
+
 
 
         $q->execute();
@@ -43,7 +46,7 @@ class CommentsManagerPDO extends CommentsManager
         }
 
         $q = $this->dao->prepare('
-            SELECT id, news, auteur, contenu, email, date
+            SELECT id, news, auteur, contenu, email, date, user
             FROM comments
             WHERE news = :news
             ORDER BY date DESC
@@ -117,11 +120,11 @@ class CommentsManagerPDO extends CommentsManager
         return $q->fetch();
     }
 
-    public function getListByAuthor($author)
+    public function getListByAuthor($id)
     {
-        $q = $this->dao->prepare('SELECT id, news, auteur, contenu, date
-        FROM comments WHERE auteur = :auteur');
-        $q->bindValue(':auteur',$author, \PDO::PARAM_STR);
+        $q = $this->dao->prepare('SELECT id, news, auteur, contenu, date, user
+        FROM comments WHERE user = :auteur');
+        $q->bindValue(':auteur',(int)$id, \PDO::PARAM_INT);
         $q->execute();
 
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
@@ -137,10 +140,10 @@ class CommentsManagerPDO extends CommentsManager
         return $comments;
 
     }
-    public function getListByCommentAuthor($author)
+    public function getListByCommentAuthor($id)
     {
-        $q=$this->dao->prepare('SELECT news.id AS nid, news.titre, comments.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.auteur = :auteur');
-        $q->bindValue(':auteur',$author, \PDO::PARAM_STR);
+        $q=$this->dao->prepare('SELECT news.id as nid, news.titre, comments.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.user = :id');
+        $q->bindValue(':id',$id, \PDO::PARAM_STR);
         $q->execute();
 
 

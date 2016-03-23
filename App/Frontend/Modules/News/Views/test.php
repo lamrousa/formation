@@ -32,7 +32,7 @@ echo json_encode($coms);
             le <?= $comment['date']->format('d/m/Y à H\hi') ?>
             <?php if ($user->isAuthenticated()) { ?> -
                 <a href="<?=  $comment->link('update') ?>">Modifier</a> |
-                <a href="<?= $comment['link']['delete'] ?>">Supprimer</a>
+                <a href="<?= $comment->->link('delete') ?>">Supprimer</a>
             <?php } ?>
         </legend>
         <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>

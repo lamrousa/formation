@@ -274,103 +274,37 @@ class NewsController extends BackController
             }
 
         }
-        if ($listeCom != NULL) {
-            foreach ($listeCom as $com) {
-             $com->setKeyLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-              $com->setKeyLink('delete',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-
-            }
-
-        }
         if ($listeComnews != NULL) {
             foreach ($listeComnews as &$comnews) {
-                /*$comnews['titre']=htmlentities('<br>');
-                   $comnews[1]=htmlentities('<br>');
-                var_dump($comnews);*/
 
-                $Newsshow[$comnews['nid']] = $this->page->getSpecificLink('News', 'show', array([$comnews['nid']]));
+                $new= new News([
+                    'id' => $comnews['nid'],
+                    'titre' => $comnews['titre']
+
+                ]);
+
+                foreach($listeCom as $com)
+                {
+                    if ($com->news() == $new->id())
+                    {
+                        $com->setNews($new);
+                    }
+                }
+
 
             }
 
-          //  ;
+            //
         }
 
-        $this->page->addVar('listeComnews', $listeComnews);
         $this->page->addVar('listeNews', $listeNews);
         $this->page->addVar('listeCom', $listeCom);
-        $this->page->addVar('Newsshow', $Newsshow);
 
         $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
         ;
 
         $this->Build();
 
-
-    }
-    public function executeShow(HTTPRequest $request)
-    {
-        $news = $this->managers->getManagerOf('News')->getUnique($request->getData('id'));
-        $auteur = $this->managers->getManagerOf('News')->getIdOfAuthorUsingId($request->getData('id'));
-
-        if (empty($news)) {
-            $this->app->httpResponse()->redirect404();
-        }
-        $this->page->addVar('title', $news->titre());
-        $this->page->addVar('news', $news);
-        $comments = $this->managers->getManagerOf('Comments')->getListOf($news->id());
-        $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->id());
-        $comment = new Comment;
-
-        $formBuilder = new CommentFormBuilder($comment);
-        if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
-            $formBuilder->buildUser();
-        } else {
-            $formBuilder->build();
-        }
-        $form = $formBuilder->form();
-
-        $this->page->addVar('form', $form->createView());
-
-
-        if ($auteur != NULL) {
-            $news->setLink('user',$this->page->getSpecificLink('News', 'showauthoruser', array($auteur->id())));
-            $auteur->clean_msg();
-
-        } else {
-            $news->setLink('user',NULL);
-        }
-
-
-
-        $news->setLink('insertComment', $this->page->getSpecificLink('News', 'insertComment', array($news->id())));
-
-
-        if ($comments != NULL) {
-            foreach ($comments as $com) {
-
-             $com->setKeyLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-              $com->setKeyLink('delete',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-
-                if ($authors != NULL) {
-                    foreach ($authors as $auth) {
-                        if ($auth->login() == $com['auteur']) {
-
-                            $com->setLink('user',$this->page->getSpecificLink('News', 'showuser', array($auth->id())));
-                        } else $com->setLink('user',NULL);
-                    }
-
-                }
-                $com->setLink('user',NULL);
-            }
-
-
-        }
-        $this->page->addVar('authors', $authors);
-        $this->page->addVar('auteur', $auteur);
-        $this->page->addVar('comments', $comments);
-
-
-        $this->Build();
 
     }
 
@@ -410,10 +344,10 @@ class NewsController extends BackController
             $auteur = $this->managers->getManagerOf('Users')->get($request->getData('id'));
 
         }
-        $ListCom = $this->managers->getManagerOf('Comments')->getListByAuthor($auteur->login());
+        $ListCom = $this->managers->getManagerOf('Comments')->getListByAuthor($auteur->id());
 
 
-        $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur->login());
+        $listenews = $this->managers->getManagerOf('News')->getListByAuthor($auteur->id());
 
         $this->page->addVar('listnews', $listenews);
         $this->page->addVar('listcom', $ListCom);

@@ -61,7 +61,7 @@ protected $fieldset='<fieldset ';
     public function Build(array $tab)
     {
         $this->setAttr(array("data-id"=>$tab['id'],"data-news"=>$tab['news']));
-        $this->setLegend($tab['link'],$tab['auteur'],$tab['date'],$tab['update'],$tab['delete'],$tab['etat']);
+        $this->setLegend($tab->link,$tab['auteur'],$tab['date'],$tab['update'],$tab['delete'],$tab['etat']);
         $this->setContent($tab['contenu']);
         return $this->fieldset.$this->legend.$this->content.'</fieldset>';
 

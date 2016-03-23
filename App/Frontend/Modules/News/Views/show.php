@@ -1,7 +1,7 @@
 
 <p>Par <em>
     <?php if ($auteur != NULL ) { ?>
-    <a href="<?= $news['link']['show'] ?>"><?= $auteur->login() ?></a>
+    <a href="<?= $news->link('show') ?>"><?= $auteur->login() ?></a>
 <?php } else { ?>
     <?= $news['auteur'] ?> <?php } ?>
   </em> , le <?= $news['dateAjout']->format('d/m/Y à H\hi') ?></p>
@@ -14,17 +14,13 @@
 
 <?php /* <p><a href="commenter-<?= $news['id'] ?>.html">Ajouter un commentaire</a></p> */?>
 
-<form action="" method="post" id="monForm" >
-  <noscript>
-</form>
-<form action="<?=$news->link('insertComment')?>" method="post"  >
+  <form action="" method="post" id="monForm" >
 
-  </noscript>
-  <?= $form ?>
-  <input type ="hidden" name="news" value= "<?= $news->id() ?>" />
-  <i>  <i><p align="right"><span style="color: #b82720"> * : Champ Obligatoire</span></p></i></i>
+      <?= $form ?>
+      <input type ="hidden" name="news" value= "<?= $news->id() ?>" />
+      <i>  <i><p align="right"><span style="color: #b82720"> * : Champ Obligatoire</span></p></i></i>
 
-  <input  type="submit" value="Commenter" />
+      <input  type="submit" value="Commenter" />
 
 </form>
 <div id="box2"> </div>
@@ -33,7 +29,7 @@
 <div id="wines">
   <div id="top"></div>
 <?php
-if (empty($comments))
+if (!isset($comments))
 {
   ?>
   <p>Aucun commentaire n'a encore été posté. Soyez le premier à en laisser un !</p>
@@ -41,7 +37,7 @@ if (empty($comments))
 }
 else
 {
-foreach ($comments as $comment)
+/*foreach ($comments as $comment)
 {
 
   ?>
@@ -49,29 +45,29 @@ foreach ($comments as $comment)
     <legend>
       Posté par <strong>
 
-        <?php   if ($comment ['link']['user'] !=NULL ) {
+        <?php   if ($comment ->link('user') !=NULL ) {
         ?>
-        <a href="<?=$comment ['link']['user']?>">
+        <a href="<?=$comment ->link('user')?>">
         <?= htmlspecialchars($comment['auteur']) ?> </a>
         <?php  } else  {echo htmlspecialchars($comment['auteur']);} ?>
 
       </strong>le <?= $comment['date']->format('d/m/Y à H\hi') ?>
       <?php if ($user->isAuthenticated()) { ?> -
         <a href="<?=  $comment->link('update') ?>">Modifier</a> |
-        <a href="<?= $comment['link']['delete'] ?>">Supprimer</a>
+        <a href="<?= $comment->link('delete') ?>">Supprimer</a>
       <?php } ?>
     </legend>
     <p><?= nl2br(htmlspecialchars($comment['contenu'])) ?></p>
   </fieldset>
   <?php
+}*/
+
+
+
+foreach ($comments as $Comment) :
+  include(__DIR__.'/show/comment.php');
+endforeach;
 }
-}
-
-
-//foreach ($Comment_a as $Comment) :
-//  include(__DIR__.'/show/comment.php');
-//endforeach;
-
 ?>
 
 

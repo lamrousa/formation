@@ -27,7 +27,7 @@ class Comment extends Entity
 
     public function setNews($news)
     {
-        $this->news = (int) $news;
+        $this->news = $news;
     }
 
     public function setAuteur($auteur)
@@ -98,7 +98,7 @@ class Comment extends Entity
         $this->email= htmlentities($this->email);
 
     }
-    public function setKeyLink($key,$AUC_link)
+    public function setLink($key,$AUC_link)
     {
         $this->link[$key] = $AUC_link;
     }
@@ -119,4 +119,8 @@ class Comment extends Entity
         return $this->user;
     }
 
+    public function getLink()
+    {
+        return $this->link;
+    }
 }
