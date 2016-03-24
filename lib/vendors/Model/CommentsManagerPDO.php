@@ -10,9 +10,8 @@ class CommentsManagerPDO extends CommentsManager
         if (filter_var($comment->email(), FILTER_VALIDATE_EMAIL) == true || $comment->email()=='')
         {
 
-        $q = $this->dao->prepare('INSERT INTO comments SET news = :news, auteur = :auteur, contenu = :contenu, email = :email,  date = NOW(),user = :userr');
-
-        $q->bindValue(':news', $comment->news(), \PDO::PARAM_INT);
+        $q = $this->dao->prepare('INSERT INTO comments SET news_fk = :news, auteur = :auteur, contenu = :contenu, email = :email,  date = NOW(),user = :userr');
+        $q->bindValue(':news', $comment->news()->newsId(), \PDO::PARAM_INT);
         $q->bindValue(':auteur', $comment->auteur(), \PDO::PARAM_STR);
         $q->bindValue(':contenu', $comment->contenu(), \PDO::PARAM_STR);
         $q->bindValue(':email', $comment->email(), \PDO::PARAM_STR);
@@ -30,12 +29,12 @@ class CommentsManagerPDO extends CommentsManager
 
     public function delete($id)
     {
-        $this->dao->exec('DELETE FROM comments WHERE id = '.(int) $id);
+        $this->dao->exec('DELETE FROM comments WHERE comment_id = '.(int) $id);
     }
 
     public function deleteFromNews($news)
     {
-        $this->dao->exec('DELETE FROM comments WHERE news = '.(int) $news);
+        $this->dao->exec('DELETE FROM comments WHERE news_fk = '.(int) $news);
     }
 
     public function getListOf($news)
@@ -46,28 +45,27 @@ class CommentsManagerPDO extends CommentsManager
         }
 
         $q = $this->dao->prepare('
-            SELECT id, news, auteur, contenu, email, date, user
-            FROM comments
-            WHERE news = :news
+           SELECT *
+        FROM comments
+         INNER JOIN news ON news.news_id=comments.news_fk
+            WHERE news_fk = :news
             ORDER BY date DESC
              LIMIT 15');
         $q->bindValue(':news', $news, \PDO::PARAM_INT);
         $q->execute();
 
-        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
 
-       if ( $comments = $q->fetchAll())
+      $comments=[];
+       while($line=$q->fetch())
        {
+           $comment=new Comment($line);
+           $comment->setNews($line);
+           $comments[]=$comment;
 
-        foreach ($comments as $comment)
-        {
-            $comment->setDate(new \DateTime($comment->date()));
-            //$comment->clean_msg();
-        }
+       }
 
         return $comments;
-    }
-    return null;
+
     }
     public function getListOfDistinct($news)
     {
@@ -77,21 +75,21 @@ class CommentsManagerPDO extends CommentsManager
         }
 
         $q = $this->dao->prepare('
-            SELECT   email, auteur
-            FROM comments
-            WHERE news = :news
+           SELECT *
+        FROM comments
+         INNER JOIN news ON news.news_id=comments.news_fk
+            WHERE news_fk = :news
             GROUP BY email,auteur');
         $q->bindValue(':news', $news, \PDO::PARAM_INT);
         $q->execute();
 
-        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
-
-        $comments = $q->fetchAll();
-
-        foreach ($comments as $comment)
+        $comments=[];
+        while($line=$q->fetch())
         {
-            $comment->setDate(new \DateTime($comment->date()));
-            $comment->clean_msg();
+            $comment=new Comment($line);
+            $comment->setNews($line);
+            $comments[]=$comment;
+
         }
 
         return $comments;
@@ -100,60 +98,75 @@ class CommentsManagerPDO extends CommentsManager
 
     protected function modify(Comment $comment)
     {
-        $q = $this->dao->prepare('UPDATE comments SET auteur = :auteur, contenu = :contenu WHERE id = :id');
+        $q = $this->dao->prepare('UPDATE comments SET auteur = :auteur, contenu = :contenu WHERE comment_id = :id');
 
         $q->bindValue(':auteur', $comment->auteur());
         $q->bindValue(':contenu', $comment->contenu());
-        $q->bindValue(':id', $comment->id(), \PDO::PARAM_INT);
+        $q->bindValue(':id', $comment->commentId(), \PDO::PARAM_INT);
 
         $q->execute();
     }
 
     public function get($id)
     {
-        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email FROM comments WHERE id = :id');
+        $q = $this->dao->prepare('SELECT comment_id, news_fk, auteur, contenu , date, email FROM comments WHERE comment_id = :id');
         $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
-        $q->execute();
-
-        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
+        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');        $q->execute();
 
         return $q->fetch();
     }
 
     public function getListByAuthor($id)
     {
-        $q = $this->dao->prepare('SELECT id, news, auteur, contenu, date, user
-        FROM comments WHERE user = :auteur');
+        $q = $this->dao->prepare('SELECT *
+        FROM comments
+         INNER JOIN news ON news.news_id=comments.news_fk
+         WHERE user = :auteur');
         $q->bindValue(':auteur',(int)$id, \PDO::PARAM_INT);
         $q->execute();
 
-        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
 
-        $comments= $q->fetchAll();
-        if ($comments ) {
-            foreach ($comments as $comment)
-            {
-                $comment->setDate(new \DateTime($comment->date()));
-                $comment->clean_msg();
-            }
+        $comments=[];
+        while($line=$q->fetch())
+        {
+
+         //   $line['date']= new \DateTime($line['date']);
+           // $line['news_dateModif']= new \DateTime($line['news_dateModif']);
+
+
+            $comment=new Comment($line);
+
+
+            $comment->setNews($line);
+            $comments[]=$comment;
+
         }
+
         return $comments;
 
     }
     public function getListByCommentAuthor($id)
     {
-        $q=$this->dao->prepare('SELECT news.id as nid, news.titre, comments.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.user = :id');
+        $q=$this->dao->prepare('SELECT * FROM news INNER JOIN comments ON comments.news_fk=news.news_id AND comments.user = :id');
         $q->bindValue(':id',$id, \PDO::PARAM_STR);
         $q->execute();
 
+        $comments=[];
+        while($line=$q->fetch())
+        {
+            $comment=new Comment($line);
+            $comment->setNews($line);
+            $comments[]=$comment;
 
-        return $q->fetchAll() ;
+        }
+
+        return $comments;
     }
     public function getLastId($news)
     {
-        $q = $this->dao->prepare('SELECT id FROM comments
+        $q = $this->dao->prepare('SELECT comment_id FROM comments
         WHERE news = :news
-        ORDER BY id
+        ORDER BY comment_id
         LIMIT 1
         ');
 
@@ -164,47 +177,57 @@ class CommentsManagerPDO extends CommentsManager
     }
     public function getListAfterIdScroll($id,$news)
     {
-        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email, user FROM comments WHERE id < :id AND news= :news
-ORDER BY id DESC
+        $q = $this->dao->prepare('SELECT *
+        FROM comments
+         INNER JOIN news ON news.news_id=comments.news_fk
+         WHERE comment_id < :id AND news_fk= :news
+ORDER BY comment_id DESC
 LIMIT 5');
         $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $q->bindValue(':news', (int) $news, \PDO::PARAM_INT);
 
         $q->execute();
 
-        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
 
-        $comments= $q->fetchAll();
-        foreach ($comments as $comment)
+        $comments=[];
+        while($line=$q->fetch())
         {
-            $comment->setDate(new \DateTime($comment->date()));
-            $comment->clean_msg();
+            $comment=new Comment($line);
+            $comment->setNews($line);
+            $comments[]=$comment;
+
         }
+
         return $comments;
     }
     public function getListAfterIdRefresh($id,$news)
     {
-        $q = $this->dao->prepare('SELECT id, news, auteur, contenu , date, email, user FROM comments WHERE id > :id AND news= :news ORDER BY id DESC ');
+        $q = $this->dao->prepare('SELECT *
+        FROM comments
+         INNER JOIN news ON news.news_id=comments.news_fk
+          WHERE comment_id > :id AND news_fk= :news ORDER BY comment_id DESC ');
         $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $q->bindValue(':news', (int) $news, \PDO::PARAM_INT);
 
         $q->execute();
 
-        $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
 
-        $comments= $q->fetchAll();
-        foreach ($comments as $comment)
+        $comments=[];
+        while($line=$q->fetch())
         {
-            $comment->setDate(new \DateTime($comment->date()));
-            $comment->clean_msg();
+            $comment=new Comment($line);
+            $comment->setNews($line);
+            $comments[]=$comment;
+
         }
+
         return $comments;
     }
 
     public function getNewsbyCommentId($id)
     {
-        $q=$this->dao->prepare('SELECT news.id FROM news INNER JOIN comments ON comments.news=news.id AND comments.id = :id
-ORDER BY id DESC');
+        $q=$this->dao->prepare('SELECT news.news_id FROM news INNER JOIN comments ON comments.news_fk=news.news_id AND comments.comment_id = :id
+ORDER BY comment_id DESC');
         $q->bindValue(':id',$id, \PDO::PARAM_STR);
         $q->execute();
 

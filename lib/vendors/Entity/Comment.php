@@ -11,6 +11,7 @@ class Comment extends Entity
         $email,
         $date,
         $user,
+        $comment_id,
         $link=[];
 
 
@@ -25,9 +26,28 @@ class Comment extends Entity
         return !(empty($this->auteur) || empty($this->contenu));
     }
 
-    public function setNews($news)
+    public function setNews(array $news)
     {
-        $this->news = $news;
+        if (count($news)>1) {
+            $this->news = new News([
+
+                'newsId' => $news['news_id'],
+                'auteur' => $news['news_auteur'],
+                'titre' => $news['news_titre'],
+                'contenu' => $news['news_contenu'],
+                'news_dateAjout	' => new \DateTime($news['news_dateAjout']),
+
+                'news_dateModif' => new \DateTime($news['news_dateModif']),
+                'news_news_user	' => $news['news_user']
+
+
+            ]);
+        }
+        else {
+            $this->news = new News([
+                'newsId' => $news['newsId']
+            ]);
+        }
     }
 
     public function setAuteur($auteur)
@@ -50,10 +70,12 @@ class Comment extends Entity
         $this->contenu = $contenu;
     }
 
-    public function setDate(\DateTime $date)
+    public function setDate($date)
     {
 
         $this->date = $date;
+        $this->date = new \DateTime($this->date);
+
     }
 
     public function setEmail($email)
@@ -85,6 +107,16 @@ class Comment extends Entity
     public function contenu()
     {
         return $this->contenu;
+    }
+
+    public function commentId()
+    {
+        return $this->comment_id;
+    }
+
+    public function setComment_id($comment_id)
+    {
+        $this->comment_id = $comment_id;
     }
 
     public function date()
@@ -122,5 +154,9 @@ class Comment extends Entity
     public function getLink()
     {
         return $this->link;
+    }
+    public function isCommentNew()
+    {
+        return empty($this->comment_id);
     }
 }

@@ -7,7 +7,7 @@ if (empty($listnews))
 foreach ($listnews as $news)
 {
     ?>
-    <h2><a href="news-<?= $news['id'] ?>.html"><?= $news['titre'] ?></a></h2>
+    <h2><a href="news-<?= $news->NewsId() ?>.html"><?= $news->titre() ?></a></h2>
     <p><?= nl2br($news['contenu']) ?></p>
     <?php
 }?>
@@ -23,7 +23,7 @@ foreach ($listcom as $com)
 
     <h2>Commentaire de <?= $auteur->login() ?> Le <?=  $com['date']->format('d/m/Y à H\hi')?> </h2>
     <p><?= nl2br($com['contenu']) ?></p>
-    <p>   <a href="news-<?= $com['news'] ?>.html"> Voir l'article correspondant </a> </p>
+    <p>   <a href="news-<?= $com['news']['NewsId'] ?>.html"> Voir l'article correspondant </a> </p>
 
 
     <?php

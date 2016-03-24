@@ -53,9 +53,9 @@ class NewsController extends BackController
         foreach ($listeNews_a as $news) :
 
             /** @var News $news */
-            $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->id())));
-            $news->setLink('delete', $this->page->getSpecificLink('News', 'delete', array($news->id())));
-            $news->setLink('show', $this->page->getSpecificLink('News', 'show', array($news->id())));
+            $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->NewsId())));
+            $news->setLink('delete', $this->page->getSpecificLink('News', 'delete', array($news->NewsId())));
+            $news->setLink('show', $this->page->getSpecificLink('News', 'show', array($news->NewsId())));
 
             endforeach;
         $this->page->addVar('listeNews_a', $listeNews_a);
@@ -95,7 +95,7 @@ class NewsController extends BackController
     if ($request->method() == 'POST')
     {
         $comment = new Comment([
-            'id' => $request->getData('id'),
+            'comment_id' => $request->getData('id'),
             'auteur' => $request->postData('auteur'),
             'contenu' => $request->postData('contenu')
         ]);
@@ -104,7 +104,6 @@ class NewsController extends BackController
     {
         $comment = $this->managers->getManagerOf('Comments')->get($request->getData('id'));
     }
-
     $formBuilder = new CommentFormBuilder($comment);
     $formBuilder->build();
 
@@ -130,14 +129,14 @@ class NewsController extends BackController
         {
             $news = new News([
                 'auteur' => $this->app->user()->getAttribute('log'),
-                'titre' => $request->postData('titre'),
+                'titre' =>$request->postData('titre'),
                 'contenu' => $request->postData('contenu'),
                 'user' =>$this->app->user()->getAttribute('id')
             ]);
 
             if ($request->getExists('id'))
             {
-                $news->setId($request->getData('id'));
+                $news->setNewsId($request->getData('id'));
             }
         }
         else
@@ -278,17 +277,17 @@ class NewsController extends BackController
 
         if ($listeNews != NULL) {
             foreach ($listeNews as $news) {
-                $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->id())));
-                $news->setLink('delete',$this->page->getSpecificLink('News', 'delete', array($news->id())));
-                $news->setLink('show',$this->page->getSpecificLink('News', 'show', array($news->id())));
+                $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->NewsId())));
+                $news->setLink('delete',$this->page->getSpecificLink('News', 'delete', array($news->NewsId())));
+                $news->setLink('show',$this->page->getSpecificLink('News', 'show', array($news->NewsId())));
 
             }
         }
         if ($listeCom != NULL) {
             foreach ($listeCom as $com) {
-                $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-                $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
-                $com->setLink('show',$this->page->getSpecificLink('News', 'show', array($com->news())));
+                $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
+                $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
+                $com->setLink('show',$this->page->getSpecificLink('News', 'show', array($com->news()->NewsId())));
 
             }
 
@@ -297,14 +296,14 @@ class NewsController extends BackController
             foreach ($listeComnews as &$comnews) {
 
                 $new= new News([
-                    'id' => $comnews['nid'],
-                    'titre' => $comnews['titre']
+                    'newsId' => $comnews['nid'],
+                    'titre' =>$comnews['titre']
 
                 ]);
 
                 foreach($listeCom as $com)
                 {
-                    if ($com->news() == $new->id())
+                    if ($com->news()->NewsId() == $new->id())
                     {
                         $com->setNews($new);
                     }
@@ -384,8 +383,8 @@ class NewsController extends BackController
         }
         $this->page->addVar('title', $news->titre());
         $this->page->addVar('news', $news);
-        $comments = $this->managers->getManagerOf('Comments')->getListOf($news->id());
-        $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->id());
+        $comments = $this->managers->getManagerOf('Comments')->getListOf($news->NewsId());
+        $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->NewsId());
         $comment = new Comment;
 
         $formBuilder = new CommentFormBuilder($comment);
@@ -403,19 +402,17 @@ class NewsController extends BackController
             $news->setLink('show',$this->page->getSpecificLink('News', 'showauthoruser', array($auteur->id())));
             $auteur->clean_msg();
 
-        } else {
-            $news->setLink('user',NULL);
         }
 
 
-        $news->setLink('insertComment',$this->page->getSpecificLink('News', 'insertComment', array($news->id())));
+        $news->setLink('insertComment',$this->page->getSpecificLink('News', 'insertComment', array($news->NewsId())));
 
 
         if ($comments != NULL) {
             foreach ($comments as $com) {
 
-                $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-                $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
+                $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
+                $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
 
                 if ($authors != NULL) {
 
@@ -423,6 +420,9 @@ class NewsController extends BackController
                         if ($auth->login() == $com['auteur']) {
 
                             $com->setLink('user',$this->page->getSpecificLink('News', 'showuser', array($auth->id())));
+                        }
+                        else {
+                            $com->setLink('user',NULL);
                         }
                     }
 

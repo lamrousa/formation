@@ -4,20 +4,20 @@
     <a href="<?= $news->link('show') ?>"><?= $auteur->login() ?></a>
 <?php } else { ?>
     <?= $news['auteur'] ?> <?php } ?>
-  </em> , le <?= $news['dateAjout']->format('d/m/Y à H\hi') ?></p>
-<h2 id="box"><?= $news['titre'] ?></h2>
+  </em> , le <?= $news->dateAjout()->format('d/m/Y à H\hi') ?></p>
+<h2 id="box"><?= $news->titre() ?></h2>
 <p><?= nl2br($news['contenu']) ?></p>
 
-<?php if ($news['dateAjout'] != $news['dateModif']) { ?>
-  <p style="text-align: right;"><small><em>Modifiée le <?= $news['dateModif']->format('d/m/Y à H\hi') ?></em></small></p>
+<?php if ($news->dateAjout() != $news->dateModif()) { ?>
+  <p style="text-align: right;"><small><em>Modifiée le <?= $news->dateModif()->format('d/m/Y à H\hi') ?></em></small></p>
 <?php } ?>
 
-<?php /* <p><a href="commenter-<?= $news['id'] ?>.html">Ajouter un commentaire</a></p> */?>
+<?php /* <p><a href="commenter-<?= $news->NewsId() ?>.html">Ajouter un commentaire</a></p> */?>
 
   <form action="" method="post" id="monForm" >
 
       <?= $form ?>
-      <input type ="hidden" name="news" value= "<?= $news->id() ?>" />
+      <input type ="hidden" name="news" value= "<?= $news->NewsId() ?>" />
       <i>  <i><p align="right"><span style="color: #b82720"> * : Champ Obligatoire</span></p></i></i>
 
       <input  type="submit" value="Commenter" />
@@ -41,7 +41,7 @@ else
 {
 
   ?>
-  <fieldset data-id="<?= $comment->id()?>" data-news="<?=$news['id']?>">
+  <fieldset data-id="<?= $comment->commentId()?>" data-news="<?=$news->NewsId()?>">
     <legend>
       Posté par <strong>
 

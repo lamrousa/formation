@@ -5,13 +5,14 @@ use \OCFram\Entity;
 
 class News extends Entity
 {
-  protected $auteur,
-      $titre,
-      $contenu,
-      $dateAjout,
-      $dateModif,
-      $user,
-      $link=[];
+  protected $news_auteur,
+      $news_titre,
+      $news_contenu,
+      $news_dateAjout,
+      $news_dateModif,
+      $news_user,
+    $news_id,
+      $news_link=[];
 
 
   const AUTEUR_INVALIDE = 1;
@@ -20,7 +21,7 @@ class News extends Entity
 
   public function isValid()
   {
-    return !(empty($this->auteur) || empty($this->titre) || empty($this->contenu));
+    return !(empty($this->news_auteur) || empty($this->news_titre) || empty($this->news_contenu));
   }
 
 
@@ -33,7 +34,7 @@ class News extends Entity
       $this->erreurs[] = self::AUTEUR_INVALIDE;
     }
 
-    $this->auteur = $auteur;
+    $this->news_auteur = $auteur;
   }
 
   public function setTitre($titre)
@@ -43,7 +44,7 @@ class News extends Entity
       $this->erreurs[] = self::TITRE_INVALIDE;
     }
 
-    $this->titre = $titre;
+    $this->news_titre = $titre;
   }
 
   public function setContenu($contenu)
@@ -53,69 +54,85 @@ class News extends Entity
       $this->erreurs[] = self::CONTENU_INVALIDE;
     }
 
-    $this->contenu = $contenu;
+    $this->news_contenu = $contenu;
   }
 
   public function setDateAjout(\DateTime $dateAjout)
   {
-    $this->dateAjout = $dateAjout;
+    $this->news_dateAjout = $dateAjout;
   }
 
   public function setDateModif(\DateTime $dateModif)
   {
-    $this->dateModif = $dateModif;
+    $this->news_dateModif = $dateModif;
   }
 
   // GETTERS //
+  public function setNewsId($news_id)
+  {
+    $this->news_id = $news_id;
+  }
 
+  public function NewsId()
+  {
+    return $this->news_id;
+  }
   public function auteur()
   {
-    return $this->auteur;
+    return $this->news_auteur;
   }
 
   public function titre()
   {
-    return $this->titre;
+    return $this->news_titre;
   }
 
   public function contenu()
   {
-    return $this->contenu;
+    return $this->news_contenu;
   }
 
   public function dateAjout()
   {
-    return $this->dateAjout;
+    return $this->news_dateAjout;
   }
 
   public function dateModif()
   {
-    return $this->dateModif;
+    return $this->news_dateModif;
   }
   public function clean_msg()
-  {  $this->auteur= htmlentities($this->auteur);
-    $this->titre= htmlentities($this->titre);
-    $this->contenu= htmlentities($this->contenu);
+  {  $this->news_auteur= htmlentities($this->news_auteur);
+    $this->news_titre= htmlentities($this->news_titre);
+    $this->news_contenu= htmlentities($this->news_contenu);
 
   }
   public function setLink($key,$AUC_link)
   {
-    $this->link[$key] = $AUC_link;
+    $this->news_link[$key] = $AUC_link;
   }
 
 
   public function link($key)
   {
-    return $this->link[$key];
+    return $this->news_link[$key];
+  }
+  public function getLink()
+  {
+    return $this->news_link;
   }
 
   public function setUser($user)
   {
-    $this->user = $user;
+    $this->news_user = $user;
   }
 
   public function user()
   {
-    return $this->user;
+    return $this->news_user;
+  }
+  public function isNewsNew()
+  {
+    return empty($this->news_id);
   }
 }

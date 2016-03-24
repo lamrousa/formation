@@ -18,7 +18,7 @@ else
 $coms = [];
 
 foreach ($comments as $comment) {
-    $comn = array('id' => $comment->id(), 'auteur' => $comment['auteur'], 'contenu' => $comment['contenu'], 'date' => $comment['date']);
+    $comn = array('id' => $comment->commentId(), 'auteur' => $comment['auteur'], 'contenu' => $comment['contenu'], 'date' => $comment['date']);
     $coms[]= $comn;
 }
 echo json_encode($coms);

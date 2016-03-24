@@ -24,7 +24,7 @@ abstract class NewsManager extends Manager
     {
         if ($news->isValid())
         {
-            $news->isNew() ? $this->add($news) : $this->modify($news);
+            $news->isNewsNew() ? $this->add($news) : $this->modify($news);
         }
         else
         {

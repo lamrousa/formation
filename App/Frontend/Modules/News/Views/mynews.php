@@ -13,7 +13,7 @@ if (empty($listeNews))
     {
 
 
-        echo '<tr><td> <a href="',$news->link('show'),'">', $news['titre'], '</a></td><td>le ', $news['dateAjout']->format('d/m/Y à H\hi'), '</td><td>', ($news['dateAjout'] == $news['dateModif'] ? '-' : 'le '.$news['dateModif']->format('d/m/Y à H\hi')), '</td><td><a href="',$news->link('update'), '"><img src="/images/update.png" alt="Modifier" /></a> <a href="',$news->link('delete'),'"><img src="/images/delete.png" alt="Supprimer" /></a></td></tr>', "\n";
+        echo '<tr><td> <a href="',$news->link('show'),'">', $news->titre(), '</a></td><td>le ', $news->dateAjout()->format('d/m/Y à H\hi'), '</td><td>', ($news->dateAjout() == $news->dateModif() ? '-' : 'le '.$news->dateModif()->format('d/m/Y à H\hi')), '</td><td><a href="',$news->link('update'), '"><img src="/images/update.png" alt="Modifier" /></a> <a href="',$news->link('delete'),'"><img src="/images/delete.png" alt="Supprimer" /></a></td></tr>', "\n";
     }
     } ?>
 </table>
@@ -37,7 +37,7 @@ else {
 
                 <td>Le <?=  $com['date']->format('d/m/Y à H\hi')?> </td>
 
-                <td>   <a href="<?=$com->link('show')?>"> <?=$com->news()->titre()  ?></a> </td>
+                <td>   <a href="<?=$com->link('show')?>"> <?=$com->news()->titre() ?></a> </td>
                 <td>
 
 

@@ -30,6 +30,7 @@ class NewsController extends BackController
 if ($listeNews)
 {
         foreach ($listeNews as $news) {
+
             if (strlen($news->contenu()) > $nombreCaracteres) {
                 $debut = substr($news->contenu(), 0, $nombreCaracteres);
 
@@ -45,7 +46,7 @@ if ($listeNews)
 
 
             // On ajoute la variable $listeNews à la vue.
-           $news->setLink('show',$this->page->getSpecificLink('News', 'show', array($news->id())));
+           $news->setLink('show',$this->page->getSpecificLink('News', 'show', array($news->NewsId())));
 
 
         }
@@ -69,7 +70,7 @@ if ($listeNews)
         }
         $this->page->addVar('title', $news->titre());
         $this->page->addVar('news', $news);
-        $comments = $this->managers->getManagerOf('Comments')->getListOf($news->id());
+        $comments = $this->managers->getManagerOf('Comments')->getListOf($news->NewsId());
         $comment = new Comment;
 
         $formBuilder = new CommentFormBuilder($comment);
@@ -84,6 +85,7 @@ if ($listeNews)
 
 
         if ($auteur != NULL) {
+
             $news->setLink('show',$this->page->getSpecificLink('News', 'showauthoruser', array($auteur->id())));
             $auteur->clean_msg();
 
@@ -92,15 +94,15 @@ if ($listeNews)
         }
 
 
-      $news->setLink('insertComment',$this->page->getSpecificLink('News', 'insertComment', array($news->id())));
-        $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->id());
+      $news->setLink('insertComment',$this->page->getSpecificLink('News', 'insertComment', array($news->NewsId())));
+        $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->NewsId());
 
 
         if ($comments != NULL) {
             foreach ($comments as $com) {
 
-             $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-              $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
+             $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
+              $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
                 $com->setLink('user',NULL);
 
                 if ($authors != NULL) {
@@ -138,28 +140,32 @@ if ($listeNews)
         $this->Build();
 
         if ($request->method() == 'POST') {
-            if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
-                $comment = new Comment([
-                    'news' => $request->getData('news'),
-                    'auteur' => $this->app->user()->getAttribute('log'),
-                    'contenu' => $request->postData('contenu'),
-                    'email' => $this->app->user()->getAttribute('mail'),
-                    'user' =>$this->app->user()->getAttribute('id')
+        if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
+            $comment = new Comment([
+                'auteur' => $this->app->user()->getAttribute('log'),
+                'contenu' => $request->postData('contenu'),
+                'email' => $this->app->user()->getAttribute('mail'),
+                'user' =>$this->app->user()->getAttribute('id')
 
-                ]);
-                $email= $this->app->user()->getAttribute('mail');
+            ]);
+            $email= $this->app->user()->getAttribute('mail');
 
-            } else {
-                $comment = new Comment([
-                    'news' => $request->getData('news'),
-                    'auteur' => $request->postData('auteur'),
-                    'contenu' => $request->postData('contenu'),
-                    'email' => $request->postData('email'),
-
-                ]);
-                $email=$request->postData('email');
-            }
         } else {
+            $comment = new Comment([
+
+                'auteur' => $request->postData('auteur'),
+                'contenu' => $request->postData('contenu'),
+                'email' => $request->postData('email'),
+
+            ]);
+
+            $email=$request->postData('email');
+        }
+
+        $comment->setNews(array('newsId'=>$request->getData('news')));
+    }
+
+        else {
             $comment = new Comment;
         }
 
@@ -221,53 +227,28 @@ if ($listeNews)
 
             $listeNews = $manager->getListByAuthor($this->app()->user()->getAttribute('id'));
         $ListeCom_a = $this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('id'));
-            $listeComnews = $this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('id'));
+
 
 
 
             if ($listeNews != NULL) {
                 foreach ($listeNews as $news) {
-                   $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->id())));
-                    $news->setLink('delete',$this->page->getSpecificLink('News', 'delete', array($news->id())));
-                   $news->setLink('show',$this->page->getSpecificLink('News', 'show', array($news->id())));
+                   $news->setLink('update', $this->page->getSpecificLink('News', 'update', array($news->NewsId())));
+                    $news->setLink('delete',$this->page->getSpecificLink('News', 'delete', array($news->NewsId())));
+                   $news->setLink('show',$this->page->getSpecificLink('News', 'show', array($news->NewsId())));
 
                 }
             }
             if ($ListeCom_a != NULL) {
                 foreach ($ListeCom_a as $com) {
-                 $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-                  $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
-                    $com->setLink('show',$this->page->getSpecificLink('News', 'show', array($com->news())));
+                 $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
+                  $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
+                    $com->setLink('show',$this->page->getSpecificLink('News', 'show', array($com->news()->NewsId())));
 
                 }
 
             }
-            if ($listeComnews != NULL) {
-                foreach ($listeComnews as &$comnews) {
 
-                    $new= new News([
-                        'id' => $comnews['nid'],
-                        'titre' => $comnews['titre']
-
-                    ]);
-                    var_dump($ListeCom_a);
-//                    die();
-                    foreach($ListeCom_a as $com)
-                    {     var_dump($com->news());var_dump($new->id());
-
-                        /** @var Comment $com */
-                        if ($com->news() == $new->id())
-                        {
-                            $com->setNews($new);
-                        }
-                    }
-
-
-
-                }
-
-              //
-            }
 
             $this->page->addVar('listeNews', $listeNews);
             $this->page->addVar('listeCom', $ListeCom_a);
@@ -308,7 +289,7 @@ if ($listeNews)
 
         if ($request->method() == 'POST') {
                     $comment = new Comment([
-                        'id' => $request->getData('id'),
+                        'comment_id' => $request->getData('id'),
                         'auteur' => $this->app->user()->getAttribute('log'),
                         'contenu' => $request->postData('contenu')
                     ]);
@@ -322,7 +303,6 @@ if ($listeNews)
                 $form = $formBuilder->form();
 
                 $formHandler = new FormHandler($form, $this->managers->getManagerOf('Comments'), $request);
-
                 if ($formHandler->process()) {
                     $this->app->user()->setFlash('Le commentaire a bien été modifié');
 
@@ -381,8 +361,9 @@ if ($listeNews)
             ]);
 
             if ($request->getExists('id')) {
-                $news->setId($request->getData('id'));
+                $news->setNewsId($request->getData('id'));
             }
+
         } else {
             // L'identifiant de la news est transmis si on veut la modifier
             if ($request->getExists('id')) {
@@ -615,7 +596,6 @@ if ($listeNews)
 
             if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
                 $comment = new Comment([
-                    'news' => $news,
                     'auteur' => $this->app->user()->getAttribute('log'),
                     'contenu' => $request->postData('contenu'),
                     'email' => $this->app->user()->getAttribute('mail'),
@@ -627,7 +607,6 @@ if ($listeNews)
 
             } else {
                 $comment = new Comment([
-                    'news' => $news,
                     'auteur' => $request->postData('auteur'),
                     'contenu' => $request->postData('contenu'),
                     'email' => $request->postData('email'),
@@ -635,6 +614,8 @@ if ($listeNews)
                 ]);
                 $email=$request->postData('email');
             }
+            $comment->setNews(array('newsId'=>$request->getData('news')));
+
 
             if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && ($request->postData('email') != ''))
             {
@@ -685,8 +666,8 @@ if ($listeNews)
                     foreach ($comments as $com) {
 
 
-                     $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-                      $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
+                     $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
+                      $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
                         $com->setLink('user','');
 
                         if ($authors != NULL) {
@@ -700,12 +681,12 @@ if ($listeNews)
 
                         }
 
-                        $tableau[$com->id()]= array(
+                        $tableau[$com->commentId()]= array(
                             "auteur" => $com->auteur(),
                             "email" => $com->email(),
                             "contenu" => $com->contenu(),
                             "date" => $com->date()->format('d/m/Y à H\hi'),
-                            "id" => $com->id(),
+                            "comment_id" => $com->commentId(),
                             "news"=>$news,
                             "etat"=>$etat,
                             "link"  =>$com->link('user'),
@@ -756,8 +737,8 @@ if ($sens =='bottom') {
                     $etat=0;
                 }
                 foreach ($comments as $com) {
-                 $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-                  $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
+                 $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
+                  $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
                     $com->setLink('user','');
 
                     if ($authors != NULL) {
@@ -771,12 +752,12 @@ if ($sens =='bottom') {
 
                     }
 
-                    $tableau[$com->id()]= array(
+                    $tableau[$com->commentId()]= array(
                         "auteur" => $com->auteur(),
                         "email" => $com->email(),
                         "contenu" => $com->contenu(),
                         "date" => $com->date()->format('d/m/Y à H\hi'),
-                        "id" => $com->id(),
+                        "id" => $com->commentId(),
                         "news"=>$news,
                         "etat"=>$etat,
                         "link"  =>$com->link('user'),
@@ -836,7 +817,6 @@ if ($sens =='bottom') {
 
             if ($this->app->user()->isUser() == true || $this->app->user()->isAuthenticated() == true) {
                 $comment = new Comment([
-                    'news' => $news,
                     'auteur' => $this->app->user()->getAttribute('log'),
                     'contenu' => $request->postData('contenu'),
                     'email' => $this->app->user()->getAttribute('mail'),
@@ -848,7 +828,6 @@ if ($sens =='bottom') {
 
             } else {
                 $comment = new Comment([
-                    'news' => $news,
                     'auteur' => $request->postData('auteur'),
                     'contenu' => $request->postData('contenu'),
                     'email' => $request->postData('email'),
@@ -856,6 +835,8 @@ if ($sens =='bottom') {
                 ]);
                 $email=$request->postData('email');
             }
+            $comment->setNews(array('newsId'=>$news ));
+
 
             if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && ($request->postData('email') != ''))
             {
@@ -909,13 +890,20 @@ if ($sens =='bottom') {
 
 
 
-                        $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->id())));
-                        $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->id())));
+                        $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
+                        $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
+
+
 
                         if ($authors != NULL) {
                             foreach ($authors as $auth) {
                                 if ($auth->login() == $com['auteur']) {
                                     $com->setLink('user',$this->page->getSpecificLink('News', 'showuser', array($auth->id())));
+                                }
+                                else
+                                {
+                                    $com->setLink('user', NULL );
+
                                 }
                             }
 

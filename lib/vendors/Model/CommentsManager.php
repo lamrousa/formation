@@ -36,7 +36,7 @@ abstract class CommentsManager extends Manager
     {
         if ($comment->isValid())
         {
-            $comment->isNew() ? $this->add($comment) : $this->modify($comment);
+            $comment->isCommentNew() ? $this->add($comment) : $this->modify($comment);
         }
         else
         {

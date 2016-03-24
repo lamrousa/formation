@@ -59,7 +59,7 @@ class UsersManagerPDO extends UsersManager
         $q=$this->dao->prepare('SELECT AUC_id,AUC_login, AUC_password, AUC_email
  FROM t_app_userc
 INNER JOIN comments ON comments.auteur=AUC_login
-INNER JOIN news ON news.id= :id AND comments.news=news.id');
+INNER JOIN news ON news.news_id= :id AND comments.news_fk=news.news_id');
         $q->bindValue(':id', (int) $id, \PDO::PARAM_INT);
         $q->execute();
         $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\OutsideUser');
