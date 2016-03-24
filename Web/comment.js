@@ -148,6 +148,8 @@
 
             else {
 
+                $("input[type=submit]").attr('disabled','disabled');
+
 
                $.ajax({ // ajax call starts
                         url: 'test2.php', // JQuery loads serverside.php
@@ -156,7 +158,10 @@
                         dataType: 'json' // Choosing a JSON datatype
                     })
 
-                    .done(function (data) { // Variable data contains the data we get from serverside
+                    .done(function (data) {
+                            $("input[type=submit]").removeAttr('disabled');
+
+                            // Variable data contains the data we get from serverside
                         // If clicked buttons value is red, we post only red wines
                         if (data.msg == 1)
                         {
@@ -174,12 +179,15 @@
                         {$("#box2").notify(data.raison, { position:"right",className: "error"});
 
                         }
-                    });      }
+                    }
 
-            //return false; // keeps the page from not refreshing
+
+
+                    );      }
+
         });
 
-        $(document).ajaxSend(function(ev,req,options){
+      /*  $(document).ajaxSend(function(ev,req,options){
 
             if (options.url == 'test2.php')
                 $("input[type=submit]").attr('disabled','disabled');
@@ -188,7 +196,7 @@
 
             if (options.url == 'test2.php')
                 $("input[type=submit]").removeAttr('disabled');
-        })
+        })*/
 
 
 
