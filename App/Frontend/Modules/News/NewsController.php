@@ -894,7 +894,6 @@ if ($sens =='bottom') {
                         $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
 
 
-
                         if ($authors != NULL) {
                             foreach ($authors as $auth) {
                                 if ($auth->login() == $com['auteur']) {
@@ -907,6 +906,9 @@ if ($sens =='bottom') {
                                 }
                             }
 
+                        }
+                        else {
+                            $com->setLink('user', NULL);
                         }
 
 

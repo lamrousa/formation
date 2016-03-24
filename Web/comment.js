@@ -148,7 +148,7 @@
 
             else {
 
-                $("input[type=submit]").attr('disabled','disabled');
+              //  $("input[type=submit]").attr('disabled','disabled');
 
 
                $.ajax({ // ajax call starts
@@ -159,7 +159,7 @@
                     })
 
                     .done(function (data) {
-                            $("input[type=submit]").removeAttr('disabled');
+                          //  $("input[type=submit]").removeAttr('disabled');
 
                             // Variable data contains the data we get from serverside
                         // If clicked buttons value is red, we post only red wines
