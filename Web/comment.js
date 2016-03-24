@@ -168,7 +168,7 @@
                             for (var i in data) {
                                 if (i != "msg")
                                 {
-                                    $('#top').prepend(data.valeur);
+                                    $('#top').prepend(data[i].page);
                                     $('#monForm').find("input[type=text], textarea").val("");
 
                                 }}

@@ -44,6 +44,27 @@ class Page extends ApplicationComponent
         require $this->contentFile;
     }}
 
+    public function getAjaxPage()
+    {
+        if (!file_exists($this->contentFile))
+        {
+            throw new \RuntimeException('La vue spécifiée n\'existe pas');
+        }
+        $user = $this->app->user();
+        extract($this->vars);
+        ob_start();
+        require $this->contentFile;
+        return ob_get_clean();
+
+
+        /*  $code=file_get_contents(__DIR__.'/show/comment.php');
+          ob_start();
+          print eval('?>'. $code);
+          $output = ob_get_contents();
+          ob_end_clean();*/
+
+    }
+
     public function setContentFile($contentFile)
     {
         if (!is_string($contentFile) || empty($contentFile))
