@@ -811,7 +811,8 @@ class NewsController extends BackController
         if ($_SERVER['REQUEST_METHOD'] == 'POST')
         {
             $news= $request->postData('news');
-            $msg=true;
+            $msg=1;
+            $error='' ;
 
 
 
@@ -841,15 +842,15 @@ class NewsController extends BackController
 
             if (((filter_var($email, FILTER_VALIDATE_EMAIL)) == false ) && ($request->postData('email') != ''))
             {
-                $msg =false;
-                $this->page()->addVar('raison','Email invalide');
+                $msg =0;
+                $error='Email invalide';
 
             }
             elseif(($request->postExists('auteur')) &&($this->managers()->getManagerOf('Users')->getUser($request->postData('auteur'))))
 
             {
-                $msg=false;
-                $this->page()->addVar('raison','Nom d\'auteur non disponible');
+                $msg=0;
+                $error='Nom d\'auteur non disponible';
             }
             else
             {
@@ -870,7 +871,7 @@ class NewsController extends BackController
                 if ($formHandler->process())
                 {
                     // $this->sendmail($request->postData('news'),$email);
-                    $msg=true;
+                    $msg=1;
                 }
                 $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news);
 
@@ -928,16 +929,18 @@ class NewsController extends BackController
                         $page->addVar('Comment',$com);
                         $page->addVar('id',$usr);
                         $page->setContentFile(__DIR__.'/Views/show/comment.php');
-                        $tab []= array("page"=> $page->getAjaxPage()) ;
+                        $tab []= array( $page->getAjaxPage()) ;
                     }
 
                     //$this->page->addVar('comments', $comments);
                 }
 
+                $this->page->addVar('data', $tab);
 
             }
-            $this->page->addVar('msg', $msg);
-          $this->page->addVar('tableau', $tab);
+            $this->page->addVar('code', $msg);
+            $this->page()->addVar('error',$error);
+
 
 
 

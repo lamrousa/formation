@@ -1,7 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alamrous
- * Date: 24/03/2016
- * Time: 15:19
- */
+$tab =[];
+$tab['data_a']= $data;
+$tab['code'] = $code;
+$tab['error'] = $error;
+?>
+<?= json_encode($tab) ?>

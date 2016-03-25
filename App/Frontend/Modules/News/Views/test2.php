@@ -1,4 +1,4 @@
-<?php
+<?php/*
 if ($msg == true) {
     $mesg=1;
 

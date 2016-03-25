@@ -41,7 +41,10 @@ class Page extends ApplicationComponent
     {
         $user = $this->app->user();
         extract($this->vars);
-        require $this->contentFile;
+        ob_start();
+        require __DIR__.'/../../App/'.$this->app->name().'/Templates/layout_JSON.php';
+        return ob_get_clean();
+        //require $this->contentFile;
     }}
 
     public function getAjaxPage()
@@ -55,13 +58,6 @@ class Page extends ApplicationComponent
         ob_start();
         require $this->contentFile;
         return ob_get_clean();
-
-
-        /*  $code=file_get_contents(__DIR__.'/show/comment.php');
-          ob_start();
-          print eval('?>'. $code);
-          $output = ob_get_contents();
-          ob_end_clean();*/
 
     }
 

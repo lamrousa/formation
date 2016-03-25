@@ -163,20 +163,18 @@
 
                             // Variable data contains the data we get from serverside
                         // If clicked buttons value is red, we post only red wines
-                        if (data.msg == 1)
+                        if (data.code == 1)
                         {
-                            for (var i in data) {
-                                if (i != "msg")
-                                {
-                                    $('#top').prepend(data[i].page);
+                            for (var i in data.data_a) {
+                                    $('#top').prepend(data.data_a[i]);
                                     $('#monForm').find("input[type=text], textarea").val("");
 
-                                }}
+                                }
                             $("html, body").animate({ scrollTop: 0 }, "slow");
                             $("#box2").notify("Commentaire Ajouté", { position:"right",className: "success"});
                         }
-                        else if (data.msg == 0)
-                        {$("#box2").notify(data.raison, { position:"right",className: "error"});
+                        else if (data.code == 0)
+                        {$("#box2").notify(data.error, { position:"right",className: "error"});
 
                         }
                     }
