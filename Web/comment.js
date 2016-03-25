@@ -120,7 +120,7 @@
 
                 })
                     .done(function(data){
-                        if(data.check == 0)
+                        if(data.code == 0)
                         {
                             count = count + 1 ;
                        //     $("#box").notify( count + " Commentaire(s) Supprimé(s)", { position:"right",className: "info"});

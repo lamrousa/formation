@@ -793,7 +793,7 @@ class NewsController extends BackController
                 {
                     $check=0;
                 }
-                $this->page()->addVar('check',$check);
+                $this->page()->addVar('code',$check);
             }
         }
         else
