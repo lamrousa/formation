@@ -1,5 +1,6 @@
 
 <?php
+/*
 if ($msg == true) {
     $mesg=1;
     $comments=array_merge(array("msg" => $mesg),$comments);

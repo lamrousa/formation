@@ -63,16 +63,16 @@
                 })
                     .done(function (data) { // Variable data contains the data we get from serverside
                         // If clicked buttons value is red, we post only red wines
-                        if (data.nb != 0)
+                        if (data.code != 0)
                         {
-                            for (var i in data) {
+                            for (var i in data.data_a) {
                                 if (i != "nb")
                                 {
-                                  (commentbuilder(data[i])).hide().appendTo('#wines').fadeIn("slow");
+                                  (commentbuilder(data.data_a[i])).hide().appendTo('#wines').fadeIn("slow");
                                 }}
-                            $("#wines fieldset:last").notify(data.nb + " Commentaires Affichés", { position:"right",className: "success"});
+                            $("#wines fieldset:last").notify(data.code + " Commentaires Affichés", { position:"right",className: "success"});
                         }
-                        else if (data.nb == 0)
+                        else if (data.code == 0)
                         {$("#wines fieldset:last").notify("No more Comments to show", { position:"right",className: "info"});
 
                         }
@@ -93,14 +93,13 @@
             })
                 .done(function (data) { // Variable data contains the data we get from serverside
                     // If clicked buttons value is red, we post only red wines
-                    if (data.nb != 0)
+                    if (data.code != 0)
                     {
-                        for (var i in data) {
-                            if (i != "nb")
-                            {
-                                (commentbuilder(data[i])).hide().prependTo('#top').fadeIn("slow");
-                            }}
-                        $("#box").notify(data.nb + " Commentaire(s) Ajouté(s)", { position:"right",className: "success"});
+                        for (var i in data.data_a) {
+
+                                (commentbuilder(data.data_a[i])).hide().prependTo('#top').fadeIn("slow");
+                            }
+                        $("#box").notify(data.code + " Commentaire(s) Ajouté(s)", { position:"right",className: "success"});
                     }
 
                 });
@@ -122,7 +121,6 @@
                     .done(function(data){
                         if(data.code == 0)
                         {
-                            count = count + 1 ;
                        //     $("#box").notify( count + " Commentaire(s) Supprimé(s)", { position:"right",className: "info"});
 
                             $(" fieldset[data-id=\'"+com + "\']").remove();

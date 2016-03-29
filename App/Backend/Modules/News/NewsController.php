@@ -268,10 +268,11 @@ class NewsController extends BackController
         $this->RedirectNews404($request);
 
         $this->page->addVar('title', 'Mes news');
+        $manager = $this->managers->getManagerOf('News');
 
-        $listeNews = $this->managers->getManagerOf('News')->getListByAuthor($this->app()->user()->getAttribute('id'));
-        $listeCom = $this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('id'));
-        $listeComnews = $this->managers->getManagerOf('Comments')->getListByCommentAuthor($this->app()->user()->getAttribute('id'));
+        $listeNews = $manager->getListByAuthor($this->app()->user()->getAttribute('id'));
+        $ListeCom_a = $this->managers->getManagerOf('Comments')->getListByAuthor($this->app()->user()->getAttribute('id'));
+
 
 
 
@@ -283,8 +284,8 @@ class NewsController extends BackController
 
             }
         }
-        if ($listeCom != NULL) {
-            foreach ($listeCom as $com) {
+        if ($ListeCom_a != NULL) {
+            foreach ($ListeCom_a as $com) {
                 $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
                 $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
                 $com->setLink('show',$this->page->getSpecificLink('News', 'show', array($com->news()->NewsId())));
@@ -292,33 +293,11 @@ class NewsController extends BackController
             }
 
         }
-        if ($listeComnews != NULL) {
-            foreach ($listeComnews as &$comnews) {
 
-                $new= new News([
-                    'newsId' => $comnews['nid'],
-                    'titre' =>$comnews['titre']
-
-                ]);
-
-                foreach($listeCom as $com)
-                {
-                    if ($com->news()->NewsId() == $new->id())
-                    {
-                        $com->setNews($new);
-                    }
-                }
-
-
-            }
-
-            //
-        }
 
         $this->page->addVar('listeNews', $listeNews);
-        $this->page->addVar('listeCom', $listeCom);
+        $this->page->addVar('listeCom', $ListeCom_a);
         $this->page->addVar('log', $this->app()->user()->getAttribute('log'));
-
 
         $this->Build();
 
@@ -384,7 +363,6 @@ class NewsController extends BackController
         $this->page->addVar('title', $news->titre());
         $this->page->addVar('news', $news);
         $comments = $this->managers->getManagerOf('Comments')->getListOf($news->NewsId());
-        $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->NewsId());
         $comment = new Comment;
 
         $formBuilder = new CommentFormBuilder($comment);
@@ -399,13 +377,17 @@ class NewsController extends BackController
 
 
         if ($auteur != NULL) {
+
             $news->setLink('show',$this->page->getSpecificLink('News', 'showauthoruser', array($auteur->id())));
             $auteur->clean_msg();
 
+        } else {
+            $news->setLink('user',NULL);
         }
 
 
         $news->setLink('insertComment',$this->page->getSpecificLink('News', 'insertComment', array($news->NewsId())));
+        $authors = $this->managers->getManagerOf('Users')->getAuthorUsingNewsComments($news->NewsId());
 
 
         if ($comments != NULL) {
@@ -413,6 +395,7 @@ class NewsController extends BackController
 
                 $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
                 $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
+                $com->setLink('user',NULL);
 
                 if ($authors != NULL) {
 
@@ -420,9 +403,6 @@ class NewsController extends BackController
                         if ($auth->login() == $com['auteur']) {
 
                             $com->setLink('user',$this->page->getSpecificLink('News', 'showuser', array($auth->id())));
-                        }
-                        else {
-                            $com->setLink('user',NULL);
                         }
                     }
 

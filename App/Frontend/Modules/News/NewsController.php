@@ -766,9 +766,15 @@ class NewsController extends BackController
                         "update" => $com->link('update') );
                     $count= $count + 1;
                 }
-                $this->page->addVar('comments', $tableau);
+                $this->page->addVar('data', $tableau);
             }
-            $this->page->addVar('nb',$count);
+            else
+            {
+                $this->page->addVar('data', NULL);
+
+            }
+            $this->page->addVar('code',$count);
+            $this->page()->addVar('error',NULL);
 
         }
         else
@@ -794,6 +800,8 @@ class NewsController extends BackController
                     $check=0;
                 }
                 $this->page()->addVar('code',$check);
+                $this->page()->addVar('data',NULL);
+                $this->page()->addVar('error',NULL);
             }
         }
         else
@@ -896,7 +904,7 @@ class NewsController extends BackController
                     {
                         $com->setLink('update',$this->page->getSpecificLink('News', 'updateComment', array($com->commentId())));
                         $com->setLink('delete',$this->page->getSpecificLink('News', 'deleteComment', array($com->commentId())));
-
+                        $com->setLink('user',NULL);
 
 
                           /*  $code=file_get_contents(__DIR__.'/show/comment.php');
@@ -909,20 +917,14 @@ class NewsController extends BackController
                         {
                             foreach ($authors as $auth)
                             {
-                                if ($auth->login() == $com['auteur'])
+                                if ($auth->id() == $com->user())
                                 {
                                     $com->setLink('user',$this->page->getSpecificLink('News', 'showuser', array($auth->id())));
                                 }
-                                else
-                                {
-                                    $com->setLink('user', NULL );
-                                }
+
                             }
                         }
-                        else
-                        {
-                            $com->setLink('user', NULL);
-                        }
+
 
 
                         $page = new Page($this->page()->app());

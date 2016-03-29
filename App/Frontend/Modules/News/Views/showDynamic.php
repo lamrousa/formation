@@ -1,4 +1,4 @@
-<?php
+<?php/*
 if ($nb >0) {
     $comments = array_merge(array("nb" => $nb), $comments);
     print json_encode($comments);
